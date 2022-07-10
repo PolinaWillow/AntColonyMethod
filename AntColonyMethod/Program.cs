@@ -9,6 +9,7 @@ namespace AntColonyMethod
             //Массив феромонов для графа 3*4
             int N = 3;
             int M = 4;
+            int K = 1; //Количество муравьев
             int[,] Graf = { { 15,15,15,40},
                             { 20,21,20,30},
                             { 19,10,23,45} };
@@ -23,55 +24,74 @@ namespace AntColonyMethod
                 Console.WriteLine("");
             }
 
-            ColonyMethod(N, M, Graf);
+            ColonyMethod(N, M, Graf, K);
 
         }
 
-        public static int ColonyMethod(int n, int m, int[,] graf)
+        public static int ColonyMethod(int n, int m, int[,] graf, int k)
         {
-            //Определение пути по графу
-            for (int j = 0; j < m; j++)
+            for (int h = 0; h < k; h++)
             {
-                int SumPheromones = 0;
-                //Массив вероятности попадания
-                double[] Pij = new double[n];
-
-                //Подсчет общего числа феромонов
-                for (int i = 0; i < n; i++)
-                {                   
-                    SumPheromones += graf[i,j];
+                int[,] Ways = new int[m,2];
+                for (int i = 0; i < m; i++) {
+                    Ways[i, 0] = i + 1;
+                    Ways[i, 1] = 0;
                 }
-
-                //Подсчет вероятности попадания
-                Console.Write("\nВероятности попадания для параметра " + (j + 1) + ": ");
-                for (int i = 0; i < n; i++)
+                //Определение пути по графу
+                for (int j = 0; j < m; j++)
                 {
-                    Pij[i] = Convert.ToDouble(graf[i, j]) / Convert.ToDouble(SumPheromones);
-                    Console.Write(Pij[i] + " ");
-                }                             
-                Console.WriteLine("");
+                    int SumPheromones = 0;
+                    //Массив вероятности попадания
+                    double[] Pij = new double[n];
 
-                //Переход к случайному параметру
-                double[] Intervals = new double[n+1];
-                Intervals[0] = 0;
-                for (int i = 1; i < Intervals.Length; i++) {
-                    Intervals[i] = Intervals[i - 1] + Pij[i - 1];
-                }
-                Intervals[Intervals.Length-1] = 1;
-                Console.WriteLine(string.Join(" ", Intervals));
-
-                Random rnd = new Random();
-                double value = rnd.NextDouble();
-                Console.WriteLine("rnd = "+ value);
-
-                int ParametrNum=0;
-                for (int i = 1; i < Intervals.Length; i++) {
-                    if((value < Intervals[i])&&(value > Intervals[i - 1]))
+                    //Подсчет общего числа феромонов
+                    for (int i = 0; i < n; i++)
                     {
-                        ParametrNum = i;
+                        SumPheromones += graf[i, j];
                     }
+
+                    //Подсчет вероятности попадания
+                    //Console.Write("\nВероятности попадания для параметра " + (j + 1) + ": ");
+                    for (int i = 0; i < n; i++)
+                    {
+                        Pij[i] = Convert.ToDouble(graf[i, j]) / Convert.ToDouble(SumPheromones);
+                        //Console.Write(Pij[i] + " ");
+                    }
+                    //Console.WriteLine("");
+
+                    //Переход к случайному параметру
+                    double[] Intervals = new double[n + 1];
+                    Intervals[0] = 0;
+                    for (int i = 1; i < Intervals.Length; i++)
+                    {
+                        Intervals[i] = Intervals[i - 1] + Pij[i - 1];
+                    }
+                    Intervals[Intervals.Length - 1] = 1;
+                    //Console.WriteLine(string.Join(" ", Intervals));
+
+                    Random rnd = new Random();
+                    double value = rnd.NextDouble();
+                    //Console.WriteLine("rnd = " + value);
+
+                    int ParametrNum = 0;
+                    for (int i = 1; i < Intervals.Length; i++)
+                    {
+                        if ((value < Intervals[i]) && (value > Intervals[i - 1]))
+                        {
+                            ParametrNum = i;
+                        }
+                    }
+                    Ways[j, 1] = ParametrNum;
+                    //Console.WriteLine("Номер выбранного значения текущего параметра = " + Ways[j, 1]);
+                    
+                    //Пересчет феромонов
                 }
-                Console.WriteLine("Номер выбранного значения текущего параметра = " + ParametrNum);
+
+                Console.Write("Путь " + (h+1) + ": ");
+                for (int j = 0; j < m; j++) {
+                    Console.Write(" " + Ways[j, 1]);
+                }
+                Console.WriteLine();
             }
             return 0;
         }
