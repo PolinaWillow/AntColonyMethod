@@ -13,14 +13,16 @@ namespace AntColonyMethod
         static void Main(string[] args)
         {
             //Массив феромонов для графа 3*4
-            int N = 3;
+            int N = 3; //Получается при вводе данных
             int M = 4;
-            int K = 1; //Количество муравьев
+            int K = 10; //Количество муравьев
 
             //Вместо массива Graf сделать массив феромонов графа с сохранением их значений
             int[,] Graf = { { 15,15,15,40},
                             { 20,21,20,30},
                             { 19,10,23,45} };
+
+
 
             Console.WriteLine("Исходный граф");
             for (int j = 0; j < N; j++)
@@ -83,13 +85,21 @@ namespace AntColonyMethod
                     //Console.WriteLine("rnd = " + value);
 
                     int ParametrNum = 0;
-                    for (int i = 1; i < Intervals.Length; i++)
-                    {
-                        if ((value < Intervals[i]) && (value > Intervals[i - 1]))
+                    int x = 0;
+                    while (ParametrNum == 0) {
+                        if ((value < Intervals[x]) && (value > Intervals[x - 1]))
                         {
-                            ParametrNum = i;
+                            ParametrNum = x;
                         }
+                        x++;
                     }
+                    //for (int i = 1; i < Intervals.Length; i++)
+                    //{
+                    //    if ((value < Intervals[i]) && (value > Intervals[i - 1]))
+                    //    {
+                    //        ParametrNum = i;
+                    //    }
+                    //}
                     Ways[j, 1] = ParametrNum;
                     //Console.WriteLine("Номер выбранного значения текущего параметра = " + Ways[j, 1]);
                 }
@@ -106,7 +116,8 @@ namespace AntColonyMethod
                 int Q = 0; //Общее число феромонов
                 int Delta = Q / Func;
 
-                for (int g = 0; g < n; g++) {
+                for (int g = 0; g < n; g++)
+                {
                     graf[g, Ways[g, 1]] += Delta;
                 }
 
