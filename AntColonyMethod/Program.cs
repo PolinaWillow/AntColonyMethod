@@ -9,6 +9,10 @@ namespace AntColonyMethod
         public int Pheromones { get; set; }
 
         public bool FlagChoice { get; set; }
+
+        public int SelectNum { get; set; }
+
+        public int Delta { get; set; }
         //public double ValParam { get; set; }
 
         public override string ToString()
@@ -23,8 +27,8 @@ namespace AntColonyMethod
             //Массив феромонов для графа 3*4
             int N = 4; //Количество параметров
             int M = 3; //Количество значений параметров
-            
-            int K = 10; //Количество муравьев          
+
+            int K = 10; //Количество муравьев
 
             int[,] TestData = { { 20,15,15,40},
                                 { 20,21,20,30},
@@ -32,25 +36,30 @@ namespace AntColonyMethod
 
 
             List<GrafParams> Graf = new List<GrafParams>(); //Список элементов Graf
-            //Заполнение списка элементов списка 
+            //Заполнение списка элементов графа 
             for (int i = 0; i < N; i++)
             {
                 for (int j = 0; j < M; j++)
                 {
 
-                    Graf.Add(new GrafParams() { NumParam = i, Pheromones = TestData[j, i], FlagChoice = false });
+                    Graf.Add(new GrafParams() { NumParam = i, Pheromones = TestData[j, i], FlagChoice = false, SelectNum = 0, Delta = 0 });
                 }
             }
-            foreach (GrafParams grafParams in Graf)
+            foreach (GrafParams element in Graf)
             {
-                Console.WriteLine(grafParams);
+                Console.WriteLine(element);
                 //Console.WriteLine("Num: {grafParams.NumParam}; Znach: {grafParams.Pheromones}");
             }
 
+            //Прохождение K муравьев
             for (int i = 0; i < K; i++)
             {
                 ColonyMethod(N, M, Graf);
-            }                 
+            }
+
+            //Испарение феромонов
+            PheromoneEvaporation(N, M, Graf);
+
         }
 
         public static int ColonyMethod(int n, int m, List<GrafParams> graf)
@@ -75,8 +84,9 @@ namespace AntColonyMethod
                 //Console.WriteLine("Raram: " + graf[i].NumParam + " SumPheromones: "+ SumPheromones);
 
                 //Подсчет вероятности попадания
-                for (int j = 0; j < m; j++) {
-                    Pij[j] = Convert.ToDouble(graf[i+j].Pheromones) / Convert.ToDouble(SumPheromones);
+                for (int j = 0; j < m; j++)
+                {
+                    Pij[j] = Convert.ToDouble(graf[i + j].Pheromones) / Convert.ToDouble(SumPheromones);
                 }
 
                 //Переход к случайному параметру
@@ -106,6 +116,7 @@ namespace AntColonyMethod
                 Ways[graf[i].NumParam, 1] = ParametrNum;
                 //Поднятие флага выбора параметра
                 graf[i + ParametrNum - 1].FlagChoice = true;
+                graf[i + ParametrNum - 1].SelectNum++;
             }
 
             for (int j = 0; j < n; j++)
@@ -116,11 +127,14 @@ namespace AntColonyMethod
 
             //Пересчет феромонов
             int Func = Function(n, m, Ways);
-            int Q = 0; //Общее число феромонов
+            int Q = 100; //Общее число феромонов
             int Delta = Q / Func;
 
-            for (int i = 0; i < graf.Count; i++) {
-                if (graf[i].FlagChoice == true) {
+            for (int i = 0; i < graf.Count; i++)
+            {
+                if (graf[i].FlagChoice == true)
+                {
+                    graf[i].Delta += Delta;
                     graf[i].Pheromones += Delta;
                     graf[i].FlagChoice = false;
                 }
@@ -133,6 +147,18 @@ namespace AntColonyMethod
         {
             int Value = 0;
             return Value;
+        }
+
+        public static int PheromoneEvaporation(int n, int m, List<GrafParams> graf)
+        {
+            double L = 0.2;
+            foreach (GrafParams element in graf)
+            {
+                double Evaporation = L * Convert.ToDouble(element.Pheromones) + (1 - L)*element.Delta;
+                element.Pheromones = Convert.ToInt32(Evaporation);
+            }
+
+            return 0;
         }
     }
 }
