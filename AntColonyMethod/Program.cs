@@ -75,49 +75,8 @@ namespace AntColonyMethod
 
             for (int i = 0; i < graf.Count; i += m)
             {
-                int SumPheromones = 0;
-                double[] Pij = new double[m];//Массив вероятности попадания
-
-                for (int j = 0; j < m; j++)
-                {
-                    SumPheromones += graf[i + j].Pheromones;
-                }
-                //Console.WriteLine("Raram: " + graf[i].NumParam + " SumPheromones: "+ SumPheromones);
-
-                //Подсчет вероятности попадания
-                for (int j = 0; j < m; j++)
-                {
-                    Pij[j] = Convert.ToDouble(graf[i + j].Pheromones) / Convert.ToDouble(SumPheromones);
-                }
-
-                //Переход к случайному параметру
-                double[] Intervals = new double[m + 1]; //Определение интервалов попадания
-                Intervals[0] = 0;
-                for (int j = 1; j < Intervals.Length; j++)
-                {
-                    Intervals[j] = Intervals[j - 1] + Pij[j - 1];
-                }
-                Intervals[Intervals.Length - 1] = 1;
-
-
-                Random rnd = new Random();
-                double value = rnd.NextDouble();
-
-                int ParametrNum = 0;
-                int x = 1;
-                while (ParametrNum == 0)
-                {
-                    if ((value < Intervals[x]) && (value > Intervals[x - 1]))
-                    {
-                        ParametrNum = x;
-                    }
-                    x++;
-                }
-
-                Ways[graf[i].NumParam, 1] = ParametrNum;
-                //Поднятие флага выбора параметра
-                graf[i + ParametrNum - 1].FlagChoice = true;
-                graf[i + ParametrNum - 1].SelectNum++;
+                //Выбор следующей вершины
+                ChoiceNextVertex(i, m, graf, Ways);                
             }
 
             for (int j = 0; j < n; j++)
@@ -132,8 +91,51 @@ namespace AntColonyMethod
             return 0;
         }
 
-        public static int ChoiceNext() //Выбор следующей вершины
+        public static int ChoiceNextVertex(int i, int m, List<GrafParams> graf, int[,] ways) //Выбор следующей вершины
         {
+
+            int SumPheromones = 0;
+            double[] Pij = new double[m];//Массив вероятности попадания
+
+            for (int j = 0; j < m; j++)
+            {
+                SumPheromones += graf[i + j].Pheromones;
+            }
+            //Console.WriteLine("Raram: " + graf[i].NumParam + " SumPheromones: "+ SumPheromones);
+
+            //Подсчет вероятности попадания
+            for (int j = 0; j < m; j++)
+            {
+                Pij[j] = Convert.ToDouble(graf[i + j].Pheromones) / Convert.ToDouble(SumPheromones);
+            }
+
+            //Переход к случайному параметру
+            double[] Intervals = new double[m + 1]; //Определение интервалов попадания
+            Intervals[0] = 0;
+            for (int j = 1; j < Intervals.Length; j++)
+            {
+                Intervals[j] = Intervals[j - 1] + Pij[j - 1];
+            }
+            Intervals[Intervals.Length - 1] = 1;
+
+            Random rnd = new Random();
+            double value = rnd.NextDouble();
+
+            int ParametrNum = 0;
+            int x = 1;
+            while (ParametrNum == 0)
+            {
+                if ((value < Intervals[x]) && (value > Intervals[x - 1]))
+                {
+                    ParametrNum = x;
+                }
+                x++;
+            }
+
+            ways[graf[i].NumParam, 1] = ParametrNum;
+            //Поднятие флага выбора параметра
+            graf[i + ParametrNum - 1].FlagChoice = true;
+            graf[i + ParametrNum - 1].SelectNum++;
 
             return 0;
         }
