@@ -68,8 +68,7 @@ namespace AntColonyMethod
             //Прохождение K агентов
             for (int i = 0; i < K; i++)
             {
-                Agent.Add(new AgentGroup() { IdAgent = i});
-                //AgentMoving(N, M, Graf);
+                Agent.Add(new AgentGroup() { IdAgent = i});                
 
                 //Добавление пути агента
                 Agent[i].WayAgent.AddRange(AgentMoving(N, M, Graf));
@@ -91,38 +90,27 @@ namespace AntColonyMethod
         public static int[] AgentMoving(int n, int m, List<GrafParams> graf)
         {
 
-            int[,] Ways = new int[n, 2]; //Выбранный путь
-            for (int i = 0; i < n; i++)
-            {
-                Ways[i, 0] = i + 1;
-                Ways[i, 1] = 0;
-            }
+            int[] Way = new int[n]; //Выбранный путь           
 
             for (int i = 0; i < graf.Count; i += m)
             {
                 //Выбор следующей вершины
-                ChoiceNextVertex(i, m, graf, Ways);                
+                ChoiceNextVertex(i, m, graf, Way);                
             }
 
             for (int j = 0; j < n; j++)
             {
-                Console.Write(" " + Ways[j, 1]);
+                Console.Write(" " + Way[j]);
             }
             Console.WriteLine();
 
             //Пересчет феромонов
-            AddPheromone(n, m, Ways, graf);
-
-            int[] ResultWay = new int[n];
-            for (int i = 0; i<n; i ++) {
-                ResultWay[i] = Ways[i, 1];
-            }
-
-
-            return ResultWay;
+            AddPheromone(n, m, Way, graf);
+            
+            return Way;
         }
 
-        public static int ChoiceNextVertex(int i, int m, List<GrafParams> graf, int[,] ways) //Выбор следующей вершины
+        public static int ChoiceNextVertex(int i, int m, List<GrafParams> graf, int[] way) //Выбор следующей вершины
         {
 
             int SumPheromones = 0;
@@ -163,7 +151,7 @@ namespace AntColonyMethod
                 x++;
             }
 
-            ways[graf[i].NumParam, 1] = ParametrNum;
+            way[graf[i].NumParam] = ParametrNum;
             //Поднятие флага выбора параметра
             graf[i + ParametrNum - 1].FlagChoice = true;
             graf[i + ParametrNum - 1].SelectNum++;
@@ -171,9 +159,9 @@ namespace AntColonyMethod
             return 0;
         }
 
-        public static int AddPheromone(int n, int m, int[,] ways, List<GrafParams> graf) //Добавление феромонов
+        public static int AddPheromone(int n, int m, int[] way, List<GrafParams> graf) //Добавление феромонов
         {
-            int Func = Function(n, m, ways); //Значение целевой фцнкции
+            int Func = Function(n, m, way); //Значение целевой фцнкции
             int Q = 100; //Общее число феромонов
             int Delta = Q / Func;
 
@@ -189,7 +177,7 @@ namespace AntColonyMethod
             return 0;
         }
 
-        public static int Function(int n, int m, int[,] ways) //Подсчет целивой функции
+        public static int Function(int n, int m, int[] way) //Подсчет целивой функции
         {
             int Value = 1;
             return Value;
