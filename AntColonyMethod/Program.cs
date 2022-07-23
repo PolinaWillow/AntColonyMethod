@@ -20,6 +20,22 @@ namespace AntColonyMethod
             return "NumParam: " + NumParam + "   Pheromones: " + Pheromones;
         }
     }
+
+    class AgentGroup
+    {
+        public int IdAgent { get; set; }
+        public List<int> WayAgent = new List<int>();
+        
+        public override string ToString()
+        {
+            string result = "NumAgent: " + IdAgent + "   Way: ";
+            foreach (int elem in WayAgent) {
+                result += elem + "; ";
+            }
+            return result;
+        }
+    }
+
     class Program
     {
         static void Main(string[] args)
@@ -28,7 +44,7 @@ namespace AntColonyMethod
             int N = 4; //Количество параметров
             int M = 3; //Количество значений параметров
 
-            int K = 2; //Количество муравьев
+            int K = 10; //Количество муравьев
 
             List<GrafParams> Graf = new List<GrafParams>(); //Список элементов Graf
             //Заполнение списка элементов графа 
@@ -46,10 +62,19 @@ namespace AntColonyMethod
                 //Console.WriteLine("Num: {grafParams.NumParam}; Znach: {grafParams.Pheromones}");
             }
 
-            //Прохождение K муравьев
+
+            //Создание группыагентов
+            List<AgentGroup> Agent = new List<AgentGroup>(); //Список агентов
+            //Прохождение K агентов
             for (int i = 0; i < K; i++)
             {
-                AgentMoving(N, M, Graf);
+                Agent.Add(new AgentGroup() { IdAgent = i});
+                //AgentMoving(N, M, Graf);
+
+                //Добавление пути агента
+                Agent[i].WayAgent.AddRange(AgentMoving(N, M, Graf));
+                
+                Console.WriteLine(Agent[i]);
 
                 foreach (GrafParams element in Graf)
                 {
@@ -63,7 +88,7 @@ namespace AntColonyMethod
 
         }
 
-        public static int AgentMoving(int n, int m, List<GrafParams> graf)
+        public static int[] AgentMoving(int n, int m, List<GrafParams> graf)
         {
 
             int[,] Ways = new int[n, 2]; //Выбранный путь
@@ -88,7 +113,13 @@ namespace AntColonyMethod
             //Пересчет феромонов
             AddPheromone(n, m, Ways, graf);
 
-            return 0;
+            int[] ResultWay = new int[n];
+            for (int i = 0; i<n; i ++) {
+                ResultWay[i] = Ways[i, 1];
+            }
+
+
+            return ResultWay;
         }
 
         public static int ChoiceNextVertex(int i, int m, List<GrafParams> graf, int[,] ways) //Выбор следующей вершины
