@@ -13,7 +13,6 @@ namespace AntColonyMethod
         public int SelectNum { get; set; }
 
         public int Delta { get; set; }
-        //public double ValParam { get; set; }
 
         public override string ToString()
         {
@@ -63,7 +62,7 @@ namespace AntColonyMethod
             }
 
 
-            //Создание группыагентов
+            //Создание группы агентов
             List<AgentGroup> Agent = new List<AgentGroup>(); //Список агентов
             //Прохождение K агентов
             for (int i = 0; i < K; i++)
