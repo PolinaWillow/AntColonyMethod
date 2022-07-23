@@ -28,12 +28,7 @@ namespace AntColonyMethod
             int N = 4; //Количество параметров
             int M = 3; //Количество значений параметров
 
-            int K = 10; //Количество муравьев
-
-            int[,] TestData = { { 20,15,15,40},
-                                { 20,21,20,30},
-                                { 19,10,23,45} };//Массив тестовых значений феромонов
-
+            int K = 2; //Количество муравьев
 
             List<GrafParams> Graf = new List<GrafParams>(); //Список элементов Graf
             //Заполнение списка элементов графа 
@@ -42,7 +37,7 @@ namespace AntColonyMethod
                 for (int j = 0; j < M; j++)
                 {
 
-                    Graf.Add(new GrafParams() { NumParam = i, Pheromones = TestData[j, i], FlagChoice = false, SelectNum = 0, Delta = 0 });
+                    Graf.Add(new GrafParams() { NumParam = i, Pheromones = 1, FlagChoice = false, SelectNum = 0, Delta = 0 });
                 }
             }
             foreach (GrafParams element in Graf)
@@ -54,7 +49,13 @@ namespace AntColonyMethod
             //Прохождение K муравьев
             for (int i = 0; i < K; i++)
             {
-                ColonyMethod(N, M, Graf);
+                AgentMoving(N, M, Graf);
+
+                foreach (GrafParams element in Graf)
+                {
+                    Console.WriteLine(element);
+                    //Console.WriteLine("Num: {grafParams.NumParam}; Znach: {grafParams.Pheromones}");
+                }
             }
 
             //Испарение феромонов
@@ -62,7 +63,7 @@ namespace AntColonyMethod
 
         }
 
-        public static int ColonyMethod(int n, int m, List<GrafParams> graf)
+        public static int AgentMoving(int n, int m, List<GrafParams> graf)
         {
 
             int[,] Ways = new int[n, 2]; //Выбранный путь
@@ -126,7 +127,20 @@ namespace AntColonyMethod
             Console.WriteLine();
 
             //Пересчет феромонов
-            int Func = Function(n, m, Ways);
+            AddPheromone(n, m, Ways, graf);
+
+            return 0;
+        }
+
+        public static int ChoiceNext() //Выбор следующей вершины
+        {
+
+            return 0;
+        }
+
+        public static int AddPheromone(int n, int m, int[,] ways, List<GrafParams> graf) //Добавление феромонов
+        {
+            int Func = Function(n, m, ways); //Значение целевой фцнкции
             int Q = 100; //Общее число феромонов
             int Delta = Q / Func;
 
@@ -139,22 +153,21 @@ namespace AntColonyMethod
                     graf[i].FlagChoice = false;
                 }
             }
-
             return 0;
         }
 
-        public static int Function(int n, int m, int[,] ways)
+        public static int Function(int n, int m, int[,] ways) //Подсчет целивой функции
         {
-            int Value = 0;
+            int Value = 1;
             return Value;
         }
 
-        public static int PheromoneEvaporation(int n, int m, List<GrafParams> graf)
+        public static int PheromoneEvaporation(int n, int m, List<GrafParams> graf) //Испарение феромона
         {
             double L = 0.2;
             foreach (GrafParams element in graf)
             {
-                double Evaporation = L * Convert.ToDouble(element.Pheromones) + (1 - L)*element.Delta;
+                double Evaporation = L * Convert.ToDouble(element.Pheromones) + (1 - L) * element.Delta;
                 element.Pheromones = Convert.ToInt32(Evaporation);
             }
 
