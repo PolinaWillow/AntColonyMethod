@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Security.Cryptography;
+using System.Text;
 
 namespace AntColonyMethod
 {
@@ -72,9 +74,15 @@ namespace AntColonyMethod
             {
                 Agent.Add(new AgentGroup() { IdAgent = i });
 
-                //Добавление пути агента
-                //int[] m = AgentMoving(N, M, Graf);
-                Agent[i].WayAgent.AddRange(AgentMoving(N, M, Graf));
+                //Определение пути агента
+                int[] wayAgent = AgentMoving(N, M, Graf);
+
+                //Вычисление Хэша пути
+                string HashWay = GetHash(wayAgent);
+
+
+                //Сохранение пути агента
+                Agent[i].WayAgent.AddRange(wayAgent);
 
                 Console.WriteLine(Agent[i]);
             }
@@ -200,5 +208,27 @@ namespace AntColonyMethod
             
             return 0;
         }
+
+        public static string GetHash(int[] way) //Получение Хэша
+        {
+            string StringWay = string.Join(",", way); //Получение строки
+            byte[] StrSource = ASCIIEncoding.ASCII.GetBytes(StringWay); //Получение массива байтов 
+            byte[] StrHash = new MD5CryptoServiceProvider().ComputeHash(StrSource); //Получение Хэша
+            //Преобразование Хэша в строку
+            string HashWay = ByteArrayToString(StrHash);
+
+            return HashWay;
+        }
+        
+        public static string ByteArrayToString(byte[] arrInput) //Преобрахование Хэша в строку
+        {
+            int i;
+            StringBuilder sOutput = new StringBuilder(arrInput.Length);
+            for (i = 0; i < arrInput.Length; i++)
+            {
+                sOutput.Append(arrInput[i].ToString("X2"));
+            }
+            return sOutput.ToString();
+        } 
     }
 }
