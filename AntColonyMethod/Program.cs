@@ -81,6 +81,8 @@ namespace AntColonyMethod
                 }
             }
 
+            //Занесение феромона
+
             //Испарение феромонов
             PheromoneEvaporation(N, M, Graf);
 
@@ -103,8 +105,9 @@ namespace AntColonyMethod
             }
             Console.WriteLine();
 
-            //Пересчет феромонов
-            AddPheromone(n, m, Way, graf);
+            ////
+            ////Пересчет феромонов
+            //AddPheromone(n, m, Way, graf);
             
             return Way;
         }
