@@ -103,7 +103,7 @@ namespace AntColonyMethod
             }
             Console.WriteLine();
 
-            //Пересчет феромонов
+            
             AddPheromone(n, m, Way, graf);
             
             return Way;
@@ -158,6 +158,7 @@ namespace AntColonyMethod
             return 0;
         }
 
+        //Сделать через общую последнюю формулу испарения феромна.
         public static int AddPheromone(int n, int m, int[] way, List<GrafParams> graf) //Добавление феромонов
         {
             int Func = Function(n, m, way); //Значение целевой фцнкции
