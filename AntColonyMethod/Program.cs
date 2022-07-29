@@ -42,13 +42,13 @@ namespace AntColonyMethod
 
     class Program
     {
+        public static int ANT_COUNT = 3; //Количество муравьев
+
         static void Main(string[] args)
         {
             //Массив феромонов для графа 3*4
             int N = 4; //Количество параметров
-            int M = 3; //Количество значений параметров
-
-            int K = 3; //Количество муравьев
+            int M = 3; //Количество значений параметров            
 
             //Создание Хэш-таблицы
             Hashtable hashTable = new Hashtable();
@@ -74,7 +74,7 @@ namespace AntColonyMethod
             //Создание группы агентов
             List<AgentGroup> Agent = new List<AgentGroup>(); //Список агентов
             //Прохождение K агентов
-            for (int i = 0; i < K; i++)
+            for (int i = 0; i < ANT_COUNT; i++)
             {
                 Agent.Add(new AgentGroup() { idAgent = i });
 
@@ -99,12 +99,13 @@ namespace AntColonyMethod
 
                 //Сохранение пути агента
                 Agent[i].wayAgent.AddRange(newWayAgent);
-
                 Console.WriteLine(Agent[i]);
+
+                
             }
 
             //Занесение феромона
-            for (int i = 0; i < K; i++)
+            for (int i = 0; i < ANT_COUNT; i++)
             {
                 Agent[i].delta = AddPheromone(N, M, Agent[i].wayAgent, Graf);
             }
