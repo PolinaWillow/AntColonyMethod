@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -7,31 +8,31 @@ namespace AntColonyMethod
 {
     class GrafParams
     {
-        public int IdParam { get; set; }
-        public int NumParam { get; set; }
-        public int Pheromones { get; set; }
+        public int idParam { get; set; }
+        public int numParam { get; set; }
+        public int pheromones { get; set; }
 
-        public int SelectNum { get; set; }
+        public int selectNum { get; set; }
 
         //public int Delta { get; set; }
 
         public override string ToString()
         {
-            return "IdParam: " + IdParam + "   NumParam: " + NumParam + "   Pheromones: " + Pheromones;
+            return "IdParam: " + idParam + "   NumParam: " + numParam + "   Pheromones: " + pheromones;
         }
     }
 
     class AgentGroup
     {
-        public int IdAgent { get; set; }
-        public double Delta { get; set; }
+        public int idAgent { get; set; }
+        public double delta { get; set; }
 
-        public List<int> WayAgent = new List<int>();
+        public List<int> wayAgent = new List<int>();
 
         public override string ToString()
         {
-            string result = "NumAgent: " + IdAgent + "   Way: ";
-            foreach (int elem in WayAgent)
+            string result = "NumAgent: " + idAgent + "   Way: ";
+            foreach (int elem in wayAgent)
             {
                 result += elem + "; ";
             }
@@ -49,6 +50,9 @@ namespace AntColonyMethod
 
             int K = 3; //Количество муравьев
 
+            //Создание Хэш-таблицы
+            Hashtable hashTable = new Hashtable();
+
             List<GrafParams> Graf = new List<GrafParams>(); //Список элементов Graf
             //Заполнение списка элементов графа 
             int id = 0;
@@ -56,7 +60,7 @@ namespace AntColonyMethod
             {
                 for (int j = 0; j < M; j++)
                 {
-                    Graf.Add(new GrafParams() { IdParam = id, NumParam = i, Pheromones = 1, SelectNum = 0 });
+                    Graf.Add(new GrafParams() { idParam = id, numParam = i, pheromones = 1, selectNum = 0 });
                     id++;
                 }
             }
@@ -72,17 +76,29 @@ namespace AntColonyMethod
             //Прохождение K агентов
             for (int i = 0; i < K; i++)
             {
-                Agent.Add(new AgentGroup() { IdAgent = i });
+                Agent.Add(new AgentGroup() { idAgent = i });
 
                 //Определение пути агента
-                int[] wayAgent = AgentMoving(N, M, Graf);
+                int[] newWayAgent;
+                bool flagFindWay = false;
+                do
+                {
+                    newWayAgent = AgentMoving(N, M, Graf);
+                    //Вычисление Хэша пути
+                    string hashWay = GetHash(newWayAgent);
+                    Console.WriteLine(hashWay);
 
-                //Вычисление Хэша пути
-                string HashWay = GetHash(wayAgent);
+                    //Сравнение Хэша со значениями таблицы
+                    if ((hashTable.Count == 0) || (!hashTable.ContainsKey(hashWay)))
+                    {
+                        hashTable.Add(hashWay, newWayAgent); //Добавление нового ключа в таблицй
+                        flagFindWay = true;
+                    }                   
+                } while (!flagFindWay);               
 
 
                 //Сохранение пути агента
-                Agent[i].WayAgent.AddRange(wayAgent);
+                Agent[i].wayAgent.AddRange(newWayAgent);
 
                 Console.WriteLine(Agent[i]);
             }
@@ -90,7 +106,7 @@ namespace AntColonyMethod
             //Занесение феромона
             for (int i = 0; i < K; i++)
             {
-                Agent[i].Delta = AddPheromone(N, M, Agent[i].WayAgent, Graf);
+                Agent[i].delta = AddPheromone(N, M, Agent[i].wayAgent, Graf);
             }
 
             //Испарение феромонов
@@ -102,84 +118,84 @@ namespace AntColonyMethod
         public static int[] AgentMoving(int n, int m, List<GrafParams> graf)
         {
 
-            int[] Way = new int[n]; //Выбранный путь           
+            int[] way = new int[n]; //Выбранный путь           
 
             for (int i = 0; i < graf.Count; i += m)
             {
                 //Выбор следующей вершины
-                ChoiceNextVertex(i, m, graf, Way);
+                ChoiceNextVertex(i, m, graf, way);
             }
 
             for (int j = 0; j < n; j++)
             {
-                Console.Write(" " + Way[j]);
+                Console.Write(" " + way[j]);
             }
             Console.WriteLine();
 
-            return Way;
+            return way;
         }
 
         public static int ChoiceNextVertex(int i, int m, List<GrafParams> graf, int[] way) //Выбор следующей вершины
         {
 
-            int SumPheromones = 0;
+            int sumPheromones = 0;
             double[] Pij = new double[m];//Массив вероятности попадания
             int[] Idij = new int[m];//Массив Id рассматриваемых узлов
 
             for (int j = 0; j < m; j++)
             {
-                SumPheromones += graf[i + j].Pheromones;
+                sumPheromones += graf[i + j].pheromones;
             }
             //Console.WriteLine("Raram: " + graf[i].NumParam + " SumPheromones: "+ SumPheromones);
 
             //Подсчет вероятности попадания
             for (int j = 0; j < m; j++)
             {
-                Pij[j] = Convert.ToDouble(graf[i + j].Pheromones) / Convert.ToDouble(SumPheromones);
-                Idij[j] = graf[i + j].IdParam;
+                Pij[j] = Convert.ToDouble(graf[i + j].pheromones) / Convert.ToDouble(sumPheromones);
+                Idij[j] = graf[i + j].idParam;
             }
 
             //Переход к случайному параметру
-            double[] Intervals = new double[m + 1]; //Определение интервалов попадания
-            Intervals[0] = 0;
-            for (int j = 1; j < Intervals.Length; j++)
+            double[] intervals = new double[m + 1]; //Определение интервалов попадания
+            intervals[0] = 0;
+            for (int j = 1; j < intervals.Length; j++)
             {
-                Intervals[j] = Intervals[j - 1] + Pij[j - 1];
+                intervals[j] = intervals[j - 1] + Pij[j - 1];
             }
-            Intervals[Intervals.Length - 1] = 1;
+            intervals[intervals.Length - 1] = 1;
 
             Random rnd = new Random();
             double value = rnd.NextDouble();
 
-            int ParametrNum = 0;
+            int parametrNum = 0;
             int x = 1;
-            while (ParametrNum == 0)
+            while (parametrNum == 0)
             {
-                if ((value < Intervals[x]) && (value > Intervals[x - 1]))
+                if ((value < intervals[x]) && (value > intervals[x - 1]))
                 {
-                    ParametrNum = x;
+                    parametrNum = x;
                 }
                 x++;
             }
 
-            way[graf[i].NumParam] = Idij[ParametrNum - 1];
+            way[graf[i].numParam] = Idij[parametrNum - 1];
             //Поднятие флага выбора параметра           
-            graf[i + ParametrNum - 1].SelectNum++;
+            graf[i + parametrNum - 1].selectNum++;
 
             return 0;
         }
 
         public static double AddPheromone(int n, int m, List<int> way, List<GrafParams> graf) //Добавление феромонов
         {
-            int Func = Function(n, m, way); //Значение целевой фцнкции
-            int Q = 100; //Общее число феромонов
-            int Delta = Q / Func;
+            int func = Function(n, m, way); //Значение целевой фцнкции
+            int q = 100; //Общее число феромонов
+            int delta = q / func;
 
             for (int i = 0; i < n; i++)
             {
-                graf[way[i]].Pheromones += Delta;
+                graf[way[i]].pheromones += delta;
             }
-            return Delta;
+            return delta;
         }
 
         public static int Function(int n, int m, List<int> way) //Подсчет целивой функции
@@ -193,13 +209,13 @@ namespace AntColonyMethod
             double L = 0.2;
             foreach (GrafParams grafElem in graf)
             {
-                double Evaporation = L * Convert.ToDouble(grafElem.Pheromones);
+                double Evaporation = L * Convert.ToDouble(grafElem.pheromones);
 
                 foreach (AgentGroup agentElem in agent)
                 {
-                    foreach (int wayElem in agentElem.WayAgent) {
-                        if (wayElem == grafElem.IdParam)
-                            Evaporation += (1 - L) * agentElem.Delta;
+                    foreach (int wayElem in agentElem.wayAgent) {
+                        if (wayElem == grafElem.idParam)
+                            Evaporation += (1 - L) * agentElem.delta;
                     }
                 }
 
