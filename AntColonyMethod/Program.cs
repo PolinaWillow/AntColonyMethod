@@ -43,6 +43,7 @@ namespace AntColonyMethod
     class Program
     {
         public static int ANT_COUNT = 3; //Количество муравьев
+        public static int THREADS_COUNT = ANT_COUNT; //Количество потоков
 
         static void Main(string[] args)
         {
@@ -89,11 +90,12 @@ namespace AntColonyMethod
                     Console.WriteLine(hashWay);
 
                     //Сравнение Хэша со значениями таблицы
-                    if ((hashTable.Count == 0) || (!hashTable.ContainsKey(hashWay)))
+                    if (!hashTable.ContainsKey(hashWay))
                     {
                         hashTable.Add(hashWay, newWayAgent); //Добавление нового ключа в таблицй
                         flagFindWay = true;
-                    }                   
+                    }     
+                    
                 } while (!flagFindWay);               
 
 
@@ -115,6 +117,7 @@ namespace AntColonyMethod
 
 
         }
+
 
         public static int[] AgentMoving(int n, int m, List<GrafParams> graf)
         {
