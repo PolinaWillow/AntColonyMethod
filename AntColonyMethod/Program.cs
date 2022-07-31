@@ -94,16 +94,16 @@ namespace AntColonyMethod
                     {
                         hashTable.Add(hashWay, newWayAgent); //Добавление нового ключа в таблицй
                         flagFindWay = true;
-                    }     
-                    
-                } while (!flagFindWay);               
+                    }
+
+                } while (!flagFindWay);
 
 
                 //Сохранение пути агента
                 Agent[i].wayAgent.AddRange(newWayAgent);
                 Console.WriteLine(Agent[i]);
 
-                
+
             }
 
             //Занесение феромона
@@ -217,7 +217,8 @@ namespace AntColonyMethod
 
                 foreach (AgentGroup agentElem in agent)
                 {
-                    foreach (int wayElem in agentElem.wayAgent) {
+                    foreach (int wayElem in agentElem.wayAgent)
+                    {
                         if (wayElem == grafElem.idParam)
                             Evaporation += (1 - L) * agentElem.delta;
                     }
@@ -225,7 +226,7 @@ namespace AntColonyMethod
 
                 //element.Pheromones = Convert.ToInt32(Evaporation);
             }
-            
+
             return 0;
         }
 
@@ -239,7 +240,7 @@ namespace AntColonyMethod
 
             return HashWay;
         }
-        
+
         public static string ByteArrayToString(byte[] arrInput) //Преобрахование Хэша в строку
         {
             int i;
@@ -249,6 +250,6 @@ namespace AntColonyMethod
                 sOutput.Append(arrInput[i].ToString("X2"));
             }
             return sOutput.ToString();
-        } 
+        }
     }
 }
