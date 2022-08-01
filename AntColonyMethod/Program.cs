@@ -42,94 +42,124 @@ namespace AntColonyMethod
 
     class Program
     {
-        public static int ANT_COUNT = 3; //Количество муравьев
-        public static int THREADS_COUNT = ANT_COUNT; //Количество потоков
+
+        public static int THREADS_COUNT = 3; //Количество потоков
 
         static void Main(string[] args)
         {
-            //Массив феромонов для графа 3*4
+            //Входные переменные
             int N = 4; //Количество параметров
-            int M = 3; //Количество значений параметров
+            int[] M = new int[N]; //Массив для хранения количество значений параметров
             int iterationCount = 10; // Число итераций в алгоритме
+            int antCount = 3; //Количество муравьев
 
             //Создание Хэш-таблицы
             Hashtable hashTable = new Hashtable();
 
+            //Получение входных данных
+            GettingInputData(N, M, iterationCount, antCount);
+
+            //Создание графа  
             List<GrafParams> Graf = new List<GrafParams>(); //Список элементов Graf
+            CreateGraf(N, M, Graf);
+
+            //Прохождение всех итераций
+            for (int j = 0; j < iterationCount; j++)
+            {
+                //Создание группы агентов
+                List<AgentGroup> Agent = new List<AgentGroup>(); //Список агентов
+                                                                 //Прохождение K агентов
+                for (int i = 0; i < antCount; i++)
+                {
+                    Agent.Add(new AgentGroup() { idAgent = i });
+
+                    //Определение пути агента
+                    int[] newWayAgent;
+                    bool flagFindWay = false;
+                    do
+                    {
+                        newWayAgent = AgentMoving(N, M, Graf);
+                        //Вычисление Хэша пути
+                        string hashWay = GetHash(newWayAgent);
+                        Console.WriteLine(hashWay);
+
+                        //Сравнение Хэша со значениями таблицы
+                        if (!hashTable.ContainsKey(hashWay))
+                        {
+                            hashTable.Add(hashWay, newWayAgent); //Добавление нового ключа в таблицй
+                            flagFindWay = true;
+                        }
+
+                    } while (!flagFindWay);
+
+
+                    //Сохранение пути агента
+                    Agent[i].wayAgent.AddRange(newWayAgent);
+                    Console.WriteLine(Agent[i]);
+
+                    TargetFunction(Agent[i].wayAgent); //Вычисление значений критериев
+
+                }
+
+                //Занесение феромона
+                for (int i = 0; i < antCount; i++)
+                {
+                    Agent[i].delta = AddPheromone(N, M, Agent[i].wayAgent, Graf);
+                }
+
+                //Испарение феромонов
+                PheromoneEvaporation(Graf, Agent);
+            }
+
+        }
+
+        public static int GettingInputData(int n, int[] m, int iterationCount, int antCount) //Получение исходныхи данных
+        {
+            return 0;
+        }
+
+        public static int CreateGraf(int n, int[] m, List<GrafParams> graf) //Создание графа 
+        {
             //Заполнение списка элементов графа 
             int id = 0;
-            for (int i = 0; i < N; i++)
+            for (int i = 0; i < n; i++)
             {
-                for (int j = 0; j < M; j++)
+                for (int j = 0; j < m[i]; j++)
                 {
-                    Graf.Add(new GrafParams() { idParam = id, numParam = i, pheromones = 1, selectNum = 0 });
+                    graf.Add(new GrafParams() { idParam = id, numParam = i, pheromones = 1, selectNum = 0 });
                     id++;
                 }
             }
-            foreach (GrafParams element in Graf)
+
+            foreach (GrafParams element in graf)
             {
                 Console.WriteLine(element);
                 //Console.WriteLine("Num: {grafParams.NumParam}; Znach: {grafParams.Pheromones}");
             }
 
-
-            //Создание группы агентов
-            List<AgentGroup> Agent = new List<AgentGroup>(); //Список агентов
-            //Прохождение K агентов
-            for (int i = 0; i < ANT_COUNT; i++)
-            {
-                Agent.Add(new AgentGroup() { idAgent = i });
-
-                //Определение пути агента
-                int[] newWayAgent;
-                bool flagFindWay = false;
-                do
-                {
-                    newWayAgent = AgentMoving(N, M, Graf);
-                    //Вычисление Хэша пути
-                    string hashWay = GetHash(newWayAgent);
-                    Console.WriteLine(hashWay);
-
-                    //Сравнение Хэша со значениями таблицы
-                    if (!hashTable.ContainsKey(hashWay))
-                    {
-                        hashTable.Add(hashWay, newWayAgent); //Добавление нового ключа в таблицй
-                        flagFindWay = true;
-                    }
-
-                } while (!flagFindWay);
-
-
-                //Сохранение пути агента
-                Agent[i].wayAgent.AddRange(newWayAgent);
-                Console.WriteLine(Agent[i]);
-
-
-            }
-
-            //Занесение феромона
-            for (int i = 0; i < ANT_COUNT; i++)
-            {
-                Agent[i].delta = AddPheromone(N, M, Agent[i].wayAgent, Graf);
-            }
-
-            //Испарение феромонов
-            PheromoneEvaporation(N, M, Graf, Agent);
-
-
+            return 0;
         }
 
-
-        public static int[] AgentMoving(int n, int m, List<GrafParams> graf)
+        public static int[] AgentMoving(int n, int[] m, List<GrafParams> graf)
         {
 
             int[] way = new int[n]; //Выбранный путь           
 
-            for (int i = 0; i < graf.Count; i += m)
+            int i = 0;
+            int k = 0;
+            while (i < graf.Count)
             {
                 //Выбор следующей вершины
-                ChoiceNextVertex(i, m, graf, way);
+                ChoiceNextVertex(i, m[k], graf, way);
+                i += m[k] - 1;
+                k++;
             }
+
+            //for (int i = 0; i < graf.Count; i += m)
+            //{
+            //    //Выбор следующей вершины
+            //    ChoiceNextVertex(i, m, graf, way);
+            //}
 
             for (int j = 0; j < n; j++)
             {
@@ -140,7 +170,8 @@ namespace AntColonyMethod
             return way;
         }
 
-        public static int ChoiceNextVertex(int i, int m, List<GrafParams> graf, int[] way) //Выбор следующей вершины
+        public static int ChoiceNextVertex(int i, //Точка начала просмотра графа 
+                                           int m, List<GrafParams> graf, int[] way) //Выбор следующей вершины
         {
 
             int sumPheromones = 0;
@@ -190,9 +221,9 @@ namespace AntColonyMethod
             return 0;
         }
 
-        public static double AddPheromone(int n, int m, List<int> way, List<GrafParams> graf) //Добавление феромонов
+        public static double AddPheromone(int n, int[] m, List<int> way, List<GrafParams> graf) //Добавление феромонов
         {
-            int func = Function(n, m, way); //Значение целевой фцнкции
+            int func = TargetFunction(way); //Значение целевой фцнкции
             int q = 100; //Общее число феромонов
             int delta = q / func;
 
@@ -203,13 +234,13 @@ namespace AntColonyMethod
             return delta;
         }
 
-        public static int Function(int n, int m, List<int> way) //Подсчет целивой функции
+        public static int TargetFunction(List<int> way) //Подсчет целивой функции
         {
             int Value = 1;
             return Value;
         }
 
-        public static int PheromoneEvaporation(int n, int m, List<GrafParams> graf, List<AgentGroup> agent) //Испарение феромона
+        public static int PheromoneEvaporation(List<GrafParams> graf, List<AgentGroup> agent) //Испарение феромона
         {
             double L = 0.2;
             foreach (GrafParams grafElem in graf)
