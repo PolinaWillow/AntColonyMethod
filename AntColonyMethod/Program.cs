@@ -10,15 +10,14 @@ namespace AntColonyMethod
     {
         public int idParam { get; set; }
         public int numParam { get; set; }
+        public int valueParam { get; set; }
         public int pheromones { get; set; }
 
         public int selectNum { get; set; }
 
-        //public int Delta { get; set; }
-
         public override string ToString()
         {
-            return "IdParam: " + idParam + "   NumParam: " + numParam + "   Pheromones: " + pheromones;
+            return "IdParam: " + idParam + "   NumParam: " + numParam + "   ValueParam: " + valueParam + "   Pheromones: " + pheromones;
         }
     }
 
@@ -49,7 +48,8 @@ namespace AntColonyMethod
         {
             //Входные переменные
             int N = 4; //Количество параметров
-            int[] M = new int[N]; //Массив для хранения количество значений параметров
+            //int[] M = new int[N]; //Массив для хранения количество значений параметров
+            int[] M = { 3, 1, 2, 5 }; //Тестовые значения
             int iterationCount = 10; // Число итераций в алгоритме
             int antCount = 3; //Количество муравьев
 
@@ -63,6 +63,10 @@ namespace AntColonyMethod
             List<GrafParams> Graf = new List<GrafParams>(); //Список элементов Graf
             CreateGraf(N, M, Graf);
 
+            //Список всех возможных путей
+            //List<int[]> WayList = new List<int[]>();
+            //CreateListWay(N, M, WayList, Graf);
+
             //Прохождение всех итераций
             for (int j = 0; j < iterationCount; j++)
             {
@@ -75,10 +79,10 @@ namespace AntColonyMethod
 
                     //Определение пути агента
                     int[] newWayAgent;
-                    bool flagFindWay = false;
+                    newWayAgent = AgentMoving(N, M, Graf);
+                   
                     do
-                    {
-                        newWayAgent = AgentMoving(N, M, Graf);
+                    {                       
                         //Вычисление Хэша пути
                         string hashWay = GetHash(newWayAgent);
                         Console.WriteLine(hashWay);
@@ -86,11 +90,18 @@ namespace AntColonyMethod
                         //Сравнение Хэша со значениями таблицы
                         if (!hashTable.ContainsKey(hashWay))
                         {
-                            hashTable.Add(hashWay, newWayAgent); //Добавление нового ключа в таблицй
-                            flagFindWay = true;
+                            hashTable.Add(hashWay, newWayAgent); //Добавление нового ключа в таблицй                            
+                            break;
+                        }
+                        else 
+                        {
+                            newWayAgent = AgentMoving(N, M, Graf);
+
+                            //Поиск нового пути по бинарному дереву
+                            //newWayAgent = FindNewWay(N, Graf);
                         }
 
-                    } while (!flagFindWay);
+                    } while (true);
 
 
                     //Сохранение пути агента
@@ -117,7 +128,7 @@ namespace AntColonyMethod
         {
             return 0;
         }
-
+ 
         public static int CreateGraf(int n, int[] m, List<GrafParams> graf) //Создание графа 
         {
             //Заполнение списка элементов графа 
@@ -151,15 +162,9 @@ namespace AntColonyMethod
             {
                 //Выбор следующей вершины
                 ChoiceNextVertex(i, m[k], graf, way);
-                i += m[k] - 1;
+                i += m[k];
                 k++;
             }
-
-            //for (int i = 0; i < graf.Count; i += m)
-            //{
-            //    //Выбор следующей вершины
-            //    ChoiceNextVertex(i, m, graf, way);
-            //}
 
             for (int j = 0; j < n; j++)
             {
@@ -254,9 +259,7 @@ namespace AntColonyMethod
                         if (wayElem == grafElem.idParam)
                             Evaporation += (1 - L) * agentElem.delta;
                     }
-                }
-
-                //element.Pheromones = Convert.ToInt32(Evaporation);
+                }               
             }
 
             return 0;
@@ -282,6 +285,24 @@ namespace AntColonyMethod
                 sOutput.Append(arrInput[i].ToString("X2"));
             }
             return sOutput.ToString();
+        }
+
+        public static int CreateListWay(int n, int[] m, List<int[]> wayList, List<GrafParams> graf) //Создание списка всех возможных путей 
+        {           
+            //Определение длины списка
+            int listLength = 1;
+            foreach (int elem in m) {
+                listLength = listLength * elem;
+            }
+
+            int[] way = new int[n];
+
+            return 0;
+        }
+
+        public static int[] FindNewWay(int n, List<GrafParams> graf) {
+            int[] newWay = new int[n];
+            return newWay;
         }
     }
 }
