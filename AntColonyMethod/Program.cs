@@ -49,7 +49,8 @@ namespace AntColonyMethod
         {
             //Массив феромонов для графа 3*4
             int N = 4; //Количество параметров
-            int M = 3; //Количество значений параметров            
+            int M = 3; //Количество значений параметров
+            int iterationCount = 10; // Число итераций в алгоритме
 
             //Создание Хэш-таблицы
             Hashtable hashTable = new Hashtable();
