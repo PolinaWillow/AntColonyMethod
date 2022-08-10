@@ -21,7 +21,7 @@ namespace AntColonyMethod
         static void Main(string[] args)
         {
             //Входные переменные
-            int N = 0; //Количество параметров
+            int N; //Количество параметров
             List<int> M = new List<int>(); //Список для хранения количества значений параметров
             List<string> valueData = new List<string>(); //Список входных значений
 
