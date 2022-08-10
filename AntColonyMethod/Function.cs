@@ -27,5 +27,48 @@ namespace AntColonyMethod
             }
             return Value;
         }
+
+        //public static string[] FindMaxFunction(List<int> way, List<GrafParams> graf, int n, double min) {
+        //    double valueFunction = TargetFunction(way, graf, n); //Вычисление значений критериев
+        //    //Console.WriteLine("Значение критерия: " + valueFunction + "\n");
+
+        //    string[] maxFunction = new string[n + 1];
+        //    //double min = double.MinValue;
+            
+        //    //Поиск максимума         
+        //    if (valueFunction >= min)
+        //    {
+        //        maxFunction[0] = Convert.ToString(valueFunction);
+        //        for (int k = 1; k < n + 1; k++)
+        //        {
+        //            maxFunction[k] = graf[way[k - 1]].valueParam;
+        //        }
+        //        min = valueFunction;
+        //    }
+
+        //    return maxFunction;
+        //}
+
+        //public static string[] FindMinFunction(List<int> way, List<GrafParams> graf, int n, double max)
+        //{
+        //    double valueFunction = TargetFunction(way, graf, n); //Вычисление значений критериев
+        //    //Console.WriteLine("Значение критерия: " + valueFunction + "\n");
+
+        //    string[] minFunction = new string[n + 1];
+        //    //double max = double.MaxValue;
+
+        //    //Поиск минимума и максимума критериев
+        //    if (valueFunction <= max)
+        //    {
+        //        minFunction[0] = Convert.ToString(valueFunction);
+        //        for (int k = 1; k < n + 1; k++)
+        //        {
+        //            minFunction[k] = graf[way[k - 1]].valueParam;
+        //        }
+        //        max = valueFunction;
+        //    }
+            
+        //    return minFunction;
+        //}
     }
 }

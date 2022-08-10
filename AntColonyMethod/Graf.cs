@@ -8,6 +8,9 @@ namespace AntColonyMethod
 {
     class Graf
     {
+        public static int Q = 100;  //Общее число феромонов
+        public static double L = 0.9; //Коэфициент пересчета испарения феромонов
+
         public List<GrafParams> Params = new List<GrafParams>();
 
         public int InitialGraf()
@@ -139,7 +142,7 @@ namespace AntColonyMethod
             return 0;
         }
 
-        public double AddPheromone(int n, List<int> m, List<int> way, double function, double Q) //Добавление феромонов
+        public double AddPheromone(int n, List<int> m, List<int> way, double function) //Добавление феромонов
         {
             double eps =0.0000000000000001;
             double delta = Q / (function + eps);
@@ -152,7 +155,7 @@ namespace AntColonyMethod
             return delta;
         }
 
-        public int PheromoneEvaporation(List<Agent> agent, double L) //Испарение феромона
+        public int PheromoneEvaporation(List<Agent> agent) //Испарение феромона
         {
             //double L = 0.2;
             foreach (GrafParams grafElem in Params)
@@ -164,10 +167,16 @@ namespace AntColonyMethod
                     foreach (int wayElem in agentElem.wayAgent)
                     {
                         if (wayElem == grafElem.idParam)
+                        {
                             Evaporation += (1 - L) * agentElem.delta;
+                            //Console.WriteLine(Evaporation);
+                        }
                     }
                 }
+                grafElem.pheromones = Evaporation;
             }
+
+            //PrintGraf();
 
             return 0;
         }
