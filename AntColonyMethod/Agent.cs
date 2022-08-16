@@ -9,6 +9,9 @@ namespace AntColonyMethod
 {
     class Agent
     {
+        /// <summary>
+        /// Идентификатор агента
+        /// </summary>
         public int idAgent { get; set; }
         public double delta { get; set; }
 
@@ -23,7 +26,17 @@ namespace AntColonyMethod
             }
             return result;
         }
-        public static int[] FindAgentWay_Method2(int n, List<int> m, Graf graf, Hashtable hashTable, int controlCount) {
+
+        /// <summary>
+        /// Определениие пути агента (Вариант 2)
+        /// </summary>
+        /// <param name="n">Количество параметров</param>
+        /// <param name="m"></param>
+        /// <param name="graf"></param>
+        /// <param name="hashTable"></param>
+        /// <param name="controlCount"></param>
+        /// <returns>Путь агента в виде списка</returns>
+        public int[] FindAgentWay_Method2(int n, List<int> m, Graf graf, Hashtable hashTable, int controlCount) {
             int[] wayAgent;
             do
             {
@@ -46,7 +59,7 @@ namespace AntColonyMethod
 
             return wayAgent;
         }
-        public static int[] FindAgentWay_Method1(int n, List<int> m, Graf graf, Hashtable hashTable) {
+        public int[] FindAgentWay_Method1(int n, List<int> m, Graf graf, Hashtable hashTable) {
             int[] wayAgent;
             wayAgent = graf.FindWay(n, m); //Генерация первичного пути
                                            //Вычисление Хэша пути
@@ -68,7 +81,7 @@ namespace AntColonyMethod
 
         }
 
-        public static int NextWay(int[] way, int nomParam, Graf graf)
+        public int NextWay(int[] way, int nomParam, Graf graf)
         {
             //Создаем и заполняем сиписок слоя
             List<int> Layer = new List<int>();
@@ -84,7 +97,7 @@ namespace AntColonyMethod
             return 0;
         }
 
-        public static int[] FindAlternativeWay(int n, Graf graf, int[] startWay, Hashtable hashTable, string hashWay)
+        public int[] FindAlternativeWay(int n, Graf graf, int[] startWay, Hashtable hashTable, string hashWay)
         {
             int nomParam = 0; //Номер параметра
             int[] newWay = new int[n]; //Новый путь

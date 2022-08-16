@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace AntColonyMethod
 {
-    class Function
+    class TargetFunction
     {
-        public static double TargetFunction(List<int> way, List<GrafParams> graf, int n) //Подсчет целивой функции
+        public double FindValue(List<int> way, List<GrafParams> graf, int n) //Подсчет целивой функции
         {
             //way.Clear();
             //way.AddRange(new[] { 1, 9, 13, 23, 42, 45, 63, 73, 75, 86, 98 });
