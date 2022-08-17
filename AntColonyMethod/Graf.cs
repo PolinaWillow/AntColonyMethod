@@ -8,11 +8,19 @@ namespace AntColonyMethod
 {
     class Graf
     {
+        
         public static int Q = 100;  //Общее число феромонов
         public static double L = 0.9; //Коэфициент пересчета испарения феромонов
 
+        /// <summary>
+        /// Список параметров
+        /// </summary>
         public List<GrafParams> Params = new List<GrafParams>();
 
+        /// <summary>
+        /// Инициализация графа
+        /// </summary>
+        /// <returns></returns>
         public int InitialGraf()
         {
             foreach (GrafParams element in Params)
@@ -22,6 +30,10 @@ namespace AntColonyMethod
             return 0;
         }
 
+        /// <summary>
+        /// Печать графа
+        /// </summary>
+        /// <returns></returns>
         public int PrintGraf()
         {
             foreach (GrafParams element in Params)
@@ -32,23 +44,28 @@ namespace AntColonyMethod
             return 0;
         }
 
-        public int CreateGraf(int n, List<int> m, List<string> valueData) //Создание графа 
+        /// <summary>
+        /// Заполнение графа
+        /// </summary>
+        /// <param name="dataTask">Набор исходных данных</param>
+        /// <returns></returns>
+        public int CreateGraf(DataTask dataTask) //Создание графа 
         {
             //Заполнение списка элементов графа 
             int id = 0;
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < dataTask.paramCount; i++)
             {
-                for (int j = 0; j < m[i]; j++)
+                for (int j = 0; j < dataTask.valueCount[i]; j++)
                 {
                     Params.Add(new GrafParams() { idParam = id, numParam = i, pheromones = 1, selectNum = 0 });
 
                     //Опредление типа значения параметра
-                    if (double.TryParse(valueData[id], out double res))
+                    if (double.TryParse(dataTask.valueData[id], out double res))
                     {
                         Params[id].typeParam = TypeNumerator.Double;
                     }
                     else { Params[id].typeParam = TypeNumerator.String; }
-                    Params[id].valueParam = valueData[id];
+                    Params[id].valueParam = dataTask.valueData[id];
 
                     id++;
                 }
@@ -59,18 +76,23 @@ namespace AntColonyMethod
             return 0;
         }
 
-        public int[] FindWay(int n, List<int> m)
+        /// <summary>
+        /// Поиск пути в графе
+        /// </summary>
+        /// <param name="dataTask"></param>
+        /// <returns></returns>
+        public int[] FindWay(DataTask dataTask)
         {
 
-            int[] way = new int[n]; //Выбранный путь           
+            int[] way = new int[dataTask.paramCount]; //Выбранный путь           
 
             int i = 0;
             int k = 0;
             while (i < Params.Count)
             {
                 //Выбор следующей вершины
-                ChoiceNextVertex(i, m[k], way);
-                i += m[k];
+                ChoiceNextVertex(i, dataTask.valueCount[k], way);
+                i += dataTask.valueCount[k];
                 k++;
             }
 
@@ -83,22 +105,28 @@ namespace AntColonyMethod
             return way;
         }
 
-        public int ChoiceNextVertex(int i, //Точка начала просмотра графа 
-                                           int m, int[] way) //Выбор следующей вершины
+        /// <summary>
+        /// Выбор следцющей вершины
+        /// </summary>
+        /// <param name="i">Точка начала просмотра графа </param>
+        /// <param name="valueCount">Список для хранения количества значений параметров</param>
+        /// <param name="way">Путь</param>
+        /// <returns></returns>
+        public int ChoiceNextVertex(int i, int valueCount, int[] way) //Выбор следующей вершины
         {
 
             double sumPheromones = 0;
-            double[] Pij = new double[m];//Массив вероятности попадания
-            int[] Idij = new int[m];//Массив Id рассматриваемых узлов
+            double[] Pij = new double[valueCount];//Массив вероятности попадания
+            int[] Idij = new int[valueCount];//Массив Id рассматриваемых узлов
 
-            for (int j = 0; j < m; j++)
+            for (int j = 0; j < valueCount; j++)
             {
                 sumPheromones += Params[i + j].pheromones;
             }
             //Console.WriteLine("Raram: " + graf[i].numParam + " SumPheromones: "+ sumPheromones);
 
             //Подсчет вероятности попадания
-            for (int j = 0; j < m; j++)
+            for (int j = 0; j < valueCount; j++)
             {
                 Pij[j] = Params[i + j].pheromones / sumPheromones;
                 Idij[j] = Params[i + j].idParam;
@@ -113,7 +141,7 @@ namespace AntColonyMethod
             //Console.WriteLine();
 
             //Переход к случайному параметру
-            double[] intervals = new double[m + 1]; //Определение интервалов попадания
+            double[] intervals = new double[valueCount + 1]; //Определение интервалов попадания
             intervals[0] = 0;
             for (int j = 1; j < intervals.Length; j++)
             {
@@ -142,12 +170,19 @@ namespace AntColonyMethod
             return 0;
         }
 
-        public double AddPheromone(int n, List<int> m, List<int> way, double function) //Добавление феромонов
+        /// <summary>
+        /// Добавление феромонов
+        /// </summary>
+        /// <param name="dataTask">Набор исходных данных</param>
+        /// <param name="way">Путь агента</param>
+        /// <param name="function">Значение искомой функции</param>
+        /// <returns></returns>
+        public double AddPheromone(DataTask dataTask, List<int> way, double functionValue) //Добавление феромонов
         {
             double eps =0.0000000000000001;
-            double delta = Q / (function + eps);
+            double delta = Q / (functionValue + eps);
 
-            for (int i = 0; i < n; i++)
+            for (int i = 0; i < dataTask.paramCount; i++)
             {
                 Params[way[i]].pheromones += delta;
             }
@@ -155,14 +190,19 @@ namespace AntColonyMethod
             return delta;
         }
 
-        public int PheromoneEvaporation(List<Agent> agent) //Испарение феромона
+        /// <summary>
+        /// Изменение феромонов
+        /// </summary>
+        /// <param name="agent">Список агентов</param>
+        /// <returns></returns>
+        public int PheromoneEvaporation(List<Agent> agents) //Испарение феромона
         {
             //double L = 0.2;
             foreach (GrafParams grafElem in Params)
             {
                 double Evaporation = L * Convert.ToDouble(grafElem.pheromones);
 
-                foreach (Agent agentElem in agent)
+                foreach (Agent agentElem in agents)
                 {
                     foreach (int wayElem in agentElem.wayAgent)
                     {

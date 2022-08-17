@@ -12,9 +12,16 @@ namespace AntColonyMethod
         /// <summary>
         /// Идентификатор агента
         /// </summary>
-        public int idAgent { get; set; }
+        public string idAgent { get; set; }
+
+        /// <summary>
+        /// Дельта
+        /// </summary>
         public double delta { get; set; }
 
+        /// <summary>
+        /// Путь Агента
+        /// </summary>
         public List<int> wayAgent = new List<int>();
 
         public override string ToString()
@@ -30,28 +37,25 @@ namespace AntColonyMethod
         /// <summary>
         /// Определениие пути агента (Вариант 2)
         /// </summary>
-        /// <param name="n">Количество параметров</param>
-        /// <param name="m"></param>
-        /// <param name="graf"></param>
-        /// <param name="hashTable"></param>
-        /// <param name="controlCount"></param>
-        /// <returns>Путь агента в виде списка</returns>
-        public int[] FindAgentWay_Method2(int n, List<int> m, Graf graf, Hashtable hashTable, int controlCount) {
+        /// <param name="dataTask">Набор входных данных</param>
+        /// <returns></returns>
+        public int[] FindAgentWay_Method2(DataTask dataTask) {
             int[] wayAgent;
             do
             {
-                wayAgent = graf.FindWay(n, m);                
+                Hash hash = new Hash();
+                wayAgent = dataTask.graf.FindWay(dataTask);                
                 //Вычисление Хэша пути
-                string hashWay = Hash.GetHash(wayAgent);
+                string hashWay = hash.GetHash(wayAgent);
                 //Console.WriteLine("Хэш выбранного пути: "+hashWay);
 
                 //Сравнение Хэша со значениями таблицы
-                if (!hashTable.ContainsKey(hashWay))
+                if (!dataTask.hashTable.ContainsKey(hashWay))
                 {
-                    hashTable.Add(hashWay, wayAgent); //Добавление нового ключа в таблицй                            
+                    hash.AddNewHash(hashWay, wayAgent, dataTask.hashTable); //Добавление нового ключа в таблицй                            
                     break;
                 }
-                if (controlCount == hashTable.Count)
+                if (dataTask.controlCount == dataTask.hashTable.Count)
                 {
                     break;
                 }
@@ -59,21 +63,29 @@ namespace AntColonyMethod
 
             return wayAgent;
         }
-        public int[] FindAgentWay_Method1(int n, List<int> m, Graf graf, Hashtable hashTable) {
+
+        /// <summary>
+        /// Определениие пути агента (Вариант 1)
+        /// </summary>
+        /// <param name="dataTask">Набор входных данных</param>
+        /// <returns></returns>
+        public int[] FindAgentWay_Method1(DataTask dataTask) {
             int[] wayAgent;
-            wayAgent = graf.FindWay(n, m); //Генерация первичного пути
-                                           //Вычисление Хэша пути
-            string hashWay = Hash.GetHash(wayAgent);
-            if (!hashTable.ContainsKey(hashWay))
+            wayAgent = dataTask.graf.FindWay(dataTask); //Генерация первичного пути
+
+            //Вычисление Хэша пути
+            Hash hash = new Hash();
+            string hashWay = hash.GetHash(wayAgent);
+            if (!dataTask.hashTable.ContainsKey(hashWay))
             {
-                hashTable.Add(hashWay, wayAgent); //Добавление нового ключа в таблицй                            
+                hash.AddNewHash(hashWay, wayAgent, dataTask.hashTable); //Добавление нового ключа в таблицй                            
             }
             else
             {
-                int[] newWayAgent = FindAlternativeWay(n, graf, wayAgent, hashTable, hashWay);
-                hashWay = Hash.GetHash(newWayAgent);
-                hashTable.Add(hashWay, newWayAgent);
-                Array.Copy(newWayAgent, 0, wayAgent, 0, n);
+                int[] newWayAgent = FindAlternativeWay(dataTask, wayAgent, hashWay);
+                hashWay = hash.GetHash(newWayAgent);
+                hash.AddNewHash(hashWay, wayAgent, dataTask.hashTable);
+                Array.Copy(newWayAgent, 0, wayAgent, 0, dataTask.paramCount);
 
             }
 
@@ -81,6 +93,13 @@ namespace AntColonyMethod
 
         }
 
+        /// <summary>
+        /// Новый путь агента
+        /// </summary>
+        /// <param name="way">Путь агента</param>
+        /// <param name="nomParam">Номер параметро</param>
+        /// <param name="graf">Граф значений</param>
+        /// <returns></returns>
         public int NextWay(int[] way, int nomParam, Graf graf)
         {
             //Создаем и заполняем сиписок слоя
@@ -97,26 +116,34 @@ namespace AntColonyMethod
             return 0;
         }
 
-        public int[] FindAlternativeWay(int n, Graf graf, int[] startWay, Hashtable hashTable, string hashWay)
+        /// <summary>
+        /// Поиск альтернативного путя агента
+        /// </summary>
+        /// <param name="dataTask">Набор исходных данных</param>
+        /// <param name="startWay">Изменяемый путь</param>
+        /// <param name="hashWay">Хэш пути</param>
+        /// <returns></returns>
+        public int[] FindAlternativeWay(DataTask dataTask, int[] startWay, string hashWay)
         {
             int nomParam = 0; //Номер параметра
-            int[] newWay = new int[n]; //Новый путь
-            Array.Copy(startWay, 0, newWay, 0, n);
+            int[] newWay = new int[dataTask.paramCount]; //Новый путь
+            Hash hash = new Hash();
+            Array.Copy(startWay, 0, newWay, 0, dataTask.paramCount);
 
-            while (hashTable.ContainsKey(hashWay) && (nomParam < n))
+            while (dataTask.hashTable.ContainsKey(hashWay) && (nomParam < dataTask.paramCount))
             {
-                NextWay(newWay, nomParam, graf);
+                NextWay(newWay, nomParam, dataTask.graf);
 
-                if (newWay[nomParam] == startWay[nomParam] && nomParam < n)
+                if (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.paramCount)
                 {
-                    while (newWay[nomParam] == startWay[nomParam] && nomParam < n)
+                    while (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.paramCount)
                     {
                         nomParam += 1;
-                        NextWay(newWay, nomParam, graf);
+                        NextWay(newWay, nomParam, dataTask.graf);
                     }
                     nomParam = 0;
                 }
-                hashWay = Hash.GetHash(newWay);
+                hashWay = hash.GetHash(newWay);
             }
 
             return newWay;

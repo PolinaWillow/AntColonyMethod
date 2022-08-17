@@ -9,15 +9,29 @@ namespace AntColonyMethod
 {
     class AgentGroup
     {
+        /// <summary>
+        /// Монитор
+        /// </summary>
         private object _monitor;
+        
+        /// <summary>
+        /// Список агентов
+        /// </summary>
         public List<Agent> Agents { get; set; }
 
+        /// <summary>
+        /// Конструктор
+        /// </summary>
         public AgentGroup() {
             _monitor = new object();
             Agents = new List<Agent>();
         }
 
-        public void AddNewAgent(int id) {
+        /// <summary>
+        /// Добавление нового агента
+        /// </summary>
+        /// <param name="id">Id агента</param>
+        public void AddNewAgent(string id) {
             Monitor.Enter(_monitor);
 
             Agent agent = new Agent { idAgent = id };
@@ -26,7 +40,12 @@ namespace AntColonyMethod
             Monitor.Exit(_monitor);
         }
 
-        public void AddWayAgent(int[] wayAgent, int id) {
+        /// <summary>
+        /// Добавление пути агента
+        /// </summary>
+        /// <param name="wayAgent">Путь агента</param>
+        /// <param name="id">Id агента</param>
+        public void AddWayAgent(int[] wayAgent, string id) {
             Monitor.Enter(_monitor);
 
             Agent agent = Agents.FirstOrDefault(r => r.idAgent == id);
@@ -37,7 +56,12 @@ namespace AntColonyMethod
             Monitor.Exit(_monitor);
         }
 
-        public Agent FindAgent(int id) {
+        /// <summary>
+        /// Поиск агента по Id
+        /// </summary>
+        /// <param name="id">Id агента</param>
+        /// <returns></returns>
+        public Agent FindAgent(string id) {
             Monitor.Enter(_monitor);
 
             Agent agent = Agents.FirstOrDefault(r => r.idAgent == id);
@@ -47,9 +71,7 @@ namespace AntColonyMethod
                 return agent;
             }
            
-            return null;
-
-            
+            return null;            
         }
     }
 }

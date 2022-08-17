@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace AntColonyMethod
 {
+    /// <summary>
+    /// Нумератор
+    /// </summary>
     enum TypeNumerator
     {       
         Double =0,

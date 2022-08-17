@@ -8,13 +8,20 @@ namespace AntColonyMethod
 {
     class TargetFunction
     {
-        public double FindValue(List<int> way, List<GrafParams> graf, int n) //Подсчет целивой функции
+        /// <summary>
+        /// Подсчет значения целефой функции
+        /// </summary>
+        /// <param name="way">Выбранный путь</param>
+        /// <param name="graf">Граф</param>
+        /// <param name="paramCount">Количество параметров</param>
+        /// <returns></returns>
+        public double FindValue(List<int> way, List<GrafParams> graf, int paramCount) //Подсчет целивой функции
         {
             //way.Clear();
             //way.AddRange(new[] { 1, 9, 13, 23, 42, 45, 63, 73, 75, 86, 98 });
 
-            double[] path = new double[n - 1];
-            for (int i = 0; i < n - 1; i++)
+            double[] path = new double[paramCount - 1];
+            for (int i = 0; i < paramCount - 1; i++)
             {
                 path[i] = Convert.ToDouble(graf[way[i]].valueParam);
             }
@@ -28,47 +35,56 @@ namespace AntColonyMethod
             return Value;
         }
 
-        //public static string[] FindMaxFunction(List<int> way, List<GrafParams> graf, int n, double min) {
-        //    double valueFunction = TargetFunction(way, graf, n); //Вычисление значений критериев
-        //    //Console.WriteLine("Значение критерия: " + valueFunction + "\n");
+        /// <summary>
+        /// Поиск максимума функции
+        /// </summary>
+        /// <param name="dataTask">Набор исходных данных</param>
+        /// <param name="agent">Проверяемый агент</param>
+        /// <param name="max">Значене максимума</param>
+        /// <param name="maxFunction">Массив для хранения максимума и пути его получения</param>
+        /// <param name="wayAgent">Путь агента</param>
+        /// <returns></returns>
+        public double FindMaxFunction(DataTask dataTask, Agent agent, double max, string[] maxFunction, int[] wayAgent)
+        {
+            double valueFunction = FindValue(agent.wayAgent, dataTask.graf.Params, dataTask.paramCount); //Вычисление значений критериев
+                                                                                                                        //Console.WriteLine("Значение критерия: " + valueFunction + "\n");
+            if (valueFunction >= max)
+            {
+                maxFunction[0] = Convert.ToString(valueFunction);
+                for (int k = 1; k < dataTask.paramCount + 1; k++)
+                {
+                    maxFunction[k] = dataTask.graf.Params[wayAgent[k - 1]].valueParam;
+                }
+                max = valueFunction;
+            }
 
-        //    string[] maxFunction = new string[n + 1];
-        //    //double min = double.MinValue;
-            
-        //    //Поиск максимума         
-        //    if (valueFunction >= min)
-        //    {
-        //        maxFunction[0] = Convert.ToString(valueFunction);
-        //        for (int k = 1; k < n + 1; k++)
-        //        {
-        //            maxFunction[k] = graf[way[k - 1]].valueParam;
-        //        }
-        //        min = valueFunction;
-        //    }
+            return max;
+        }
 
-        //    return maxFunction;
-        //}
+        /// <summary>
+        /// Поиск минимума функции
+        /// </summary>
+        /// <param name="dataTask">Набор исходных данных</param>
+        /// <param name="agent">Проверяемый агент</param>
+        /// <param name="min">Значене минимума</param>
+        /// <param name="minFunction">Массив для хранения минимума и пути его получения</param>
+        /// <param name="wayAgent">Путь агента</param>
+        /// <returns></returns>
+        public double FindMinFunction(DataTask dataTask, Agent agent, double min, string[] minFunction, int[] wayAgent)
+        {
+            double valueFunction = FindValue(agent.wayAgent, dataTask.graf.Params, dataTask.paramCount); //Вычисление значений критериев
+                                                                                                         //Console.WriteLine("Значение критерия: " + valueFunction + "\n");
+            if (valueFunction <= min)
+            {
+                minFunction[0] = Convert.ToString(valueFunction);
+                for (int k = 1; k < dataTask.paramCount + 1; k++)
+                {
+                    minFunction[k] = dataTask.graf.Params[wayAgent[k - 1]].valueParam;
+                }
+                min = valueFunction;
+            }
 
-        //public static string[] FindMinFunction(List<int> way, List<GrafParams> graf, int n, double max)
-        //{
-        //    double valueFunction = TargetFunction(way, graf, n); //Вычисление значений критериев
-        //    //Console.WriteLine("Значение критерия: " + valueFunction + "\n");
-
-        //    string[] minFunction = new string[n + 1];
-        //    //double max = double.MaxValue;
-
-        //    //Поиск минимума и максимума критериев
-        //    if (valueFunction <= max)
-        //    {
-        //        minFunction[0] = Convert.ToString(valueFunction);
-        //        for (int k = 1; k < n + 1; k++)
-        //        {
-        //            minFunction[k] = graf[way[k - 1]].valueParam;
-        //        }
-        //        max = valueFunction;
-        //    }
-            
-        //    return minFunction;
-        //}
+            return min;
+        }
     }
 }
