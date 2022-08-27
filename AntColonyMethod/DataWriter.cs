@@ -19,9 +19,9 @@ namespace AntColonyMethod
         /// </summary>
         /// <param name="dataTask">Набор входых данных</param>
         /// <returns></returns>
-        public string CreateOutputFile(DataTask dataTask) {
-            string outputDataFile = CreateFileName(); //Получение имени выходного файла
-            Console.WriteLine(outputDataFile);
+        public string CreateOutputFile(DataTask dataTask)
+        {
+            string outputDataFile = CreateFileName("OutputData"); //Получение имени выходного файла
 
             // Создание файла и запись в него
             FileInfo fileInf = new FileInfo(outputDataFile);
@@ -33,7 +33,7 @@ namespace AntColonyMethod
                 {
                     sw.WriteLine("Работа без разделения на потоки\n");
                 }
-                else 
+                else
                 {
                     sw.WriteLine("Работа c разделением на потоки\n");
                 }
@@ -44,9 +44,11 @@ namespace AntColonyMethod
                     sw.WriteLine(Convert.ToString(elem));
                 }
                 sw.WriteLine("\n\n");
+
+                sw.Close();
             }
 
-                return outputDataFile;
+            return outputDataFile;
         }
 
         /// <summary>
@@ -56,7 +58,7 @@ namespace AntColonyMethod
         /// <param name="numIteration">№ итерации</param>
         /// <param name="maxFunction">Массив зранения максимума</param>
         /// <param name="minFunction">Массив хранения минимума</param>
-        public void GettingOutputData( string outputDataFile, int numIteration, string[] maxFunction, string[] minFunction) 
+        public void GettingOutputData(string outputDataFile, int numIteration, string[] maxFunction, string[] minFunction)
         {
             using (StreamWriter sw = new StreamWriter(outputDataFile, true))
             {
@@ -68,6 +70,8 @@ namespace AntColonyMethod
                 sw.WriteLine("Минимум: " + strMinFunction);
                 sw.WriteLine("Максимум: " + strMaxFunction);
                 sw.WriteLine("\n");
+
+                sw.Close();
             }
 
         }
@@ -75,7 +79,8 @@ namespace AntColonyMethod
         /// <summary>
         /// Создание имени файла
         /// </summary>
-        public string CreateFileName() {
+        public string CreateFileName(string nameFile)
+        {
             //Получение текущей даты
             DateTime today = DateTime.Now;
 
@@ -85,9 +90,56 @@ namespace AntColonyMethod
             createData = createData.Replace(":", "-");
             createData = createData.Replace(".", "-");
             //Формирование имени
-            string fileName = "ResultsWork/OutputData_" + createData + ".txt";
+            string fileName = "ResultsWork/" + nameFile + "_" + createData + ".txt";
 
             return fileName;
         }
+
+        public string CreateStatisticsOutputFile(StatisticsCollection statisticsCollection)
+        {
+            string outputDataFile = CreateFileName("Statistics"); //Получение имени выходного файла
+
+            // Создание файла и запись в него
+            FileInfo fileInf = new FileInfo(outputDataFile);
+
+            using (StreamWriter sw = fileInf.CreateText())
+            {
+                sw.WriteLine("Сбор статистики");
+
+                sw.Close();
+            }
+
+            return outputDataFile;
+        }
+
+        /// <summary>
+        /// Заполнение выходного файла со статистикой
+        /// </summary>
+        /// <param name="outputDataFile">Название выходного файла</param>
+        public void GettingOutputData(string outputDataFile, StatisticsCollection statisticsCollection, DataTask dataTask)
+        {
+            using (StreamWriter sw = new StreamWriter(outputDataFile, true))
+            {
+                //Запись результата              
+                sw.WriteLine("Количество агентов: "+ dataTask.antCount+ "\tИтерация прогона: " + statisticsCollection.LaunchesCount);
+                sw.WriteLine("MIteration: " + statisticsCollection.MIteration);
+                sw.WriteLine("DIteration: " + statisticsCollection.DIteration);
+                sw.WriteLine("MSolution: " + statisticsCollection.MSolution);
+                sw.WriteLine("DSolution: " + statisticsCollection.DSolution);
+                sw.WriteLine("Количество попаданий в интервал: ");
+
+                sw.WriteLine("100%: " + statisticsCollection.HitCount[0]);
+                for (int i=1; i< statisticsCollection.NumHitPercentage; i++) 
+                {
+                    sw.WriteLine(statisticsCollection.PercentageList[i] + "%: " + statisticsCollection.HitCount[i]);
+                }
+
+                sw.WriteLine("\n");
+
+                sw.Close();
+            }
+
+        }
+
     }
 }

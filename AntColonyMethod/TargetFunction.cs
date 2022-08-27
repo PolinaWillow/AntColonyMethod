@@ -17,9 +17,6 @@ namespace AntColonyMethod
         /// <returns></returns>
         public double FindValue(List<int> way, List<GrafParams> graf, int paramCount) //Подсчет целивой функции
         {
-            //way.Clear();
-            //way.AddRange(new[] { 1, 9, 13, 23, 42, 45, 63, 73, 75, 86, 98 });
-
             double[] path = new double[paramCount - 1];
             for (int i = 0; i < paramCount - 1; i++)
             {
@@ -73,7 +70,7 @@ namespace AntColonyMethod
         public double FindMinFunction(DataTask dataTask, Agent agent, double min, string[] minFunction, int[] wayAgent)
         {
             double valueFunction = FindValue(agent.wayAgent, dataTask.graf.Params, dataTask.paramCount); //Вычисление значений критериев
-                                                                                                         //Console.WriteLine("Значение критерия: " + valueFunction + "\n");
+                                                                                            
             if (valueFunction <= min)
             {
                 minFunction[0] = Convert.ToString(valueFunction);

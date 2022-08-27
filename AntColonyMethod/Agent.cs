@@ -136,9 +136,9 @@ namespace AntColonyMethod
 
                 if (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.paramCount)
                 {
-                    while (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.paramCount)
+                    while (newWay[nomParam] == startWay[nomParam] && nomParam < (dataTask.paramCount-1))
                     {
-                        nomParam += 1;
+                        nomParam += 1;                       
                         NextWay(newWay, nomParam, dataTask.graf);
                     }
                     nomParam = 0;

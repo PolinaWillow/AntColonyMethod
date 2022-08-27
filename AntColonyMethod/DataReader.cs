@@ -23,19 +23,17 @@ namespace AntColonyMethod
             DataTask dataTask = new DataTask();
             using (var sr = new StreamReader(PATH_TEST_FILE_DATA))
             {
+                //Чтение числа итераций
+                string iterationCountStr = sr.ReadLine();
+                dataTask.iterationCount = Convert.ToInt32(iterationCountStr);
+
                 //Чтение числа пораметров
                 string countParam = sr.ReadLine();
                 dataTask.paramCount = Convert.ToInt32(countParam);
-                //Console.WriteLine(n + "\n");
 
                 //Определение массива количества значений параметров
                 string countValueParam = sr.ReadLine();
                 dataTask.valueCount.AddRange(countValueParam.Split(' ').Select(x => Convert.ToInt32(x)).ToList());
-
-                //foreach (int mElem in m)
-                //{
-                //    Console.Write(mElem + " ");
-                //}
 
                 //Считывание всех значений параметров 
                 for (int i = 0; i < dataTask.paramCount; i++)
@@ -43,11 +41,6 @@ namespace AntColonyMethod
                     string valueParam = sr.ReadLine();
                     dataTask.valueData.AddRange(valueParam.Split(' '));
                 }
-                //Console.WriteLine();
-                //foreach (string elem in valueData)
-                //{
-                //    Console.Write(elem + " ");
-                //}
 
                 sr.Close();
             }

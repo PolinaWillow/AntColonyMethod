@@ -22,23 +22,56 @@ namespace AntColonyMethod
         /// <summary>
         /// Список для хранения количества значений параметров
         /// </summary>
-        public List<int> valueCount = new List<int>();
+        public List<int> valueCount { get; set; }
 
         /// <summary>
         /// Список входных значений
         /// </summary>
-        public List<string> valueData = new List<string>();
+        public List<string> valueData { get; set; }
 
         /// <summary>
         ///  Хэш-таблица для хранения хэшей путей
         /// </summary>
-        public Hashtable hashTable = new Hashtable();
+        public Hashtable hashTable { get; set; }
 
-        public Graf graf = new Graf();
+        /// <summary>
+        /// Граф параметров
+        /// </summary>
+        public Graf graf { get; set; }
+
+        /// <summary>
+        /// Число итераций в алгоритме
+        /// </summary>
+        public int iterationCount { get; set; }
+
+        /// <summary>
+        /// Количество муравьев
+        /// </summary>
+        public int antCount { get; set; }
 
         /// <summary>
         /// Наличие или отсутствие потоков
         /// </summary>
-        public bool availabilityThread = false;
+        public bool availabilityThread { get; set; }
+
+        public DataTask() {
+            valueCount = new List<int>();
+            valueData = new List<string>();
+            hashTable = new Hashtable();
+            graf = new Graf();
+            availabilityThread = false;
+            antCount = 5;
+            iterationCount = 0;
+        }
+
+        /// <summary>
+        /// Обнуление изменений входных данных
+        /// </summary>
+        public void ResetDatatTask() {
+            graf.InitialGraf();
+            hashTable.Clear();
+        }
+
+
     }
 }

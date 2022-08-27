@@ -94,14 +94,7 @@ namespace AntColonyMethod
                 ChoiceNextVertex(i, dataTask.valueCount[k], way);
                 i += dataTask.valueCount[k];
                 k++;
-            }
-
-            //for (int j = 0; j < n; j++)
-            //{
-            //    Console.Write(" " + way[j]);
-            //}
-            //Console.WriteLine();
-
+            }         
             return way;
         }
 
@@ -123,7 +116,6 @@ namespace AntColonyMethod
             {
                 sumPheromones += Params[i + j].pheromones;
             }
-            //Console.WriteLine("Raram: " + graf[i].numParam + " SumPheromones: "+ sumPheromones);
 
             //Подсчет вероятности попадания
             for (int j = 0; j < valueCount; j++)
@@ -131,14 +123,6 @@ namespace AntColonyMethod
                 Pij[j] = Params[i + j].pheromones / sumPheromones;
                 Idij[j] = Params[i + j].idParam;
             }
-
-            //Console.Write("Вероятности попадания: ");
-            //foreach (double elem in Pij) 
-            //{
-            //    Console.Write(elem + "  ");
-
-            //}
-            //Console.WriteLine();
 
             //Переход к случайному параметру
             double[] intervals = new double[valueCount + 1]; //Определение интервалов попадания
@@ -197,7 +181,7 @@ namespace AntColonyMethod
         /// <returns></returns>
         public int PheromoneEvaporation(List<Agent> agents) //Испарение феромона
         {
-            //double L = 0.2;
+            //Умножаем для максимума, делаим для минимума
             foreach (GrafParams grafElem in Params)
             {
                 double Evaporation = L * Convert.ToDouble(grafElem.pheromones);
@@ -209,15 +193,11 @@ namespace AntColonyMethod
                         if (wayElem == grafElem.idParam)
                         {
                             Evaporation += (1 - L) * agentElem.delta;
-                            //Console.WriteLine(Evaporation);
                         }
                     }
                 }
                 grafElem.pheromones = Evaporation;
             }
-
-            //PrintGraf();
-
             return 0;
         }
     }
