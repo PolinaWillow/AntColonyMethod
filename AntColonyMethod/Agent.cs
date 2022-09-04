@@ -69,7 +69,7 @@ namespace AntColonyMethod
         /// </summary>
         /// <param name="dataTask">Набор входных данных</param>
         /// <returns></returns>
-        public int[] FindAgentWay_Method1(DataTask dataTask) {
+        public int[] FindAgentWay_Method1(DataTask dataTask, StatisticsCollection statistics) {
             int[] wayAgent;
             wayAgent = dataTask.graf.FindWay(dataTask); //Генерация первичного пути
 

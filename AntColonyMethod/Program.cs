@@ -52,7 +52,7 @@ namespace AntColonyMethod
                     max = double.MinValue;
                     min = double.MaxValue;
                     dataTask.ResetDatatTask();
-                    statistics.ResetStatistics();
+                    statistics.ResetStatistics();                   
 
                     //Прохождение всех итераций
                     for (int j = 0; j < dataTask.iterationCount; j++)
@@ -67,19 +67,18 @@ namespace AntColonyMethod
                         {
                             Parallel.For(0, dataTask.antCount, (i, state) =>
                             {
-                                AgentPassage(dataTask, agentGroup, CountAgent, attempt, min, max, maxFunction, minFunction, statistics);
+                                AgentPassage(dataTask, agentGroup, CountAgent, attempt, min, max, maxFunction, minFunction, statistics, j);
                                 max = Convert.ToDouble(maxFunction[0]);
-                                min = Convert.ToDouble(minFunction[0]);
+                                min = Convert.ToDouble(minFunction[0]);                                
                             });
                         }
                         else
                         {
                             for (int i = 0; i < dataTask.antCount; i++)
                             {
-                                AgentPassage(dataTask, agentGroup, CountAgent, attempt, min, max, maxFunction, minFunction, statistics);
+                                AgentPassage(dataTask, agentGroup, CountAgent, attempt, min, max, maxFunction, minFunction, statistics, j);
                                 max = Convert.ToDouble(maxFunction[0]);
-                                min = Convert.ToDouble(minFunction[0]);
-                                //Console.WriteLine("min = " + min);
+                                min = Convert.ToDouble(minFunction[0]);                                                             
                             }
                         }
 
@@ -100,6 +99,13 @@ namespace AntColonyMethod
                         //Сбор статистики после каждой итерации
                         statistics.UniqueSolutionCount = dataTask.antCount;
                         statistics.CollectingStat(j, statistics.UniqueSolutionCount);
+
+                        //Если все решения просмотрениы, а итерации еще не закончены
+                        if (dataTask.hashTable.Count == dataTask.controlCount)
+                        {
+                            Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено");
+                            break;
+                        }
                     }
 
                     //Запись статистики в файл
@@ -112,7 +118,7 @@ namespace AntColonyMethod
             }
         }
 
-        public static void AgentPassage(DataTask dataTask, AgentGroup agentGroup, int CountAgent, int attempt, double min, double max, string[] maxFunction, string[] minFunction, StatisticsCollection statistics)
+        public static void AgentPassage(DataTask dataTask, AgentGroup agentGroup, int CountAgent, int attempt, double min, double max, string[] maxFunction, string[] minFunction, StatisticsCollection statistics, int nomIteration)
         {
             CountAgent++;
 
@@ -122,7 +128,7 @@ namespace AntColonyMethod
             Agent agent = agentGroup.FindAgent(id);
 
             //Определение пути агента
-            int[] wayAgent = agent.FindAgentWay_Method1(dataTask);
+            int[] wayAgent = agent.FindAgentWay_Method1(dataTask, statistics);
             //int[] wayAgent = agent.FindAgentWay_Method2(dataTask);
             
             attempt += 1;
@@ -136,19 +142,25 @@ namespace AntColonyMethod
             //Сбор статистики о количестве найденных оптимумов
             List<int> way = new List<int>();
             way.AddRange(wayAgent);
-            statistics.FindOptimalCount(targetFunction.FindValue(way, dataTask.graf.Params, dataTask.paramCount));
+            statistics.FindOptimalCount(targetFunction.FindValue(way, dataTask.graf.Params, dataTask.paramCount), (nomIteration+1), agentGroup.Agents.Count());
 
 
             targetFunction.FindMaxFunction(dataTask, agent, max, maxFunction, wayAgent);
             targetFunction.FindMinFunction(dataTask, agent, min, minFunction, wayAgent);
+
+            //Если все решения просмотрениы, а итерации еще не закончены
+            if (dataTask.hashTable.Count == dataTask.controlCount)
+            {
+                Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено");
+                return;
+            }
 
             // Сброс феромонов
             if (attempt == ATTEMPTS_COUNT)
             {
                 dataTask.graf.InitialGraf();
                 attempt = 0;
-            }
-
+            }            
         }
     }
 }

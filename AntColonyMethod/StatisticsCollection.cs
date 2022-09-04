@@ -9,7 +9,8 @@ namespace AntColonyMethod
     class StatisticsCollection
     {
         public int NumHitPercentage = 16; //Количество интервалов попадания 
-        public StatisticsCollection() {
+        public StatisticsCollection()
+        {
             numLaunches = 4;
             LaunchesCount = 0;
             optimalMax = 7 - 1 + 2 * 10 + 20 + 2 * 3 + 0.5 * 5.34 - 0.12 * 15.3 - 1 + 80 * 0.5 + 0.00001 * 600000 + 20;
@@ -18,18 +19,36 @@ namespace AntColonyMethod
             DIteration = 0;
             MSolution = 0;
             DSolution = 0;
+            MAntEnumI = 0;
+            DAntEnumI = 0;
+            MAntEnumS = 0;
+            DAntEnumS = 0;
+
+
             UniqueSolutionCount = 0;
 
             PercentageList = new List<double>();
             PercentageList.Add(0.9999);
-            for (int i = 1; i < NumHitPercentage; i++) {
-                PercentageList.Add(1-i*0.01);
+            for (int i = 1; i < NumHitPercentage; i++)
+            {
+                PercentageList.Add(1 - i * 0.01);
             }
 
             HitCount = new List<int>();
+            МFinctionI = new List<double>();
+            DFinctionI = new List<double>();
+            МFinctionS = new List<double>();
+            DFinctionS = new List<double>();
+            Kol = new List<int>();
+
             for (int i = 0; i < NumHitPercentage; i++)
             {
                 HitCount.Add(0);
+                МFinctionI.Add(0);
+                DFinctionI.Add(0);
+                МFinctionS.Add(0);
+                DFinctionS.Add(0);
+                Kol.Add(0);
             }
         }
 
@@ -53,25 +72,61 @@ namespace AntColonyMethod
         /// </summary>
         public double optimalMin { get; set; }
 
+
         /// <summary>
         /// Матожидание итераций
         /// </summary>
-        public long MIteration { get; set; }
+        public double MIteration { get; set; }
 
         /// <summary>
         /// Дисперсия итераций
         /// </summary>
-        public long DIteration { get; set; }
+        public double DIteration { get; set; }
 
         /// <summary>
         /// Матожидание найденных уникальных решений
         /// </summary>
-        public long MSolution { get; set; }
+        public double MSolution { get; set; }
 
         /// <summary>
         /// Дисперсия найденных уникальных решений
         /// </summary>
-        public long DSolution { get; set; }
+        public double DSolution { get; set; }
+
+        /// <summary>
+        /// Номер итерации, на котором найдено оптимальное решение
+        /// </summary> 
+        public List<double> МFinctionI { get; set; }
+
+        /// <summary>
+        /// Дисперсия попадание в интервал (итерации)
+        /// </summary>
+        public List<double> DFinctionI { get; set; }
+
+        /// <summary>
+        /// Матожидание попадание в интервал (решение)
+        /// </summary>
+        public List<double> МFinctionS { get; set; }
+
+        /// <summary>
+        /// Дисперсия попадание в интервал (решение)
+        /// </summary>
+        public List<double> DFinctionS { get; set; }
+
+        /// <summary>
+        /// Количество переборов неуникальных решений
+        /// </summary>
+        public double MAntEnumI { get; set; }
+        public double DAntEnumI { get; set; }
+        public double MAntEnumS { get; set; }
+        public double DAntEnumS { get; set; }
+
+
+
+        /// <summary>
+        /// Сколько раз собрали статистику по матожиданию и дисперсии
+        /// </summary>
+        public List<int> Kol { get; set; }
 
         /// <summary>
         /// Список хранения процентов
@@ -89,18 +144,27 @@ namespace AntColonyMethod
         public int UniqueSolutionCount { get; set; }
 
         /// <summary>
-        /// Количество найденных оптимальных решений максимума
-        /// </summary>
-        public long OptimalCountMax { get; set; }
-
-        /// <summary>
         /// Сброс статистики на начало
         /// </summary>
-        public void StartStatistics() {
+        public void StartStatistics()
+        {
             MIteration = 0;
             DIteration = 0;
             MSolution = 0;
             DSolution = 0;
+            MAntEnumI = 0;
+            DAntEnumI = 0;
+            MAntEnumS = 0;
+            DAntEnumS = 0;
+            for (int i = 0; i < NumHitPercentage; i++)
+            {
+                МFinctionI[i] = 0;
+                DFinctionI[i] = 0;
+                МFinctionS[i] = 0;
+                DFinctionS[i] = 0;
+                Kol[i] = 0;
+            }
+
             UniqueSolutionCount = 0;
         }
 
@@ -109,7 +173,6 @@ namespace AntColonyMethod
         /// </summary>
         public void ResetStatistics()
         {
-            OptimalCountMax = 0;
             for (int i = 0; i < NumHitPercentage; i++)
             {
                 HitCount[i] = 0;
@@ -121,31 +184,42 @@ namespace AntColonyMethod
         /// <summary>
         /// Сбор статистики
         /// </summary>
-        /// <param name="IterationCount">Число итераций</param>
+        /// <param name="IterationCount">Номер итерации</param>
         /// <param name="SolutionCount">Число уникальных решений</param>
-        public void CollectingStat(int IterationCount, int SolutionCount) {
+        public void CollectingStat(int IterationCount, int SolutionCount)
+        {
+            IterationCount += 1;
             MIteration += IterationCount;
             DIteration = DIteration + IterationCount * IterationCount;
             MSolution += SolutionCount;
-            DSolution = DSolution + SolutionCount* SolutionCount;
+            DSolution = DSolution + SolutionCount * SolutionCount;
         }
 
         /// <summary>
         /// Определения количества попадания решения в интервалы
         /// </summary>
         /// <param name="targetFunction">Значение функции</param>
-        public void FindOptimalCount(double targetFunction) {
-            for (int i = 0; i < NumHitPercentage; i++) {
-                if (((optimalMax - optimalMin) * PercentageList[i] + optimalMin) <= targetFunction) 
+        public void FindOptimalCount(double targetFunction, int nomIteration, int nomSolution)
+        {
+            for (int i = 0; i < NumHitPercentage; i++)
+            {
+                if ((((optimalMax - optimalMin) * PercentageList[i] + optimalMin) <= targetFunction) && (HitCount[i] == 0))
+                {
+                    //Подсчет матожидания и дисперсии
+                    МFinctionI[i] = МFinctionI[i] + nomIteration;
+                    DFinctionI[i] = DFinctionI[i] + nomIteration * nomSolution;
+                    МFinctionS[i] = МFinctionS[i] + nomSolution;
+                    DFinctionS[i] = DFinctionS[i] + nomSolution * nomSolution;
+
+                    Kol[i] = Kol[i] + 1;
+                }
+
+                if (((optimalMax - optimalMin) * PercentageList[i] + optimalMin) <= targetFunction)
                 {
                     HitCount[i]++;
                 }
             }
-            
 
-            if (targetFunction == optimalMax) {
-                OptimalCountMax++;
-            }
         }
     }
 }

@@ -116,22 +116,39 @@ namespace AntColonyMethod
         /// Заполнение выходного файла со статистикой
         /// </summary>
         /// <param name="outputDataFile">Название выходного файла</param>
-        public void GettingOutputData(string outputDataFile, StatisticsCollection statisticsCollection, DataTask dataTask)
+        public void GettingOutputData(string outputDataFile, StatisticsCollection statistics, DataTask dataTask)
         {
+            statistics.MIteration = statistics.MIteration / statistics.LaunchesCount;
+            statistics.MSolution = statistics.MSolution / statistics.LaunchesCount;
+            statistics.DIteration = statistics.DIteration / statistics.LaunchesCount;
+            statistics.DSolution = statistics.DSolution / statistics.LaunchesCount;
+
+            for (int i = 0; i < statistics.NumHitPercentage; i++) {
+                statistics.МFinctionI[i] = statistics.МFinctionI[i] / statistics.Kol[i];
+                statistics.DFinctionI[i] = statistics.DFinctionI[i] / statistics.Kol[i];
+                statistics.МFinctionS[i] = statistics.МFinctionS[i] / statistics.Kol[i];
+                statistics.DFinctionS[i] = statistics.DFinctionS[i] / statistics.Kol[i];
+            }
+
             using (StreamWriter sw = new StreamWriter(outputDataFile, true))
             {
                 //Запись результата              
-                sw.WriteLine("Количество агентов: "+ dataTask.antCount+ "\tИтерация прогона: " + statisticsCollection.LaunchesCount);
-                sw.WriteLine("MIteration: " + statisticsCollection.MIteration);
-                sw.WriteLine("DIteration: " + statisticsCollection.DIteration);
-                sw.WriteLine("MSolution: " + statisticsCollection.MSolution);
-                sw.WriteLine("DSolution: " + statisticsCollection.DSolution);
+                sw.WriteLine("Количество агентов: "+ dataTask.antCount+ "\tИтерация прогона: " + statistics.LaunchesCount);
+                sw.WriteLine("MIteration: " + statistics.MIteration);
+                sw.WriteLine("DIteration: " + statistics.DIteration);
+                sw.WriteLine("MSolution: " + statistics.MSolution);
+                sw.WriteLine("DSolution: " + statistics.DSolution);
                 sw.WriteLine("Количество попаданий в интервал: ");
 
-                sw.WriteLine("100%: " + statisticsCollection.HitCount[0]);
-                for (int i=1; i< statisticsCollection.NumHitPercentage; i++) 
+                //Вывод статистики нахождения количества решенияй составляющих какой-либо процент от оптимального решения
+                sw.WriteLine("100%: " + statistics.HitCount[0] + 
+                    "\tМFinctionI: " + statistics.МFinctionI[0] + "\tDFinctionI: " + statistics.DFinctionI[0] +
+                        "\tМFinctionS: " + statistics.МFinctionS[0] + "\tDFinctionS: " + statistics.DFinctionS[0]);
+                for (int i = 1; i < statistics.NumHitPercentage; i++)
                 {
-                    sw.WriteLine(statisticsCollection.PercentageList[i] + "%: " + statisticsCollection.HitCount[i]);
+                    sw.Write(statistics.PercentageList[i] + "%: " + statistics.HitCount[i] +
+                        "\tМFinctionI: " + statistics.МFinctionI[i] + "\tDFinctionI: " + statistics.DFinctionI[i] +
+                        "\tМFinctionS: " + statistics.МFinctionS[i] + "\tDFinctionS: " + statistics.DFinctionS[i] +"\n");
                 }
 
                 sw.WriteLine("\n");
