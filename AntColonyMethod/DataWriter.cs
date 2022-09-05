@@ -134,6 +134,8 @@ namespace AntColonyMethod
             {
                 //Запись результата              
                 sw.WriteLine("Количество агентов: \t"+ dataTask.antCount+ "\tИтерация прогона: " + statistics.LaunchesCount);
+                sw.WriteLine("Число итераций: \t" + dataTask.iterationCount);
+                sw.WriteLine("Время работы алгоритма: \t" + statistics.WorkTime.Seconds.ToString() + "\tмс");
                 sw.WriteLine("MIteration: \t" + statistics.MIteration);
                 sw.WriteLine("DIteration: \t" + statistics.DIteration);
                 sw.WriteLine("MSolution: \t" + statistics.MSolution);
@@ -144,12 +146,13 @@ namespace AntColonyMethod
 
                 //Вывод статистики нахождения количества решенияй составляющих какой-либо процент от оптимального решения
                 sw.Write("Проценты             : \t100%: \t");
-                for (int i = 1; i < statistics.NumHitPercentage; i++) {
-                    sw.Write((statistics.PercentageList[i]*100) + "% \t");
+                for (int i = 1; i < statistics.NumHitPercentage; i++)
+                {
+                    sw.Write((statistics.PercentageList[i] * 100) + "% \t");
                 }
                 sw.Write("\n");
 
-                sw.Write("Количество попаданий : \t"+statistics.HitCount[0]+"\t");
+                sw.Write("Количество попаданий : \t" + statistics.HitCount[0] + "\t");
                 for (int i = 1; i < statistics.NumHitPercentage; i++)
                 {
                     sw.Write(statistics.HitCount[i] + " \t");
@@ -183,19 +186,8 @@ namespace AntColonyMethod
                     sw.Write(statistics.DFinctionS[i] + " \t");
                 }
                 sw.Write("\n");
-
-                
-                //sw.WriteLine("100%: \t" + statistics.HitCount[0] + 
-                //    "\tМFinctionI: \t" + statistics.МFinctionI[0] + "\tDFinctionI: \t" + statistics.DFinctionI[0] +
-                //        "\tМFinctionS: \t" + statistics.МFinctionS[0] + "\tDFinctionS: \t" + statistics.DFinctionS[0]);
-                //for (int i = 1; i < statistics.NumHitPercentage; i++)
-                //{
-                //    sw.Write(statistics.PercentageList[i] + "%: \t" + statistics.HitCount[i] +
-                //        "\tМFinctionI: \t" + statistics.МFinctionI[i] + "\tDFinctionI: \t" + statistics.DFinctionI[i] +
-                //        "\tМFinctionS: \t" + statistics.МFinctionS[i] + "\tDFinctionS: \t" + statistics.DFinctionS[i] +"\n");
-                //}
-
-                //sw.WriteLine("\n");
+                sw.Write("\n");
+                sw.Write("\n");
 
                 sw.Close();
             }

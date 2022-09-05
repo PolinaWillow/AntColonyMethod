@@ -49,7 +49,26 @@ namespace AntColonyMethod
                 DFinctionS.Add(0);
                 Kol.Add(0);
             }
+
+            WorkTime = new TimeSpan();
+            TimeStart = new DateTime();
+            TimeEnd = new DateTime();
         }
+
+        /// <summary>
+        /// Время работы алгоритма
+        /// </summary>
+        public TimeSpan WorkTime { get; set; }
+
+        /// <summary>
+        /// Начало отсчета времени выполнения
+        /// </summary>
+        public DateTime TimeStart { get; set; }
+
+        /// <summary>
+        /// Конец отсчета времени выполнения
+        /// </summary>
+        public DateTime TimeEnd { get; set; }
 
         /// <summary>
         /// Количество запусков выполнения
@@ -154,15 +173,7 @@ namespace AntColonyMethod
             MIteration = 0;
             DIteration = 0;
             MSolution = 0;
-            DSolution = 0;
-            for (int i = 0; i < NumHitPercentage; i++)
-            {
-                МFinctionI[i] = 0;
-                DFinctionI[i] = 0;
-                МFinctionS[i] = 0;
-                DFinctionS[i] = 0;
-                Kol[i] = 0;
-            }
+            DSolution = 0;           
 
             UniqueSolutionCount = 0;
         }
@@ -176,9 +187,21 @@ namespace AntColonyMethod
             {
                 HitCount[i] = 0;
             }
+
+            for (int i = 0; i < NumHitPercentage; i++)
+            {
+                МFinctionI[i] = 0;
+                DFinctionI[i] = 0;
+                МFinctionS[i] = 0;
+                DFinctionS[i] = 0;
+                Kol[i] = 0;
+            }
+
             AntEnumI = 0;
             KolEnumI = 0;
             AntEnumIProc = 0;
+
+
         }
 
 
@@ -231,6 +254,11 @@ namespace AntColonyMethod
             AntEnumI = KolEnumI / IterationCount;
             AntEnumIProc = KolEnumI / (KolEnumI + IterationCount);
         }
+
+        public void WorkTimeLaunch() {
+            WorkTime = TimeEnd - TimeStart;
+        }
+    
     }
 
 }
