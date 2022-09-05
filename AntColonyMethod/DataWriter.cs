@@ -135,7 +135,7 @@ namespace AntColonyMethod
                 //Запись результата              
                 sw.WriteLine("Количество агентов: \t"+ dataTask.antCount+ "\tИтерация прогона: " + statistics.LaunchesCount);
                 sw.WriteLine("Число итераций: \t" + dataTask.iterationCount);
-                sw.WriteLine("Время работы алгоритма: \t" + statistics.WorkTime.Seconds.ToString() + "\tмс");
+                sw.WriteLine("Время работы алгоритма: \t" + statistics.WorkTime.ToString() + "\tмс");
                 sw.WriteLine("MIteration: \t" + statistics.MIteration);
                 sw.WriteLine("DIteration: \t" + statistics.DIteration);
                 sw.WriteLine("MSolution: \t" + statistics.MSolution);

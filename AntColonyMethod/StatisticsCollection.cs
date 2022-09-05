@@ -170,6 +170,8 @@ namespace AntColonyMethod
         /// </summary>
         public void StartStatistics()
         {
+            LaunchesCount = 0;
+
             MIteration = 0;
             DIteration = 0;
             MSolution = 0;
