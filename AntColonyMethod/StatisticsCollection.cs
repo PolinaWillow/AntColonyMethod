@@ -11,7 +11,7 @@ namespace AntColonyMethod
         public int NumHitPercentage = 16; //Количество интервалов попадания 
         public StatisticsCollection()
         {
-            numLaunches = 4;
+            numLaunches = 10;
             LaunchesCount = 0;
             optimalMax = 7 - 1 + 2 * 10 + 20 + 2 * 3 + 0.5 * 5.34 - 0.12 * 15.3 - 1 + 80 * 0.5 + 0.00001 * 600000 + 20;
             optimalMin = 1 - 5 + 2 * 1 + 1 + 2 * 1 + 0.5 * 5.24 - 0.12 * 16.9 - 10 + 80 * 0.01 + 0.00001 * 100000;
@@ -19,10 +19,9 @@ namespace AntColonyMethod
             DIteration = 0;
             MSolution = 0;
             DSolution = 0;
-            MAntEnumI = 0;
-            DAntEnumI = 0;
-            MAntEnumS = 0;
-            DAntEnumS = 0;
+            AntEnumI = 0;
+            KolEnumI = 0;
+            AntEnumIProc = 0;
 
 
             UniqueSolutionCount = 0;
@@ -114,12 +113,16 @@ namespace AntColonyMethod
         public List<double> DFinctionS { get; set; }
 
         /// <summary>
-        /// Количество переборов неуникальных решений
+        /// Среднее количество переборов за итерацию
         /// </summary>
-        public double MAntEnumI { get; set; }
-        public double DAntEnumI { get; set; }
-        public double MAntEnumS { get; set; }
-        public double DAntEnumS { get; set; }
+        public double AntEnumI { get; set; }
+
+        public double AntEnumIProc { get; set; }
+
+        /// <summary>
+        /// Количество переборов за итерацию
+        /// </summary>
+        public int KolEnumI { get; set; }
 
 
 
@@ -152,10 +155,6 @@ namespace AntColonyMethod
             DIteration = 0;
             MSolution = 0;
             DSolution = 0;
-            MAntEnumI = 0;
-            DAntEnumI = 0;
-            MAntEnumS = 0;
-            DAntEnumS = 0;
             for (int i = 0; i < NumHitPercentage; i++)
             {
                 МFinctionI[i] = 0;
@@ -177,7 +176,9 @@ namespace AntColonyMethod
             {
                 HitCount[i] = 0;
             }
-
+            AntEnumI = 0;
+            KolEnumI = 0;
+            AntEnumIProc = 0;
         }
 
 
@@ -221,5 +222,15 @@ namespace AntColonyMethod
             }
 
         }
+
+        /// <summary>
+        /// Определение среднее количества переборов за решение (Сколько раз агенты переберают пути за итерацию в среднем)
+        /// </summary>
+        /// <param name="IterationCount">Число итераций</param>
+        public void EmunStatI(long IterationCount) {
+            AntEnumI = KolEnumI / IterationCount;
+            AntEnumIProc = KolEnumI / (KolEnumI + IterationCount);
+        }
     }
+
 }

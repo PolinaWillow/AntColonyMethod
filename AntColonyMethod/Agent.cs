@@ -82,7 +82,7 @@ namespace AntColonyMethod
             }
             else
             {
-                int[] newWayAgent = FindAlternativeWay(dataTask, wayAgent, hashWay);
+                int[] newWayAgent = FindAlternativeWay(dataTask, wayAgent, hashWay, statistics);
                 hashWay = hash.GetHash(newWayAgent);
                 hash.AddNewHash(hashWay, wayAgent, dataTask.hashTable);
                 Array.Copy(newWayAgent, 0, wayAgent, 0, dataTask.paramCount);
@@ -123,7 +123,7 @@ namespace AntColonyMethod
         /// <param name="startWay">Изменяемый путь</param>
         /// <param name="hashWay">Хэш пути</param>
         /// <returns></returns>
-        public int[] FindAlternativeWay(DataTask dataTask, int[] startWay, string hashWay)
+        public int[] FindAlternativeWay(DataTask dataTask, int[] startWay, string hashWay, StatisticsCollection statistics)
         {
             int nomParam = 0; //Номер параметра
             int[] newWay = new int[dataTask.paramCount]; //Новый путь
@@ -132,6 +132,9 @@ namespace AntColonyMethod
 
             while (dataTask.hashTable.ContainsKey(hashWay) && (nomParam < dataTask.paramCount))
             {
+                //Сохраняем количество переборов
+                statistics.KolEnumI++;
+
                 NextWay(newWay, nomParam, dataTask.graf);
 
                 if (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.paramCount)

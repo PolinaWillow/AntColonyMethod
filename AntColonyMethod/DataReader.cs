@@ -25,7 +25,7 @@ namespace AntColonyMethod
             {
                 //Чтение числа итераций
                 string iterationCountStr = sr.ReadLine();
-                dataTask.iterationCount = Convert.ToInt32(iterationCountStr);
+                dataTask.iterationCount = Convert.ToInt64(iterationCountStr);
 
                 //Чтение числа пораметров
                 string countParam = sr.ReadLine();

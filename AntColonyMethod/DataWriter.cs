@@ -133,30 +133,73 @@ namespace AntColonyMethod
             using (StreamWriter sw = new StreamWriter(outputDataFile, true))
             {
                 //Запись результата              
-                sw.WriteLine("Количество агентов: "+ dataTask.antCount+ "\tИтерация прогона: " + statistics.LaunchesCount);
-                sw.WriteLine("MIteration: " + statistics.MIteration);
-                sw.WriteLine("DIteration: " + statistics.DIteration);
-                sw.WriteLine("MSolution: " + statistics.MSolution);
-                sw.WriteLine("DSolution: " + statistics.DSolution);
+                sw.WriteLine("Количество агентов: \t"+ dataTask.antCount+ "\tИтерация прогона: " + statistics.LaunchesCount);
+                sw.WriteLine("MIteration: \t" + statistics.MIteration);
+                sw.WriteLine("DIteration: \t" + statistics.DIteration);
+                sw.WriteLine("MSolution: \t" + statistics.MSolution);
+                sw.WriteLine("DSolution: \t" + statistics.DSolution);
+                sw.WriteLine("Среднее количество переборов путей за интервал: \t" + statistics.AntEnumI);
+                sw.WriteLine("Среднее количество переборов путей за интервал в прjцентах: \t" + statistics.AntEnumIProc);
                 sw.WriteLine("Количество попаданий в интервал: ");
 
                 //Вывод статистики нахождения количества решенияй составляющих какой-либо процент от оптимального решения
-                sw.WriteLine("100%: " + statistics.HitCount[0] + 
-                    "\tМFinctionI: " + statistics.МFinctionI[0] + "\tDFinctionI: " + statistics.DFinctionI[0] +
-                        "\tМFinctionS: " + statistics.МFinctionS[0] + "\tDFinctionS: " + statistics.DFinctionS[0]);
+                sw.Write("Проценты             : \t100%: \t");
+                for (int i = 1; i < statistics.NumHitPercentage; i++) {
+                    sw.Write((statistics.PercentageList[i]*100) + "% \t");
+                }
+                sw.Write("\n");
+
+                sw.Write("Количество попаданий : \t"+statistics.HitCount[0]+"\t");
                 for (int i = 1; i < statistics.NumHitPercentage; i++)
                 {
-                    sw.Write(statistics.PercentageList[i] + "%: " + statistics.HitCount[i] +
-                        "\tМFinctionI: " + statistics.МFinctionI[i] + "\tDFinctionI: " + statistics.DFinctionI[i] +
-                        "\tМFinctionS: " + statistics.МFinctionS[i] + "\tDFinctionS: " + statistics.DFinctionS[i] +"\n");
+                    sw.Write(statistics.HitCount[i] + " \t");
                 }
+                sw.Write("\n");
 
-                sw.WriteLine("\n");
+                sw.Write("МFinctionI           : \t" + statistics.МFinctionI[0] + "\t");
+                for (int i = 1; i < statistics.NumHitPercentage; i++)
+                {
+                    sw.Write(statistics.МFinctionI[i] + " \t");
+                }
+                sw.Write("\n");
+
+                sw.Write("DFinctionI           : \t" + statistics.DFinctionI[0] + "\t");
+                for (int i = 1; i < statistics.NumHitPercentage; i++)
+                {
+                    sw.Write(statistics.DFinctionI[i] + " \t");
+                }
+                sw.Write("\n");
+
+                sw.Write("MFinctionS           : \t" + statistics.МFinctionS[0] + "\t");
+                for (int i = 1; i < statistics.NumHitPercentage; i++)
+                {
+                    sw.Write(statistics.МFinctionS[i] + " \t");
+                }
+                sw.Write("\n");
+
+                sw.Write("DFinctionS           : \t" + statistics.DFinctionS[0] + "\t");
+                for (int i = 1; i < statistics.NumHitPercentage; i++)
+                {
+                    sw.Write(statistics.DFinctionS[i] + " \t");
+                }
+                sw.Write("\n");
+
+                
+                //sw.WriteLine("100%: \t" + statistics.HitCount[0] + 
+                //    "\tМFinctionI: \t" + statistics.МFinctionI[0] + "\tDFinctionI: \t" + statistics.DFinctionI[0] +
+                //        "\tМFinctionS: \t" + statistics.МFinctionS[0] + "\tDFinctionS: \t" + statistics.DFinctionS[0]);
+                //for (int i = 1; i < statistics.NumHitPercentage; i++)
+                //{
+                //    sw.Write(statistics.PercentageList[i] + "%: \t" + statistics.HitCount[i] +
+                //        "\tМFinctionI: \t" + statistics.МFinctionI[i] + "\tDFinctionI: \t" + statistics.DFinctionI[i] +
+                //        "\tМFinctionS: \t" + statistics.МFinctionS[i] + "\tDFinctionS: \t" + statistics.DFinctionS[i] +"\n");
+                //}
+
+                //sw.WriteLine("\n");
 
                 sw.Close();
             }
 
-        }
-
+        }        
     }
 }

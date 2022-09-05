@@ -57,6 +57,12 @@ namespace AntColonyMethod
                     //Прохождение всех итераций
                     for (int j = 0; j < dataTask.iterationCount; j++)
                     {
+                        //Если все решения просмотрениы, а итерации еще не закончены
+                        if (dataTask.hashTable.Count == dataTask.controlCount)
+                        {
+                            Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено 2");
+                            break;
+                        }
                         //Создание группы агентов
                         AgentGroup agentGroup = new AgentGroup(); //Список агентов
 
@@ -84,7 +90,7 @@ namespace AntColonyMethod
 
                         TargetFunction targetFun = new TargetFunction();
                         //Занесение феромона
-                        for (int i = 0; i < dataTask.antCount; i++)
+                        for (int i = 0; i < agentGroup.Agents.Count(); i++)
                         {
                             double functionValue = targetFun.FindValue(agentGroup.Agents[i].wayAgent, dataTask.graf.Params, dataTask.paramCount);
                             agentGroup.Agents[i].delta = dataTask.graf.AddPheromone(dataTask, agentGroup.Agents[i].wayAgent, functionValue);
@@ -95,18 +101,14 @@ namespace AntColonyMethod
 
                         //Занесение результатов прохода итерации в файл
                         dataWriter.GettingOutputData(outputFile, (j + 1), maxFunction, minFunction);
-
+                        
                         //Сбор статистики после каждой итерации
                         statistics.UniqueSolutionCount = dataTask.antCount;
-                        statistics.CollectingStat(j, statistics.UniqueSolutionCount);
-
-                        //Если все решения просмотрениы, а итерации еще не закончены
-                        if (dataTask.hashTable.Count == dataTask.controlCount)
-                        {
-                            Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено");
-                            break;
-                        }
+                        statistics.CollectingStat(j, statistics.UniqueSolutionCount);                      
                     }
+
+                    //Сбор статистки о среднем числе переборов за итерацию
+                    statistics.EmunStatI(dataTask.iterationCount);
 
                     //Запись статистики в файл
                     dataWriter.GettingOutputData(outputStat, statistics, dataTask);
@@ -120,6 +122,13 @@ namespace AntColonyMethod
 
         public static void AgentPassage(DataTask dataTask, AgentGroup agentGroup, int CountAgent, int attempt, double min, double max, string[] maxFunction, string[] minFunction, StatisticsCollection statistics, int nomIteration)
         {
+            //Если все решения просмотрениы, а итерации еще не закончены
+            if (dataTask.hashTable.Count == dataTask.controlCount)
+            {
+                Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено 3");
+                return;
+            }
+
             CountAgent++;
 
             string id = Guid.NewGuid().ToString();
@@ -151,7 +160,7 @@ namespace AntColonyMethod
             //Если все решения просмотрениы, а итерации еще не закончены
             if (dataTask.hashTable.Count == dataTask.controlCount)
             {
-                Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено");
+                Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено 1");
                 return;
             }
 

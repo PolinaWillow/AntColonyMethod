@@ -17,7 +17,7 @@ namespace AntColonyMethod
         /// <summary>
         /// Контрольное число путей
         /// </summary>
-        public int controlCount;
+        public int controlCount { get; set; }
 
         /// <summary>
         /// Список для хранения количества значений параметров
@@ -42,7 +42,7 @@ namespace AntColonyMethod
         /// <summary>
         /// Число итераций в алгоритме
         /// </summary>
-        public int iterationCount { get; set; }
+        public long iterationCount { get; set; }
 
         /// <summary>
         /// Количество муравьев
@@ -62,6 +62,7 @@ namespace AntColonyMethod
             availabilityThread = false;
             antCount = 5;
             iterationCount = 0;
+            controlCount = 1;
         }
 
         /// <summary>
