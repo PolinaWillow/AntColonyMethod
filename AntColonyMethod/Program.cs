@@ -120,6 +120,12 @@ namespace AntColonyMethod
                     //Запись статистики в файл
                     dataWriter.GettingOutputData(outputStat, statistics, dataTask);
 
+                    //Тестовый вывод
+                    Console.WriteLine("MIteration: \t" + statistics.MIteration);
+                    Console.WriteLine("DIteration: \t" + statistics.DIteration);
+                    Console.WriteLine("MSolution: \t" + statistics.MSolution);
+                    Console.WriteLine("DSolution: \t" + statistics.DSolution);
+
                     statistics.LaunchesCount++;
                 }
 

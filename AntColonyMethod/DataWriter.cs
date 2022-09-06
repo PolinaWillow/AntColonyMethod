@@ -136,55 +136,55 @@ namespace AntColonyMethod
                 sw.WriteLine("Количество агентов: \t"+ dataTask.antCount+ "\tИтерация прогона: " + statistics.LaunchesCount);
                 sw.WriteLine("Число итераций: \t" + dataTask.iterationCount);
                 sw.WriteLine("Время работы алгоритма: \t" + statistics.WorkTime.ToString() + "\tмс");
-                sw.WriteLine("MIteration: \t" + statistics.MIteration);
-                sw.WriteLine("DIteration: \t" + statistics.DIteration);
-                sw.WriteLine("MSolution: \t" + statistics.MSolution);
-                sw.WriteLine("DSolution: \t" + statistics.DSolution);
-                sw.WriteLine("Среднее количество переборов путей за интервал: \t" + statistics.AntEnumI);
-                sw.WriteLine("Среднее количество переборов путей за интервал в прjцентах: \t" + statistics.AntEnumIProc);
-                sw.WriteLine("Количество попаданий в интервал: ");
+                //sw.WriteLine("MIteration: \t" + statistics.MIteration);
+                //sw.WriteLine("DIteration: \t" + statistics.DIteration);
+                //sw.WriteLine("MSolution: \t" + statistics.MSolution);
+                //sw.WriteLine("DSolution: \t" + statistics.DSolution);
+                //sw.WriteLine("Среднее количество переборов путей за интервал: \t" + statistics.AntEnumI);
+                //sw.WriteLine("Среднее количество переборов путей за интервал в прjцентах: \t" + statistics.AntEnumIProc);
+                //sw.WriteLine("Количество попаданий в интервал: ");
 
-                //Вывод статистики нахождения количества решенияй составляющих какой-либо процент от оптимального решения
-                sw.Write("Проценты             : \t100%: \t");
-                for (int i = 1; i < statistics.NumHitPercentage; i++)
-                {
-                    sw.Write((statistics.PercentageList[i] * 100) + "% \t");
-                }
-                sw.Write("\n");
+                ////Вывод статистики нахождения количества решенияй составляющих какой-либо процент от оптимального решения
+                //sw.Write("Проценты             : \t100%: \t");
+                //for (int i = 1; i < statistics.NumHitPercentage; i++)
+                //{
+                //    sw.Write((statistics.PercentageList[i] * 100) + "% \t");
+                //}
+                //sw.Write("\n");
 
-                sw.Write("Количество попаданий : \t" + statistics.HitCount[0] + "\t");
-                for (int i = 1; i < statistics.NumHitPercentage; i++)
-                {
-                    sw.Write(statistics.HitCount[i] + " \t");
-                }
-                sw.Write("\n");
+                //sw.Write("Количество попаданий : \t" + statistics.HitCount[0] + "\t");
+                //for (int i = 1; i < statistics.NumHitPercentage; i++)
+                //{
+                //    sw.Write(statistics.HitCount[i] + " \t");
+                //}
+                //sw.Write("\n");
 
-                sw.Write("МFinctionI           : \t" + statistics.МFinctionI[0] + "\t");
-                for (int i = 1; i < statistics.NumHitPercentage; i++)
-                {
-                    sw.Write(statistics.МFinctionI[i] + " \t");
-                }
-                sw.Write("\n");
+                //sw.Write("МFinctionI           : \t" + statistics.МFinctionI[0] + "\t");
+                //for (int i = 1; i < statistics.NumHitPercentage; i++)
+                //{
+                //    sw.Write(statistics.МFinctionI[i] + " \t");
+                //}
+                //sw.Write("\n");
 
-                sw.Write("DFinctionI           : \t" + statistics.DFinctionI[0] + "\t");
-                for (int i = 1; i < statistics.NumHitPercentage; i++)
-                {
-                    sw.Write(statistics.DFinctionI[i] + " \t");
-                }
-                sw.Write("\n");
+                //sw.Write("DFinctionI           : \t" + statistics.DFinctionI[0] + "\t");
+                //for (int i = 1; i < statistics.NumHitPercentage; i++)
+                //{
+                //    sw.Write(statistics.DFinctionI[i] + " \t");
+                //}
+                //sw.Write("\n");
 
-                sw.Write("MFinctionS           : \t" + statistics.МFinctionS[0] + "\t");
-                for (int i = 1; i < statistics.NumHitPercentage; i++)
-                {
-                    sw.Write(statistics.МFinctionS[i] + " \t");
-                }
-                sw.Write("\n");
+                //sw.Write("MFinctionS           : \t" + statistics.МFinctionS[0] + "\t");
+                //for (int i = 1; i < statistics.NumHitPercentage; i++)
+                //{
+                //    sw.Write(statistics.МFinctionS[i] + " \t");
+                //}
+                //sw.Write("\n");
 
-                sw.Write("DFinctionS           : \t" + statistics.DFinctionS[0] + "\t");
-                for (int i = 1; i < statistics.NumHitPercentage; i++)
-                {
-                    sw.Write(statistics.DFinctionS[i] + " \t");
-                }
+                //sw.Write("DFinctionS           : \t" + statistics.DFinctionS[0] + "\t");
+                //for (int i = 1; i < statistics.NumHitPercentage; i++)
+                //{
+                //    sw.Write(statistics.DFinctionS[i] + " \t");
+                //}
                 sw.Write("\n");
                 sw.Write("\n");
                 sw.Write("\n");

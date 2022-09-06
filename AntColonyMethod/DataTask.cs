@@ -60,7 +60,7 @@ namespace AntColonyMethod
             hashTable = new Hashtable();
             graf = new Graf();
             availabilityThread = false;
-            antCount = 10;
+            antCount = 5;
             iterationCount = 0;
             controlCount = 1;
         }
