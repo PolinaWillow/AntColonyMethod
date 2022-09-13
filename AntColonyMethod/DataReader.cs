@@ -12,7 +12,7 @@ namespace AntColonyMethod
         /// <summary>
         /// Адрес файла с данными
         /// </summary>
-        public static string PATH_TEST_FILE_DATA = "TestData1.txt"; //Файл тестовых значений
+        public static string PATH_TEST_FILE_DATA = "TestData3.txt"; //Файл тестовых значений
 
         /// <summary>
         /// Получение исходныхи данных

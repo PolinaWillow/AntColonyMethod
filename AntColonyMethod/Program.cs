@@ -12,7 +12,7 @@ namespace AntColonyMethod
     class Program
     {
         public static int ATTEMPTS_COUNT = 10000000; //Количество попыток генерации нового пути
-        public static int MAX_ANT_COUNT = 30; //Максимальное количество муравьев
+        public static int MAX_ANT_COUNT = 6; //Максимальное количество муравьев
 
         static void Main(string[] args)
         {
@@ -107,7 +107,9 @@ namespace AntColonyMethod
                         
                         //Сбор статистики после каждой итерации
                         statistics.UniqueSolutionCount = dataTask.antCount;
-                        statistics.CollectingStat(j, statistics.UniqueSolutionCount);                      
+                        statistics.CollectingStat(j, statistics.UniqueSolutionCount);
+
+                        agentGroup.Agents.Clear();
                     }
 
                     //Конец отсчета выполнения
@@ -118,13 +120,7 @@ namespace AntColonyMethod
                     statistics.EmunStatI(dataTask.iterationCount);
 
                     //Запись статистики в файл
-                    dataWriter.GettingOutputData(outputStat, statistics, dataTask);
-
-                    //Тестовый вывод
-                    Console.WriteLine("MIteration: \t" + statistics.MIteration);
-                    Console.WriteLine("DIteration: \t" + statistics.DIteration);
-                    Console.WriteLine("MSolution: \t" + statistics.MSolution);
-                    Console.WriteLine("DSolution: \t" + statistics.DSolution);
+                    dataWriter.GettingOutputData(outputStat, statistics, dataTask);                 
 
                     statistics.LaunchesCount++;
                 }

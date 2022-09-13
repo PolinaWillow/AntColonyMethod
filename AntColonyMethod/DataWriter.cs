@@ -118,10 +118,10 @@ namespace AntColonyMethod
         /// <param name="outputDataFile">Название выходного файла</param>
         public void GettingOutputData(string outputDataFile, StatisticsCollection statistics, DataTask dataTask)
         {
-            statistics.MIteration = statistics.MIteration / statistics.LaunchesCount;
-            statistics.MSolution = statistics.MSolution / statistics.LaunchesCount;
-            statistics.DIteration = statistics.DIteration / statistics.LaunchesCount;
-            statistics.DSolution = statistics.DSolution / statistics.LaunchesCount;
+            statistics.MIteration = statistics.MIteration / statistics.numLaunches;
+            statistics.MSolution = statistics.MSolution / statistics.numLaunches;
+            statistics.DIteration = statistics.DIteration / statistics.numLaunches;
+            statistics.DSolution = statistics.DSolution / statistics.numLaunches;
 
             for (int i = 0; i < statistics.NumHitPercentage; i++) {
                 statistics.МFinctionI[i] = statistics.МFinctionI[i] / statistics.Kol[i];
@@ -133,58 +133,44 @@ namespace AntColonyMethod
             using (StreamWriter sw = new StreamWriter(outputDataFile, true))
             {
                 //Запись результата              
-                sw.WriteLine("Количество агентов: \t"+ dataTask.antCount+ "\tИтерация прогона: " + statistics.LaunchesCount);
+                sw.WriteLine("Количество агентов: \t"+ dataTask.antCount+ "\tИтерация прогона: " + (statistics.LaunchesCount+1));
                 sw.WriteLine("Число итераций: \t" + dataTask.iterationCount);
                 sw.WriteLine("Время работы алгоритма: \t" + statistics.WorkTime.ToString() + "\tмс");
-                //sw.WriteLine("MIteration: \t" + statistics.MIteration);
-                //sw.WriteLine("DIteration: \t" + statistics.DIteration);
-                //sw.WriteLine("MSolution: \t" + statistics.MSolution);
-                //sw.WriteLine("DSolution: \t" + statistics.DSolution);
-                //sw.WriteLine("Среднее количество переборов путей за интервал: \t" + statistics.AntEnumI);
-                //sw.WriteLine("Среднее количество переборов путей за интервал в прjцентах: \t" + statistics.AntEnumIProc);
-                //sw.WriteLine("Количество попаданий в интервал: ");
+                sw.WriteLine("MIteration: \t" + statistics.MIteration.ToString());
+                sw.WriteLine("DIteration: \t" + statistics.DIteration.ToString());
+                sw.WriteLine("MSolution: \t" + statistics.MSolution.ToString());
+                sw.WriteLine("DSolution: \t" + statistics.DSolution.ToString());
+                sw.WriteLine("Среднее количество переборов путей за интервал: \t" + statistics.AntEnumI);
+                sw.WriteLine("Среднее количество переборов путей за интервал в прjцентах: \t" + statistics.AntEnumIProc);
+                sw.WriteLine("Количество попаданий в интервал: ");
 
-                ////Вывод статистики нахождения количества решенияй составляющих какой-либо процент от оптимального решения
-                //sw.Write("Проценты             : \t100%: \t");
-                //for (int i = 1; i < statistics.NumHitPercentage; i++)
-                //{
-                //    sw.Write((statistics.PercentageList[i] * 100) + "% \t");
-                //}
-                //sw.Write("\n");
+                //Вывод статистики нахождения количества решенияй составляющих какой-либо процент от оптимального решения
+                sw.Write("Проценты             : \t100%: \t");
+                for (int i = 1; i < statistics.NumHitPercentage; i++)
+                {
+                    sw.Write((statistics.PercentageList[i] * 100) + "% \t");
+                }
+                sw.Write("\n");
 
-                //sw.Write("Количество попаданий : \t" + statistics.HitCount[0] + "\t");
-                //for (int i = 1; i < statistics.NumHitPercentage; i++)
-                //{
-                //    sw.Write(statistics.HitCount[i] + " \t");
-                //}
-                //sw.Write("\n");
+                sw.Write("Количество попаданий : \t" + statistics.HitCount[0] + "\t");
+                for (int i = 1; i < statistics.NumHitPercentage; i++)
+                {
+                    sw.Write(statistics.HitCount[i] + " \t");
+                }
+                sw.Write("\n");
 
-                //sw.Write("МFinctionI           : \t" + statistics.МFinctionI[0] + "\t");
-                //for (int i = 1; i < statistics.NumHitPercentage; i++)
-                //{
-                //    sw.Write(statistics.МFinctionI[i] + " \t");
-                //}
-                //sw.Write("\n");
+                sw.Write("МFinctionI | DFinctionI: \t" + statistics.МFinctionI[0] + "\t" + statistics.DFinctionI[0] + "\t");
+                for (int i = 1; i < statistics.NumHitPercentage; i++)
+                {
+                    sw.Write(statistics.МFinctionI[i] + " \t" + statistics.DFinctionI[i] + " \t");
+                }
+                sw.Write("\n");              
 
-                //sw.Write("DFinctionI           : \t" + statistics.DFinctionI[0] + "\t");
-                //for (int i = 1; i < statistics.NumHitPercentage; i++)
-                //{
-                //    sw.Write(statistics.DFinctionI[i] + " \t");
-                //}
-                //sw.Write("\n");
-
-                //sw.Write("MFinctionS           : \t" + statistics.МFinctionS[0] + "\t");
-                //for (int i = 1; i < statistics.NumHitPercentage; i++)
-                //{
-                //    sw.Write(statistics.МFinctionS[i] + " \t");
-                //}
-                //sw.Write("\n");
-
-                //sw.Write("DFinctionS           : \t" + statistics.DFinctionS[0] + "\t");
-                //for (int i = 1; i < statistics.NumHitPercentage; i++)
-                //{
-                //    sw.Write(statistics.DFinctionS[i] + " \t");
-                //}
+                sw.Write("MFinctionS | DFinctionI:\t" + statistics.МFinctionS[0] + "\t"+ statistics.DFinctionS[0] + "\t");
+                for (int i = 1; i < statistics.NumHitPercentage; i++)
+                {
+                    sw.Write(statistics.МFinctionS[i] + " \t" + statistics.DFinctionS[i] + " \t");
+                }
                 sw.Write("\n");
                 sw.Write("\n");
                 sw.Write("\n");
