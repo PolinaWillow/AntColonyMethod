@@ -12,17 +12,27 @@ namespace AntColonyMethod
         /// Id параметра
         /// </summary>
         public int idParam { get; set; }
-        
+
         /// <summary>
-        /// Номер параметра
+        /// Номер параметра в случе переупорядочеывания 
+        /// </summary>
+        public int numParamFact { get; set; }
+
+        /// <summary>
+        /// Номер параметра 
         /// </summary>
         public int numParam { get; set; }
-        
+
         /// <summary>
         /// Тип параметра
         /// </summary>
         public TypeNumerator typeParam { get; set; }
         
+        /// <summary>
+        /// Номер значения параметра
+        /// </summary>
+        public int numValueParam { get; set; }
+
         /// <summary>
         /// Значение параметра
         /// </summary>
@@ -40,7 +50,7 @@ namespace AntColonyMethod
 
         public override string ToString()
         {
-            return "IdParam: " + idParam + "   NumParam: " + numParam + "   TypeParam: " + typeParam + "   ValueParam: " + valueParam + "   Pheromones: " + pheromones;
+            return "IdParam: " + idParam + "   NumParam: " + numParam + "   NumParamFact: " + numParamFact + "   TypeParam: " + typeParam + "   numValueParam: " + numValueParam + "   ValueParam: " + valueParam + "   Pheromones: " + pheromones;
         }
 
         /// <summary>

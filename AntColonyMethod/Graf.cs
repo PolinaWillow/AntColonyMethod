@@ -8,14 +8,15 @@ namespace AntColonyMethod
 {
     class Graf
     {
-        
-        public static int Q = 100;  //Общее число феромонов
-        public static double L = 0.9; //Коэфициент пересчета испарения феромонов
-
         /// <summary>
         /// Список параметров
         /// </summary>
         public List<GrafParams> Params = new List<GrafParams>();
+
+        /// <summary>
+        /// Список id первых значений параметра
+        /// </summary>
+        public List<int> IDFirstValueParam = new List<int>();
 
         /// <summary>
         /// Инициализация графа
@@ -55,9 +56,10 @@ namespace AntColonyMethod
             int id = 0;
             for (int i = 0; i < dataTask.paramCount; i++)
             {
+                IDFirstValueParam.Add(id);
                 for (int j = 0; j < dataTask.valueCount[i]; j++)
                 {
-                    Params.Add(new GrafParams() { idParam = id, numParam = i, pheromones = 1, selectNum = 0 });
+                    Params.Add(new GrafParams() { idParam = id, numParamFact = i, numParam = i, pheromones = 1, selectNum = 0 });
 
                     //Опредление типа значения параметра
                     if (double.TryParse(dataTask.valueData[id], out double res))
@@ -65,6 +67,7 @@ namespace AntColonyMethod
                         Params[id].typeParam = TypeNumerator.Double;
                     }
                     else { Params[id].typeParam = TypeNumerator.String; }
+                    Params[id].numValueParam = j;
                     Params[id].valueParam = dataTask.valueData[id];
 
                     id++;
@@ -72,6 +75,77 @@ namespace AntColonyMethod
             }
 
             PrintGraf();
+
+
+            return 0;
+        }
+
+        /// <summary>
+        /// Создание Упорядоченного графа
+        /// </summary>
+        /// <param name="ParamsCopy">Упорядочевиемый граф</param>
+        /// <param name="dataTask">Исходные данные</param>
+        /// <param name="key">Ключ упорядочения</param>
+        /// <param name="NumParam">Номер параметра</param>
+        /// <returns></returns>
+        public int CreateGrafClone(Graf GrafCopy, DataTask dataTask, string key, int NumParam)
+        {
+            if (string.Compare(key, "ParamsIncreasing") == 0)
+            { //Упорядочивание № параметров по количеству значений по возрастанию 
+                //Упорядочивание номеров параметров
+                int[,] NumsParams = new int[dataTask.valueCount.Count, 2];
+                for (int i = 0; i < dataTask.valueCount.Count; i++)
+                {
+                    NumsParams[i, 0] = i;
+                    NumsParams[i, 1] = dataTask.valueCount[i];
+                }
+
+                //Сортировка номеров параметров
+                for (int i = 1; i < dataTask.valueCount.Count; i++)
+                {
+                    for (int j = 0; j < dataTask.valueCount.Count - 1; j++)
+                    {
+                        if (NumsParams[j, 1] > NumsParams[j + 1, 1])
+                        {
+                            int num = NumsParams[j, 0];
+                            int val = NumsParams[j, 1];
+                            NumsParams[j, 0] = NumsParams[j + 1, 0];
+                            NumsParams[j, 1] = NumsParams[j + 1, 1];
+                            NumsParams[j + 1, 0] = num;
+                            NumsParams[j + 1, 1] = val;
+                        }
+                    }
+                }
+
+                //Создание клона графа
+                for (int i = 0; i < dataTask.valueCount.Count; i++)
+                {
+                    for (int j = 0; j < NumsParams[i, 1]; j++)
+                    {
+                        GrafCopy.Params.Add(dataTask.graf.Params[dataTask.graf.IDFirstValueParam[NumsParams[i, 0]] + j]);
+                    }
+                }
+
+                //Перенумерация параметров
+                int f = 0;
+                int k = 0;
+                int h = 0;
+                while (k < dataTask.graf.Params.Count)
+                {
+                    h++;
+                    if (h > NumsParams[f, 1])
+                    {
+                        f++;
+                        h = 1;
+                    }
+                    GrafCopy.Params[k].numParamFact = f;
+                    
+                    k++;
+                }
+
+                //GrafCopy.PrintGraf();
+            }
+
 
             return 0;
         }
@@ -94,7 +168,7 @@ namespace AntColonyMethod
                 ChoiceNextVertex(i, dataTask.valueCount[k], way);
                 i += dataTask.valueCount[k];
                 k++;
-            }         
+            }
             return way;
         }
 
@@ -163,8 +237,8 @@ namespace AntColonyMethod
         /// <returns></returns>
         public double AddPheromone(DataTask dataTask, List<int> way, double functionValue) //Добавление феромонов
         {
-            double eps =0.0000000000000001;
-            double delta = Q / (functionValue + eps);
+            double eps = 0.0000000000000001;
+            double delta = ChangeableParams.Q / (functionValue + eps);
 
             for (int i = 0; i < dataTask.paramCount; i++)
             {
@@ -184,7 +258,7 @@ namespace AntColonyMethod
             //Умножаем для максимума, делаим для минимума
             foreach (GrafParams grafElem in Params)
             {
-                double Evaporation = L * Convert.ToDouble(grafElem.pheromones);
+                double Evaporation = ChangeableParams.L * Convert.ToDouble(grafElem.pheromones);
 
                 foreach (Agent agentElem in agents)
                 {
@@ -192,7 +266,7 @@ namespace AntColonyMethod
                     {
                         if (wayElem == grafElem.idParam)
                         {
-                            Evaporation += (1 - L) * agentElem.delta;
+                            Evaporation += (1 - ChangeableParams.L) * agentElem.delta;
                         }
                     }
                 }

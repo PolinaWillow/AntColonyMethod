@@ -11,9 +11,6 @@ namespace AntColonyMethod
 {
     class Program
     {
-        public static int ATTEMPTS_COUNT = 10000000; //Количество попыток генерации нового пути
-        public static int MAX_ANT_COUNT = 6; //Максимальное количество муравьев
-
         static void Main(string[] args)
         {
             //Получение входных данных
@@ -23,7 +20,7 @@ namespace AntColonyMethod
 
             //Создание графа  
             dataTask.graf.CreateGraf(dataTask);
-
+           
             string[] maxFunction = new string[dataTask.paramCount + 1]; //Массив хранения максимума функции и значения параметров
             string[] minFunction = new string[dataTask.paramCount + 1]; //Массив хранения минимума функции и значения параметров
 
@@ -41,7 +38,7 @@ namespace AntColonyMethod
             string outputStat = dataWriter.CreateStatisticsOutputFile(statistics);
 
             //Варьирование количества муравьев
-            while (dataTask.antCount < MAX_ANT_COUNT)
+            while (dataTask.antCount < ChangeableParams.MAX_ANT_COUNT)
             {
                 //Сброс статистики
                 statistics.StartStatistics();
@@ -125,11 +122,12 @@ namespace AntColonyMethod
                     statistics.LaunchesCount++;
                 }
 
-                dataTask.antCount += 5;
+                dataTask.antCount += ChangeableParams.ANT_INTERVAL;
             }
         }
 
         public static void AgentPassage(DataTask dataTask, AgentGroup agentGroup, int CountAgent, int attempt, double min, double max, string[] maxFunction, string[] minFunction, StatisticsCollection statistics, int nomIteration)
+
         {
             //Если все решения просмотрениы, а итерации еще не закончены
             if (dataTask.hashTable.Count == dataTask.controlCount)
@@ -146,9 +144,10 @@ namespace AntColonyMethod
             Agent agent = agentGroup.FindAgent(id);
 
             //Определение пути агента
-            int[] wayAgent = agent.FindAgentWay_Method1(dataTask, statistics);
+            //int[] wayAgent = agent.FindAgentWay_Method1(dataTask, statistics);
+            int[] wayAgent = agent.FindAgentWay_Method3(dataTask, statistics);
             //int[] wayAgent = agent.FindAgentWay_Method2(dataTask);
-            
+
             attempt += 1;
 
             //Сохранение пути агента
@@ -174,7 +173,7 @@ namespace AntColonyMethod
             }
 
             // Сброс феромонов
-            if (attempt == ATTEMPTS_COUNT)
+            if (attempt == ChangeableParams.ATTEMPTS_COUNT)
             {
                 dataTask.graf.InitialGraf();
                 attempt = 0;

@@ -40,6 +40,11 @@ namespace AntColonyMethod
         public Graf graf { get; set; }
 
         /// <summary>
+        /// Граф параметров (Упорядоченная копия)
+        /// </summary>
+        public Graf grafCopy { get; set; }
+
+        /// <summary>
         /// Число итераций в алгоритме
         /// </summary>
         public long iterationCount { get; set; }
@@ -59,8 +64,9 @@ namespace AntColonyMethod
             valueData = new List<string>();
             hashTable = new Hashtable();
             graf = new Graf();
+            grafCopy = new Graf();
             availabilityThread = false;
-            antCount = 5;
+            antCount = ChangeableParams.ANT_COUNT;
             iterationCount = 0;
             controlCount = 1;
         }

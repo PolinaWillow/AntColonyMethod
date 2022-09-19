@@ -8,10 +8,10 @@ namespace AntColonyMethod
 {
     class StatisticsCollection
     {
-        public int NumHitPercentage = 16; //Количество интервалов попадания 
         public StatisticsCollection()
         {
-            numLaunches = 10;
+            NumHitPercentage = ChangeableParams.NUM_HIT_PERCENTAGE;
+            numLaunches = ChangeableParams.NUM_LAUNCHES;
             LaunchesCount = 0;
             optimalMax = 7 - 1 + 2 * 10 + 20 + 2 * 3 + 0.5 * 5.34 - 0.12 * 15.3 - 1 + 80 * 0.5 + 0.00001 * 600000 + 20;
             optimalMin = 1 - 5 + 2 * 1 + 1 + 2 * 1 + 0.5 * 5.24 - 0.12 * 16.9 - 10 + 80 * 0.01 + 0.00001 * 100000;
@@ -28,7 +28,7 @@ namespace AntColonyMethod
 
             PercentageList = new List<double>();
             PercentageList.Add(0.9999);
-            for (int i = 1; i < NumHitPercentage; i++)
+            for (int i = 1; i < ChangeableParams.NUM_HIT_PERCENTAGE; i++)
             {
                 PercentageList.Add(1 - i * 0.01);
             }
@@ -40,7 +40,7 @@ namespace AntColonyMethod
             DFinctionS = new List<double>();
             Kol = new List<int>();
 
-            for (int i = 0; i < NumHitPercentage; i++)
+            for (int i = 0; i < ChangeableParams.NUM_HIT_PERCENTAGE; i++)
             {
                 HitCount.Add(0);
                 МFinctionI.Add(0);
@@ -54,6 +54,11 @@ namespace AntColonyMethod
             TimeStart = new DateTime();
             TimeEnd = new DateTime();
         }
+
+        /// <summary>
+        /// ПРоцент попадания
+        /// </summary>
+        public int NumHitPercentage { get; set; }
 
         /// <summary>
         /// Время работы алгоритма
@@ -71,7 +76,7 @@ namespace AntColonyMethod
         public DateTime TimeEnd { get; set; }
 
         /// <summary>
-        /// Количество запусков выполнения
+        /// Число запусков программы
         /// </summary>
         public int numLaunches { get; set; }
 
@@ -185,12 +190,12 @@ namespace AntColonyMethod
         /// </summary>
         public void ResetStatistics()
         {
-            for (int i = 0; i < NumHitPercentage; i++)
+            for (int i = 0; i < ChangeableParams.NUM_HIT_PERCENTAGE; i++)
             {
                 HitCount[i] = 0;
             }
 
-            for (int i = 0; i < NumHitPercentage; i++)
+            for (int i = 0; i < ChangeableParams.NUM_HIT_PERCENTAGE; i++)
             {
                 МFinctionI[i] = 0;
                 DFinctionI[i] = 0;
@@ -227,7 +232,7 @@ namespace AntColonyMethod
         /// <param name="targetFunction">Значение функции</param>
         public void FindOptimalCount(double targetFunction, int nomIteration, int nomSolution)
         {
-            for (int i = 0; i < NumHitPercentage; i++)
+            for (int i = 0; i < ChangeableParams.NUM_HIT_PERCENTAGE; i++)
             {
                 if ((((optimalMax - optimalMin) * PercentageList[i] + optimalMin) <= targetFunction) && (HitCount[i] == 0))
                 {

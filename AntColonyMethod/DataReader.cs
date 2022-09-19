@@ -10,18 +10,13 @@ namespace AntColonyMethod
     class DataReader
     {
         /// <summary>
-        /// Адрес файла с данными
-        /// </summary>
-        public static string PATH_TEST_FILE_DATA = "TestData3.txt"; //Файл тестовых значений
-
-        /// <summary>
         /// Получение исходныхи данных
         /// </summary>
         /// <returns></returns>
         public DataTask GettingInputData()
         {
             DataTask dataTask = new DataTask();
-            using (var sr = new StreamReader(PATH_TEST_FILE_DATA))
+            using (var sr = new StreamReader(ChangeableParams.PATH_TEST_FILE_DATA))
             {
                 //Чтение числа итераций
                 string iterationCountStr = sr.ReadLine();

@@ -136,12 +136,8 @@ namespace AntColonyMethod
                 sw.WriteLine("Количество агентов: \t"+ dataTask.antCount+ "\tИтерация прогона: " + (statistics.LaunchesCount+1));
                 sw.WriteLine("Число итераций: \t" + dataTask.iterationCount);
                 sw.WriteLine("Время работы алгоритма: \t" + statistics.WorkTime.ToString() + "\tмс");
-                sw.WriteLine("MIteration: \t" + statistics.MIteration.ToString());
-                sw.WriteLine("DIteration: \t" + statistics.DIteration.ToString());
-                sw.WriteLine("MSolution: \t" + statistics.MSolution.ToString());
-                sw.WriteLine("DSolution: \t" + statistics.DSolution.ToString());
-                sw.WriteLine("Среднее количество переборов путей за интервал: \t" + statistics.AntEnumI);
-                sw.WriteLine("Среднее количество переборов путей за интервал в прjцентах: \t" + statistics.AntEnumIProc);
+                sw.WriteLine("MIteration: \t DIteration: \t MSolution: \t DSolution: \t Среднее количество переборов путей за интервал: \t");
+                sw.WriteLine(statistics.MIteration.ToString() + "\t" + statistics.DIteration.ToString()+"\t" + statistics.MSolution.ToString()+ "\t" + statistics.DSolution.ToString()+ "\t" + statistics.AntEnumI);                          
                 sw.WriteLine("Количество попаданий в интервал: ");
 
                 //Вывод статистики нахождения количества решенияй составляющих какой-либо процент от оптимального решения
