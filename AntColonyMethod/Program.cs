@@ -138,14 +138,13 @@ namespace AntColonyMethod
 
             CountAgent++;
 
-            string id = Guid.NewGuid().ToString();
-            agentGroup.AddNewAgent(id);
-
+            //Создание нового агента
+            string id = agentGroup.AddNewAgent();
             Agent agent = agentGroup.FindAgent(id);
 
             //Определение пути агента
-            //int[] wayAgent = agent.FindAgentWay_Method1(dataTask, statistics);
-            int[] wayAgent = agent.FindAgentWay_Method3(dataTask, statistics);
+            int[] wayAgent = agent.FindAgentWay_Method1(dataTask, statistics);
+            //int[] wayAgent = agent.FindAgentWay_Method3(dataTask, statistics);
             //int[] wayAgent = agent.FindAgentWay_Method2(dataTask);
 
             attempt += 1;

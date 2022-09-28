@@ -133,7 +133,7 @@ namespace AntColonyMethod
         /// <param name="nomParam">Номер параметро</param>
         /// <param name="graf">Граф значений</param>
         /// <returns></returns>
-        public int NextWay(int[] way, int nomParam, Graf graf)
+        private int NextWay(int[] way, int nomParam, Graf graf)
         {
             //Создаем и заполняем сиписок слоя
             List<int> Layer = new List<int>();
@@ -156,7 +156,7 @@ namespace AntColonyMethod
         /// <param name="startWay">Изменяемый путь</param>
         /// <param name="hashWay">Хэш пути</param>
         /// <returns></returns>
-        public int[] FindAlternativeWay(DataTask dataTask, int[] startWay, string hashWay, StatisticsCollection statistics)
+        private int[] FindAlternativeWay(DataTask dataTask, int[] startWay, string hashWay, StatisticsCollection statistics)
         {
             int nomParam = 0; //Номер параметра
             int[] newWay = new int[dataTask.paramCount]; //Новый путь
@@ -192,7 +192,7 @@ namespace AntColonyMethod
         /// <param name="startWay">Изменяемый путь</param>
         /// <param name="hashWay">Хэш пути</param>
         /// <returns></returns>
-        public int[] FindAlternativeWay2(DataTask dataTask, int[] startWay, string hashWay, StatisticsCollection statistics)
+        private int[] FindAlternativeWay2(DataTask dataTask, int[] startWay, string hashWay, StatisticsCollection statistics)
         {
             int nomParam = 0; //Номер параметра
             int[] newWay = new int[dataTask.paramCount]; //Новый путь

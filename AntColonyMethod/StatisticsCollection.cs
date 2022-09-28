@@ -107,7 +107,7 @@ namespace AntColonyMethod
         public double DIteration { get; set; }
 
         /// <summary>
-        /// Матожидание найденных уникальных решений
+        /// Среднее число найденных уникальных решений
         /// </summary>
         public double MSolution { get; set; }
 
@@ -127,7 +127,7 @@ namespace AntColonyMethod
         public List<double> DFinctionI { get; set; }
 
         /// <summary>
-        /// Матожидание попадание в интервал (решение)
+        /// Номер агента, нашедшего решение
         /// </summary>
         public List<double> МFinctionS { get; set; }
 
@@ -137,7 +137,7 @@ namespace AntColonyMethod
         public List<double> DFinctionS { get; set; }
 
         /// <summary>
-        /// Среднее количество переборов за итерацию
+        /// Среднее количество переборов путей за итерацию
         /// </summary>
         public double AntEnumI { get; set; }
 
@@ -186,7 +186,7 @@ namespace AntColonyMethod
         }
 
         /// <summary>
-        /// Сброс части статистики
+        /// Сброс статистики перед каждым новым прогоном
         /// </summary>
         public void ResetStatistics()
         {
@@ -213,7 +213,7 @@ namespace AntColonyMethod
 
 
         /// <summary>
-        /// Сбор статистики
+        /// Определение среднего числа итераций за все прогоны
         /// </summary>
         /// <param name="IterationCount">Номер итерации</param>
         /// <param name="SolutionCount">Число уникальных решений</param>
@@ -254,7 +254,7 @@ namespace AntColonyMethod
         }
 
         /// <summary>
-        /// Определение среднее количества переборов за решение (Сколько раз агенты переберают пути за итерацию в среднем)
+        /// Определение среднее количества переборов за решение (Сколько раз агенты перебирают пути за итерацию в среднем)
         /// </summary>
         /// <param name="IterationCount">Число итераций</param>
         public void EmunStatI(long IterationCount) {
@@ -262,6 +262,9 @@ namespace AntColonyMethod
             AntEnumIProc = KolEnumI / (KolEnumI + IterationCount);
         }
 
+        /// <summary>
+        /// Определение времени работы программы
+        /// </summary>
         public void WorkTimeLaunch() {
             WorkTime = TimeEnd - TimeStart;
         }

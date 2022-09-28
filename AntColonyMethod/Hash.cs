@@ -46,7 +46,7 @@ namespace AntColonyMethod
         /// </summary>
         /// <param name="arrInput">Хэш</param>
         /// <returns></returns>
-        public string ByteArrayToString(byte[] arrInput) //Преобрахование Хэша в строку
+        private string ByteArrayToString(byte[] arrInput) //Преобрахование Хэша в строку
         {
             int i;
             StringBuilder sOutput = new StringBuilder(arrInput.Length);

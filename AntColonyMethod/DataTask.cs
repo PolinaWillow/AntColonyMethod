@@ -7,12 +7,15 @@ using System.Threading.Tasks;
 
 namespace AntColonyMethod
 {
+    /// <summary>
+    /// Класс, служащий для хранения 
+    /// </summary>
     class DataTask
     {
         /// <summary>
         /// Количество параметров
         /// </summary>
-        public int paramCount;
+        public int paramCount { get; set; }
 
         /// <summary>
         /// Контрольное число путей
@@ -50,7 +53,7 @@ namespace AntColonyMethod
         public long iterationCount { get; set; }
 
         /// <summary>
-        /// Количество муравьев
+        /// Количество агентов
         /// </summary>
         public int antCount { get; set; }
 
@@ -69,10 +72,11 @@ namespace AntColonyMethod
             antCount = ChangeableParams.ANT_COUNT;
             iterationCount = 0;
             controlCount = 1;
+            paramCount = 0;
         }
 
         /// <summary>
-        /// Обнуление изменений входных данных
+        /// Обнуление изменений входных данных и свойства hashTable
         /// </summary>
         public void ResetDatatTask() {
             graf.InitialGraf();

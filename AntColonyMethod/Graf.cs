@@ -75,8 +75,6 @@ namespace AntColonyMethod
             }
 
             PrintGraf();
-
-
             return 0;
         }
 
@@ -179,7 +177,7 @@ namespace AntColonyMethod
         /// <param name="valueCount">Список для хранения количества значений параметров</param>
         /// <param name="way">Путь</param>
         /// <returns></returns>
-        public int ChoiceNextVertex(int i, int valueCount, int[] way) //Выбор следующей вершины
+        private int ChoiceNextVertex(int i, int valueCount, int[] way) //Выбор следующей вершины
         {
 
             double sumPheromones = 0;

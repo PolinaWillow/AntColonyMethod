@@ -11,7 +11,7 @@ namespace AntColonyMethod
         /// <summary>
         /// Файл исходных тестовых значений
         /// </summary>
-        public static string PATH_TEST_FILE_DATA { get; } = "TestData1.txt";
+        public static string PATH_TEST_FILE_DATA { get; } = "TestData6.txt";
 
         /// <summary>
         /// Ключ упорядочения графа

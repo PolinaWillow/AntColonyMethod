@@ -31,13 +31,16 @@ namespace AntColonyMethod
         /// Добавление нового агента
         /// </summary>
         /// <param name="id">Id агента</param>
-        public void AddNewAgent(string id) {
+        public string AddNewAgent() {
+            string id = Guid.NewGuid().ToString();
             Monitor.Enter(_monitor);
 
             Agent agent = new Agent { idAgent = id };
             Agents.Add(agent);
 
             Monitor.Exit(_monitor);
+            return id;
+
         }
 
         /// <summary>

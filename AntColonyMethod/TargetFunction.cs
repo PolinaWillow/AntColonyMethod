@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -8,6 +10,78 @@ namespace AntColonyMethod
 {
     class TargetFunction
     {
+        /// <summary>
+        /// Номер порта
+        /// </summary>
+        private int PORT { get; set; } = 0;
+
+        /// <summary>
+        /// IP адрес подключения
+        /// </summary>
+        private string IP { get; set; } = "";
+
+        /// <summary>
+        /// Файл конфигурации
+        /// </summary>
+        private string ConfigFile = "../../../config/config.txt";
+
+        /// <summary>
+        /// Значение целефой функции
+        /// </summary>
+        public double valueTarget { get; set; }
+
+        public TargetFunction()
+        {
+            GetConfig();
+            valueTarget = 0;
+        }
+
+        /// <summary>
+        /// Чтение файла конфигурации для получения порта и IP подключения
+        /// </summary>
+        /// <returns></returns>
+        private int GetConfig()
+        {
+            using (var sr = new StreamReader(ConfigFile))
+            {
+                string port = sr.ReadLine();
+                PORT = Convert.ToInt32(port);
+                IP = sr.ReadLine();
+            }
+            //Console.WriteLine("PORT: " + PORT + " IP: " + IP);
+            return 0;
+        }
+
+        /// <summary>
+        /// Отправление данных для подсчета значения целевой функции
+        /// </summary>
+        /// <param name="path">Массив значений параметров</param>
+        /// <param name="pathLength">Длина массива</param>
+        /// <returns></returns>
+        private int SendData(string[] path, int pathLength)
+        {
+            try
+            {
+                //Определение точки подключения
+                var EndPoint = new IPEndPoint(IPAddress.Parse(IP), PORT);
+                //Создание сокета
+                var newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                //Подключение к серверу
+                newSocket.Connect(EndPoint);
+
+                //Отправление длины массива
+                string lengthMas = Convert.ToString(pathLength);
+                byte[] data = Encoding.Unicode.GetBytes(lengthMas);
+                newSocket.Send(data);
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+            }
+            return 0;
+        }
+
         /// <summary>
         /// Подсчет значения целефой функции
         /// </summary>
@@ -44,7 +118,7 @@ namespace AntColonyMethod
         public double FindMaxFunction(DataTask dataTask, Agent agent, double max, string[] maxFunction, int[] wayAgent)
         {
             double valueFunction = FindValue(agent.wayAgent, dataTask.graf.Params, dataTask.paramCount); //Вычисление значений критериев
-                                                                                                                        //Console.WriteLine("Значение критерия: " + valueFunction + "\n");
+                                                                                                         //Console.WriteLine("Значение критерия: " + valueFunction + "\n");
             if (valueFunction >= max)
             {
                 maxFunction[0] = Convert.ToString(valueFunction);
@@ -70,7 +144,7 @@ namespace AntColonyMethod
         public double FindMinFunction(DataTask dataTask, Agent agent, double min, string[] minFunction, int[] wayAgent)
         {
             double valueFunction = FindValue(agent.wayAgent, dataTask.graf.Params, dataTask.paramCount); //Вычисление значений критериев
-                                                                                            
+
             if (valueFunction <= min)
             {
                 minFunction[0] = Convert.ToString(valueFunction);
