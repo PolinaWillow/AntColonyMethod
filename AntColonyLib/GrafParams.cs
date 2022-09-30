@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntColonyMethod
+namespace AntColonyLib
 {
-    class GrafParams
+    public class GrafParams
     {
         /// <summary>
         /// Id параметра
@@ -27,7 +27,7 @@ namespace AntColonyMethod
         /// Тип параметра
         /// </summary>
         public TypeNumerator typeParam { get; set; }
-        
+
         /// <summary>
         /// Номер значения параметра
         /// </summary>
@@ -37,7 +37,7 @@ namespace AntColonyMethod
         /// Значение параметра
         /// </summary>
         public string valueParam { get; set; }
-        
+
         /// <summary>
         /// Количество феромонов
         /// </summary>
@@ -57,7 +57,8 @@ namespace AntColonyMethod
         /// Инициализация графа
         /// </summary>
         /// <returns></returns>
-        public int InitialState() {
+        public int InitialState()
+        {
             pheromones = 1;
             return 0;
         }

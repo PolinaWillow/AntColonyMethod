@@ -4,14 +4,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntColonyMethod
+namespace AntColonyLib
 {
     /// <summary>
     /// Нумератор
     /// </summary>
-    enum TypeNumerator
-    {       
-        Double =0,
+    public enum TypeNumerator
+    {
+        Double = 0,
         String
     }
 }

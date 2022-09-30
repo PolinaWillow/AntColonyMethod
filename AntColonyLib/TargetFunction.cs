@@ -6,9 +6,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntColonyMethod
+namespace AntColonyLib
 {
-    class TargetFunction
+    public class TargetFunction
     {
         /// <summary>
         /// Номер порта
@@ -115,9 +115,9 @@ namespace AntColonyMethod
         /// <param name="maxFunction">Массив для хранения максимума и пути его получения</param>
         /// <param name="wayAgent">Путь агента</param>
         /// <returns></returns>
-        public double FindMaxFunction(DataTask dataTask, Agent agent, double max, string[] maxFunction, int[] wayAgent)
+        public double FindMaxFunction(DataTask dataTask, List<int> way, double max, string[] maxFunction, int[] wayAgent)
         {
-            double valueFunction = FindValue(agent.wayAgent, dataTask.graf.Params, dataTask.paramCount); //Вычисление значений критериев
+            double valueFunction = FindValue(way, dataTask.graf.Params, dataTask.paramCount); //Вычисление значений критериев
                                                                                                          //Console.WriteLine("Значение критерия: " + valueFunction + "\n");
             if (valueFunction >= max)
             {
@@ -141,9 +141,9 @@ namespace AntColonyMethod
         /// <param name="minFunction">Массив для хранения минимума и пути его получения</param>
         /// <param name="wayAgent">Путь агента</param>
         /// <returns></returns>
-        public double FindMinFunction(DataTask dataTask, Agent agent, double min, string[] minFunction, int[] wayAgent)
+        public double FindMinFunction(DataTask dataTask, List<int> way, double min, string[] minFunction, int[] wayAgent)
         {
-            double valueFunction = FindValue(agent.wayAgent, dataTask.graf.Params, dataTask.paramCount); //Вычисление значений критериев
+            double valueFunction = FindValue(way, dataTask.graf.Params, dataTask.paramCount); //Вычисление значений критериев
 
             if (valueFunction <= min)
             {

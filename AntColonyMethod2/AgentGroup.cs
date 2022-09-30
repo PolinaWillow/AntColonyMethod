@@ -6,7 +6,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using AntColonyLib;
 
-namespace AntColonyMethod
+namespace AntColonyMethod2
 {
     public class AgentGroup
     {

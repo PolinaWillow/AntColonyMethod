@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AntColonyLib;
 
-namespace AntColonyMethod
+namespace AntColonyMethod2
 {
     public class Agent
     {
@@ -34,9 +34,9 @@ namespace AntColonyMethod
             }
             return result;
         }
-      
+
         /// <summary>
-        /// Определениие пути агента
+        /// Определениие пути агента (Вариант 3)
         /// </summary>
         /// <param name="dataTask">Набор входных данных</param>
         /// <returns></returns>
@@ -54,6 +54,9 @@ namespace AntColonyMethod
             }
             else
             {
+                //Создание упорядоченной копии графа
+                dataTask.grafCopy.CreateGrafClone(dataTask.grafCopy, dataTask, "ParamsIncreasing", 0);
+
                 int[] newWayAgent = FindAlternativeWay(dataTask, wayAgent, hashWay, statistics);
                 hashWay = hash.GetHash(newWayAgent);
                 hash.AddNewHash(hashWay, wayAgent, dataTask.hashTable);
@@ -64,7 +67,7 @@ namespace AntColonyMethod
             return wayAgent;
 
         }
-       
+
         /// <summary>
         /// Новый путь агента
         /// </summary>
@@ -88,8 +91,9 @@ namespace AntColonyMethod
             return 0;
         }
 
+
         /// <summary>
-        /// Поиск альтернативного путя агента (Вариант 1)
+        /// Поиск альтернативного путя агента (Вариант 2)
         /// </summary>
         /// <param name="dataTask">Набор исходных данных</param>
         /// <param name="startWay">Изменяемый путь</param>
@@ -102,19 +106,20 @@ namespace AntColonyMethod
             Hash hash = new Hash();
             Array.Copy(startWay, 0, newWay, 0, dataTask.paramCount);
 
+
             while (dataTask.hashTable.ContainsKey(hashWay) && (nomParam < dataTask.paramCount))
             {
                 //Сохраняем количество переборов
                 statistics.KolEnumI++;
 
-                NextWay(newWay, nomParam, dataTask.graf);
+                NextWay(newWay, nomParam, dataTask.grafCopy);
 
                 if (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.paramCount)
                 {
                     while (newWay[nomParam] == startWay[nomParam] && nomParam < (dataTask.paramCount - 1))
                     {
                         nomParam += 1;
-                        NextWay(newWay, nomParam, dataTask.graf);
+                        NextWay(newWay, nomParam, dataTask.grafCopy);
                     }
                     nomParam = 0;
                 }
@@ -122,6 +127,7 @@ namespace AntColonyMethod
             }
 
             return newWay;
-        }      
+        }
+
     }
 }

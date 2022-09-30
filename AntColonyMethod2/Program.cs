@@ -8,7 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using AntColonyLib;
 
-namespace AntColonyMethod
+namespace AntColonyMethod2
 {
     class Program
     {
@@ -21,7 +21,7 @@ namespace AntColonyMethod
 
             //Создание графа  
             dataTask.graf.CreateGraf(dataTask);
-           
+
             string[] maxFunction = new string[dataTask.paramCount + 1]; //Массив хранения максимума функции и значения параметров
             string[] minFunction = new string[dataTask.paramCount + 1]; //Массив хранения минимума функции и значения параметров
 
@@ -30,7 +30,7 @@ namespace AntColonyMethod
 
             //Создание выходного файла
             DataWriter dataWriter = new DataWriter();
-            string outputFile = dataWriter.CreateOutputFile(dataTask); 
+            string outputFile = dataWriter.CreateOutputFile(dataTask);
 
             int attempt = 0; //Количество попыток нахождения уникального пути
 
@@ -76,7 +76,7 @@ namespace AntColonyMethod
                             {
                                 AgentPassage(dataTask, agentGroup, CountAgent, attempt, min, max, maxFunction, minFunction, statistics, j);
                                 max = Convert.ToDouble(maxFunction[0]);
-                                min = Convert.ToDouble(minFunction[0]);                                
+                                min = Convert.ToDouble(minFunction[0]);
                             });
                         }
                         else
@@ -85,7 +85,7 @@ namespace AntColonyMethod
                             {
                                 AgentPassage(dataTask, agentGroup, CountAgent, attempt, min, max, maxFunction, minFunction, statistics, j);
                                 max = Convert.ToDouble(maxFunction[0]);
-                                min = Convert.ToDouble(minFunction[0]);                                                             
+                                min = Convert.ToDouble(minFunction[0]);
                             }
                         }
 
@@ -102,7 +102,7 @@ namespace AntColonyMethod
 
                         //Занесение результатов прохода итерации в файл
                         dataWriter.GettingOutputData(outputFile, (j + 1), maxFunction, minFunction);
-                        
+
                         //Сбор статистики после каждой итерации
                         statistics.UniqueSolutionCount = dataTask.antCount;
                         statistics.CollectingStat(j, statistics.UniqueSolutionCount);
@@ -118,7 +118,7 @@ namespace AntColonyMethod
                     statistics.EmunStatI(dataTask.iterationCount);
 
                     //Запись статистики в файл
-                    dataWriter.GettingOutputData(outputStat, statistics, dataTask);                 
+                    dataWriter.GettingOutputData(outputStat, statistics, dataTask);
 
                     statistics.LaunchesCount++;
                 }
@@ -149,7 +149,7 @@ namespace AntColonyMethod
             attempt += 1;
 
             //Сохранение пути агента
-            agentGroup.AddWayAgent(wayAgent, id);            
+            agentGroup.AddWayAgent(wayAgent, id);
 
             //Поиск максимума и минимума
             TargetFunction targetFunction = new TargetFunction();
@@ -157,7 +157,7 @@ namespace AntColonyMethod
             //Сбор статистики о количестве найденных оптимумов
             List<int> way = new List<int>();
             way.AddRange(wayAgent);
-            statistics.FindOptimalCount(targetFunction.FindValue(way, dataTask.graf.Params, dataTask.paramCount), (nomIteration+1), agentGroup.Agents.Count());
+            statistics.FindOptimalCount(targetFunction.FindValue(way, dataTask.graf.Params, dataTask.paramCount), (nomIteration + 1), agentGroup.Agents.Count());
 
 
             targetFunction.FindMaxFunction(dataTask, agent.wayAgent, max, maxFunction, wayAgent);
@@ -175,7 +175,7 @@ namespace AntColonyMethod
             {
                 dataTask.graf.InitialGraf();
                 attempt = 0;
-            }            
+            }
         }
     }
 }

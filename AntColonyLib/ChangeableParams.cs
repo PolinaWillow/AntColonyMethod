@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntColonyMethod
+namespace AntColonyLib
 {
-    class ChangeableParams
+    public class ChangeableParams
     {
         /// <summary>
         /// Файл исходных тестовых значений
@@ -33,7 +33,7 @@ namespace AntColonyMethod
         /// <summary>
         /// Количество интервалов попадания
         /// </summary>
-        public static int NUM_HIT_PERCENTAGE { get; } = 16;     
+        public static int NUM_HIT_PERCENTAGE { get; } = 16;
 
         /// <summary>
         /// Интервал изменения количества муравьев

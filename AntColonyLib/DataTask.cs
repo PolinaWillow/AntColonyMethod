@@ -5,12 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntColonyMethod
+namespace AntColonyLib
 {
     /// <summary>
     /// Класс, служащий для хранения 
     /// </summary>
-    class DataTask
+    public class DataTask
     {
         /// <summary>
         /// Количество параметров
@@ -62,7 +62,8 @@ namespace AntColonyMethod
         /// </summary>
         public bool availabilityThread { get; set; }
 
-        public DataTask() {
+        public DataTask()
+        {
             valueCount = new List<int>();
             valueData = new List<string>();
             hashTable = new Hashtable();
@@ -78,7 +79,8 @@ namespace AntColonyMethod
         /// <summary>
         /// Обнуление изменений входных данных и свойства hashTable
         /// </summary>
-        public void ResetDatatTask() {
+        public void ResetDatatTask()
+        {
             graf.InitialGraf();
             hashTable.Clear();
         }

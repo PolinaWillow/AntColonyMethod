@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntColonyMethod
+namespace AntColonyLib
 {
-    class DataWriter
+    public class DataWriter
     {
         /// <summary>
         /// Файл с выходными данными
@@ -123,7 +123,8 @@ namespace AntColonyMethod
             statistics.DIteration = statistics.DIteration / statistics.numLaunches;
             statistics.DSolution = statistics.DSolution / statistics.numLaunches;
 
-            for (int i = 0; i < statistics.NumHitPercentage; i++) {
+            for (int i = 0; i < statistics.NumHitPercentage; i++)
+            {
                 statistics.МFinctionI[i] = statistics.МFinctionI[i] / statistics.Kol[i];
                 statistics.DFinctionI[i] = statistics.DFinctionI[i] / statistics.Kol[i];
                 statistics.МFinctionS[i] = statistics.МFinctionS[i] / statistics.Kol[i];
@@ -133,11 +134,11 @@ namespace AntColonyMethod
             using (StreamWriter sw = new StreamWriter(outputDataFile, true))
             {
                 //Запись результата              
-                sw.WriteLine("Количество агентов: \t"+ dataTask.antCount+ "\tИтерация прогона: " + (statistics.LaunchesCount+1));
+                sw.WriteLine("Количество агентов: \t" + dataTask.antCount + "\tИтерация прогона: " + (statistics.LaunchesCount + 1));
                 sw.WriteLine("Число итераций: \t" + dataTask.iterationCount);
                 sw.WriteLine("Время работы алгоритма: \t" + statistics.WorkTime.ToString() + "\tмс");
                 sw.WriteLine("MIteration: \t DIteration: \t MSolution: \t DSolution: \t Среднее количество переборов путей за интервал: \t");
-                sw.WriteLine(statistics.MIteration.ToString() + "\t" + statistics.DIteration.ToString()+"\t" + statistics.MSolution.ToString()+ "\t" + statistics.DSolution.ToString()+ "\t" + statistics.AntEnumI);                          
+                sw.WriteLine(statistics.MIteration.ToString() + "\t" + statistics.DIteration.ToString() + "\t" + statistics.MSolution.ToString() + "\t" + statistics.DSolution.ToString() + "\t" + statistics.AntEnumI);
                 sw.WriteLine("Количество попаданий в интервал: ");
 
                 //Вывод статистики нахождения количества решенияй составляющих какой-либо процент от оптимального решения
@@ -160,9 +161,9 @@ namespace AntColonyMethod
                 {
                     sw.Write(statistics.МFinctionI[i] + " \t" + statistics.DFinctionI[i] + " \t");
                 }
-                sw.Write("\n");              
+                sw.Write("\n");
 
-                sw.Write("MFinctionS | DFinctionI:\t" + statistics.МFinctionS[0] + "\t"+ statistics.DFinctionS[0] + "\t");
+                sw.Write("MFinctionS | DFinctionI:\t" + statistics.МFinctionS[0] + "\t" + statistics.DFinctionS[0] + "\t");
                 for (int i = 1; i < statistics.NumHitPercentage; i++)
                 {
                     sw.Write(statistics.МFinctionS[i] + " \t" + statistics.DFinctionS[i] + " \t");
@@ -174,6 +175,6 @@ namespace AntColonyMethod
                 sw.Close();
             }
 
-        }        
+        }
     }
 }

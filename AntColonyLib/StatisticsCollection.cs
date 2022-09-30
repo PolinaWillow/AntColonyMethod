@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntColonyMethod
+namespace AntColonyLib
 {
-    class StatisticsCollection
+    public class StatisticsCollection
     {
         public StatisticsCollection()
         {
@@ -180,7 +180,7 @@ namespace AntColonyMethod
             MIteration = 0;
             DIteration = 0;
             MSolution = 0;
-            DSolution = 0;           
+            DSolution = 0;
 
             UniqueSolutionCount = 0;
         }
@@ -257,7 +257,8 @@ namespace AntColonyMethod
         /// Определение среднее количества переборов за решение (Сколько раз агенты перебирают пути за итерацию в среднем)
         /// </summary>
         /// <param name="IterationCount">Число итераций</param>
-        public void EmunStatI(long IterationCount) {
+        public void EmunStatI(long IterationCount)
+        {
             AntEnumI = KolEnumI / IterationCount;
             AntEnumIProc = KolEnumI / (KolEnumI + IterationCount);
         }
@@ -265,10 +266,11 @@ namespace AntColonyMethod
         /// <summary>
         /// Определение времени работы программы
         /// </summary>
-        public void WorkTimeLaunch() {
+        public void WorkTimeLaunch()
+        {
             WorkTime = TimeEnd - TimeStart;
         }
-    
+
     }
 
 }

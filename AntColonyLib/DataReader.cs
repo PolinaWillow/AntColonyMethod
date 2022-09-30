@@ -5,9 +5,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntColonyMethod
+namespace AntColonyLib
 {
-    class DataReader
+    public class DataReader
     {
         /// <summary>
         /// Получение исходныхи данных

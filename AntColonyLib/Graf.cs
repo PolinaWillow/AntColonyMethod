@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntColonyMethod
+namespace AntColonyLib
 {
-    class Graf
+    public class Graf
     {
         /// <summary>
         /// Список параметров
@@ -137,7 +137,7 @@ namespace AntColonyMethod
                         h = 1;
                     }
                     GrafCopy.Params[k].numParamFact = f;
-                    
+
                     k++;
                 }
 
@@ -226,51 +226,6 @@ namespace AntColonyMethod
             return 0;
         }
 
-        /// <summary>
-        /// Добавление феромонов
-        /// </summary>
-        /// <param name="dataTask">Набор исходных данных</param>
-        /// <param name="way">Путь агента</param>
-        /// <param name="function">Значение искомой функции</param>
-        /// <returns></returns>
-        public double AddPheromone(DataTask dataTask, List<int> way, double functionValue) //Добавление феромонов
-        {
-            double eps = 0.0000000000000001;
-            double delta = ChangeableParams.Q / (functionValue + eps);
-
-            for (int i = 0; i < dataTask.paramCount; i++)
-            {
-                Params[way[i]].pheromones += delta;
-            }
-
-            return delta;
-        }
-
-        /// <summary>
-        /// Изменение феромонов
-        /// </summary>
-        /// <param name="agent">Список агентов</param>
-        /// <returns></returns>
-        public int PheromoneEvaporation(List<Agent> agents) //Испарение феромона
-        {
-            //Умножаем для максимума, делаим для минимума
-            foreach (GrafParams grafElem in Params)
-            {
-                double Evaporation = ChangeableParams.L * Convert.ToDouble(grafElem.pheromones);
-
-                foreach (Agent agentElem in agents)
-                {
-                    foreach (int wayElem in agentElem.wayAgent)
-                    {
-                        if (wayElem == grafElem.idParam)
-                        {
-                            Evaporation += (1 - ChangeableParams.L) * agentElem.delta;
-                        }
-                    }
-                }
-                grafElem.pheromones = Evaporation;
-            }
-            return 0;
-        }
+        
     }
 }

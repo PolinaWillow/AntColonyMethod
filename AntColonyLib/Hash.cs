@@ -4,9 +4,9 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
 
-namespace AntColonyMethod
+namespace AntColonyLib
 {
-    class Hash
+    public class Hash
     {
         /// <summary>
         /// Монитор
@@ -55,6 +55,6 @@ namespace AntColonyMethod
                 sOutput.Append(arrInput[i].ToString("X2"));
             }
             return sOutput.ToString();
-        }       
+        }
     }
 }
