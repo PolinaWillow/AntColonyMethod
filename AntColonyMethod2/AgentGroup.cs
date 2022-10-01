@@ -95,7 +95,7 @@ namespace AntColonyMethod2
             double eps = 0.0000000000000001;
             double delta = ChangeableParams.Q / (functionValue + eps);
 
-            for (int i = 0; i < dataTask.paramCount; i++)
+            for (int i = 0; i < dataTask.graf.paramCount; i++)
             {
                 dataTask.graf.Params[way[i]].pheromones += delta;
             }

@@ -11,21 +11,11 @@ namespace AntColonyLib
     /// Класс, служащий для хранения 
     /// </summary>
     public class DataTask
-    {
-        /// <summary>
-        /// Количество параметров
-        /// </summary>
-        public int paramCount { get; set; }
-
+    {       
         /// <summary>
         /// Контрольное число путей
         /// </summary>
-        public int controlCount { get; set; }
-
-        /// <summary>
-        /// Список для хранения количества значений параметров
-        /// </summary>
-        public List<int> valueCount { get; set; }
+        public int controlCount { get; set; }       
 
         /// <summary>
         /// Список входных значений
@@ -64,7 +54,7 @@ namespace AntColonyLib
 
         public DataTask()
         {
-            valueCount = new List<int>();
+            
             valueData = new List<string>();
             hashTable = new Hashtable();
             graf = new Graf();
@@ -73,7 +63,7 @@ namespace AntColonyLib
             antCount = ChangeableParams.ANT_COUNT;
             iterationCount = 0;
             controlCount = 1;
-            paramCount = 0;
+            
         }
 
         /// <summary>
@@ -83,6 +73,106 @@ namespace AntColonyLib
         {
             graf.InitialGraf();
             hashTable.Clear();
+        }
+
+        /// <summary>
+        /// Заполнение графа
+        /// </summary>       
+        public int CreateGraf() //Создание графа 
+        {
+            //Заполнение списка элементов графа 
+            int id = 0;
+            for (int i = 0; i < graf.paramCount; i++)
+            {
+                graf.IDFirstValueParam.Add(id);
+                for (int j = 0; j < graf.valueCount[i]; j++)
+                {
+                    graf.Params.Add(new GrafParams() { idParam = id, numParamFact = i, numParam = i, pheromones = 1, selectNum = 0 });
+
+                    //Опредление типа значения параметра
+                    if (double.TryParse(valueData[id], out double res))
+                    {
+                        graf.Params[id].typeParam = TypeNumerator.Double;
+                    }
+                    else { graf.Params[id].typeParam = TypeNumerator.String; }
+                    graf.Params[id].numValueParam = j;
+                    graf.Params[id].valueParam = valueData[id];
+
+                    id++;
+                }
+            }
+            graf.PrintGraf();
+            return 0;
+        }
+
+        /// <summary>
+        /// Создание Упорядоченного графа
+        /// </summary>
+        /// <param name="ParamsCopy">Упорядочевиемый граф</param>
+        /// <param name="dataTask">Исходные данные</param>
+        /// <param name="key">Ключ упорядочения</param>
+        /// <param name="NumParam">Номер параметра</param>
+        /// <returns></returns>
+        public int CreateGrafClone(string key, int NumParam)
+        {
+            if (string.Compare(key, "ParamsIncreasing") == 0)
+            { //Упорядочивание № параметров по количеству значений по возрастанию 
+                //Упорядочивание номеров параметров
+                int[,] NumsParams = new int[graf.valueCount.Count, 2];
+                for (int i = 0; i < graf.valueCount.Count; i++)
+                {
+                    NumsParams[i, 0] = i;
+                    NumsParams[i, 1] = graf.valueCount[i];
+                }
+
+                //Сортировка номеров параметров
+                for (int i = 1; i < graf.valueCount.Count; i++)
+                {
+                    for (int j = 0; j < graf.valueCount.Count - 1; j++)
+                    {
+                        if (NumsParams[j, 1] > NumsParams[j + 1, 1])
+                        {
+                            int num = NumsParams[j, 0];
+                            int val = NumsParams[j, 1];
+                            NumsParams[j, 0] = NumsParams[j + 1, 0];
+                            NumsParams[j, 1] = NumsParams[j + 1, 1];
+                            NumsParams[j + 1, 0] = num;
+                            NumsParams[j + 1, 1] = val;
+                        }
+                    }
+                }
+
+                //Создание клона графа
+                for (int i = 0; i < graf.valueCount.Count; i++)
+                {
+                    for (int j = 0; j < NumsParams[i, 1]; j++)
+                    {
+                        grafCopy.Params.Add(graf.Params[graf.IDFirstValueParam[NumsParams[i, 0]] + j]);
+                    }
+                }
+
+                //Перенумерация параметров
+                int f = 0;
+                int k = 0;
+                int h = 0;
+                while (k < graf.Params.Count)
+                {
+                    h++;
+                    if (h > NumsParams[f, 1])
+                    {
+                        f++;
+                        h = 1;
+                    }
+                    grafCopy.Params[k].numParamFact = f;
+
+                    k++;
+                }
+
+                //GrafCopy.PrintGraf();
+            }
+
+
+            return 0;
         }
 
 

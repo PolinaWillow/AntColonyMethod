@@ -57,7 +57,7 @@ namespace AntColonyMethod
                 int[] newWayAgent = FindAlternativeWay(dataTask, wayAgent, hashWay, statistics);
                 hashWay = hash.GetHash(newWayAgent);
                 hash.AddNewHash(hashWay, wayAgent, dataTask.hashTable);
-                Array.Copy(newWayAgent, 0, wayAgent, 0, dataTask.paramCount);
+                Array.Copy(newWayAgent, 0, wayAgent, 0, dataTask.graf.paramCount);
 
             }
 
@@ -98,20 +98,20 @@ namespace AntColonyMethod
         private int[] FindAlternativeWay(DataTask dataTask, int[] startWay, string hashWay, StatisticsCollection statistics)
         {
             int nomParam = 0; //Номер параметра
-            int[] newWay = new int[dataTask.paramCount]; //Новый путь
+            int[] newWay = new int[dataTask.graf.paramCount]; //Новый путь
             Hash hash = new Hash();
-            Array.Copy(startWay, 0, newWay, 0, dataTask.paramCount);
+            Array.Copy(startWay, 0, newWay, 0, dataTask.graf.paramCount);
 
-            while (dataTask.hashTable.ContainsKey(hashWay) && (nomParam < dataTask.paramCount))
+            while (dataTask.hashTable.ContainsKey(hashWay) && (nomParam < dataTask.graf.paramCount))
             {
                 //Сохраняем количество переборов
                 statistics.KolEnumI++;
 
                 NextWay(newWay, nomParam, dataTask.graf);
 
-                if (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.paramCount)
+                if (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.graf.paramCount)
                 {
-                    while (newWay[nomParam] == startWay[nomParam] && nomParam < (dataTask.paramCount - 1))
+                    while (newWay[nomParam] == startWay[nomParam] && nomParam < (dataTask.graf.paramCount - 1))
                     {
                         nomParam += 1;
                         NextWay(newWay, nomParam, dataTask.graf);

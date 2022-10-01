@@ -117,12 +117,12 @@ namespace AntColonyLib
         /// <returns></returns>
         public double FindMaxFunction(DataTask dataTask, List<int> way, double max, string[] maxFunction, int[] wayAgent)
         {
-            double valueFunction = FindValue(way, dataTask.graf.Params, dataTask.paramCount); //Вычисление значений критериев
+            double valueFunction = FindValue(way, dataTask.graf.Params, dataTask.graf.paramCount); //Вычисление значений критериев
                                                                                                          //Console.WriteLine("Значение критерия: " + valueFunction + "\n");
             if (valueFunction >= max)
             {
                 maxFunction[0] = Convert.ToString(valueFunction);
-                for (int k = 1; k < dataTask.paramCount + 1; k++)
+                for (int k = 1; k < dataTask.graf.paramCount + 1; k++)
                 {
                     maxFunction[k] = dataTask.graf.Params[wayAgent[k - 1]].valueParam;
                 }
@@ -143,12 +143,12 @@ namespace AntColonyLib
         /// <returns></returns>
         public double FindMinFunction(DataTask dataTask, List<int> way, double min, string[] minFunction, int[] wayAgent)
         {
-            double valueFunction = FindValue(way, dataTask.graf.Params, dataTask.paramCount); //Вычисление значений критериев
+            double valueFunction = FindValue(way, dataTask.graf.Params, dataTask.graf.paramCount); //Вычисление значений критериев
 
             if (valueFunction <= min)
             {
                 minFunction[0] = Convert.ToString(valueFunction);
-                for (int k = 1; k < dataTask.paramCount + 1; k++)
+                for (int k = 1; k < dataTask.graf.paramCount + 1; k++)
                 {
                     minFunction[k] = dataTask.graf.Params[wayAgent[k - 1]].valueParam;
                 }

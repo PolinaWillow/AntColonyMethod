@@ -24,14 +24,14 @@ namespace AntColonyLib
 
                 //Чтение числа пораметров
                 string countParam = sr.ReadLine();
-                dataTask.paramCount = Convert.ToInt32(countParam);
+                dataTask.graf.paramCount = Convert.ToInt32(countParam);
 
                 //Определение массива количества значений параметров
                 string countValueParam = sr.ReadLine();
-                dataTask.valueCount.AddRange(countValueParam.Split(' ').Select(x => Convert.ToInt32(x)).ToList());
+                dataTask.graf.valueCount.AddRange(countValueParam.Split(' ').Select(x => Convert.ToInt32(x)).ToList());
 
                 //Считывание всех значений параметров 
-                for (int i = 0; i < dataTask.paramCount; i++)
+                for (int i = 0; i < dataTask.graf.paramCount; i++)
                 {
                     string valueParam = sr.ReadLine();
                     dataTask.valueData.AddRange(valueParam.Split(' '));
@@ -40,7 +40,7 @@ namespace AntColonyLib
                 sr.Close();
             }
 
-            foreach (int elem in dataTask.valueCount) //Подсчет количества всех путей
+            foreach (int elem in dataTask.graf.valueCount) //Подсчет количества всех путей
             {
                 dataTask.controlCount = dataTask.controlCount * elem;
             }

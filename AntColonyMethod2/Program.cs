@@ -20,10 +20,10 @@ namespace AntColonyMethod2
             dataTask = dataReader.GettingInputData();
 
             //Создание графа  
-            dataTask.graf.CreateGraf(dataTask);
+            dataTask.CreateGraf();
 
-            string[] maxFunction = new string[dataTask.paramCount + 1]; //Массив хранения максимума функции и значения параметров
-            string[] minFunction = new string[dataTask.paramCount + 1]; //Массив хранения минимума функции и значения параметров
+            string[] maxFunction = new string[dataTask.graf.paramCount + 1]; //Массив хранения максимума функции и значения параметров
+            string[] minFunction = new string[dataTask.graf.paramCount + 1]; //Массив хранения минимума функции и значения параметров
 
             double max = double.MinValue;
             double min = double.MaxValue;
@@ -93,7 +93,7 @@ namespace AntColonyMethod2
                         //Занесение феромона
                         for (int i = 0; i < agentGroup.Agents.Count(); i++)
                         {
-                            double functionValue = targetFun.FindValue(agentGroup.Agents[i].wayAgent, dataTask.graf.Params, dataTask.paramCount);
+                            double functionValue = targetFun.FindValue(agentGroup.Agents[i].wayAgent, dataTask.graf.Params, dataTask.graf.paramCount);
                             agentGroup.Agents[i].delta = agentGroup.AddPheromone(dataTask, agentGroup.Agents[i].wayAgent, functionValue);
                         }
 
@@ -157,7 +157,7 @@ namespace AntColonyMethod2
             //Сбор статистики о количестве найденных оптимумов
             List<int> way = new List<int>();
             way.AddRange(wayAgent);
-            statistics.FindOptimalCount(targetFunction.FindValue(way, dataTask.graf.Params, dataTask.paramCount), (nomIteration + 1), agentGroup.Agents.Count());
+            statistics.FindOptimalCount(targetFunction.FindValue(way, dataTask.graf.Params, dataTask.graf.paramCount), (nomIteration + 1), agentGroup.Agents.Count());
 
 
             targetFunction.FindMaxFunction(dataTask, agent.wayAgent, max, maxFunction, wayAgent);
