@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AntColonyLib
 {
-    public class GrafParams
+    public class GraphParams
     {
         /// <summary>
         /// Id параметра

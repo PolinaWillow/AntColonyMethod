@@ -43,7 +43,7 @@ namespace AntColonyMethod
         public int[] FindAgentWay_Method(DataTask dataTask, StatisticsCollection statistics)
         {
             int[] wayAgent;
-            wayAgent = dataTask.graf.FindWay(dataTask); //Генерация первичного пути
+            wayAgent = dataTask.graphWorkCopy.FindWay(dataTask); //Генерация первичного пути
 
             //Вычисление Хэша пути
             Hash hash = new Hash();
@@ -57,7 +57,7 @@ namespace AntColonyMethod
                 int[] newWayAgent = FindAlternativeWay(dataTask, wayAgent, hashWay, statistics);
                 hashWay = hash.GetHash(newWayAgent);
                 hash.AddNewHash(hashWay, wayAgent, dataTask.hashTable);
-                Array.Copy(newWayAgent, 0, wayAgent, 0, dataTask.graf.paramCount);
+                Array.Copy(newWayAgent, 0, wayAgent, 0, dataTask.graphWorkCopy.paramCount);
 
             }
 
@@ -70,13 +70,13 @@ namespace AntColonyMethod
         /// </summary>
         /// <param name="way">Путь агента</param>
         /// <param name="nomParam">Номер параметро</param>
-        /// <param name="graf">Граф значений</param>
+        /// <param name="graph">Граф значений</param>
         /// <returns></returns>
-        private int NextWay(int[] way, int nomParam, Graf graf)
+        private int NextWay(int[] way, int nomParam, Graph graph)
         {
             //Создаем и заполняем сиписок слоя
             List<int> Layer = new List<int>();
-            foreach (GrafParams elem in graf.Params)
+            foreach (GraphParams elem in graph.Params)
             {
                 if (elem.numParamFact == nomParam) { Layer.Add(elem.idParam); }
             }
@@ -98,23 +98,23 @@ namespace AntColonyMethod
         private int[] FindAlternativeWay(DataTask dataTask, int[] startWay, string hashWay, StatisticsCollection statistics)
         {
             int nomParam = 0; //Номер параметра
-            int[] newWay = new int[dataTask.graf.paramCount]; //Новый путь
+            int[] newWay = new int[dataTask.graphWorkCopy.paramCount]; //Новый путь
             Hash hash = new Hash();
-            Array.Copy(startWay, 0, newWay, 0, dataTask.graf.paramCount);
+            Array.Copy(startWay, 0, newWay, 0, dataTask.graphWorkCopy.paramCount);
 
-            while (dataTask.hashTable.ContainsKey(hashWay) && (nomParam < dataTask.graf.paramCount))
+            while (dataTask.hashTable.ContainsKey(hashWay) && (nomParam < dataTask.graphWorkCopy.paramCount))
             {
                 //Сохраняем количество переборов
                 statistics.KolEnumI++;
 
-                NextWay(newWay, nomParam, dataTask.graf);
+                NextWay(newWay, nomParam, dataTask.graphWorkCopy);
 
-                if (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.graf.paramCount)
+                if (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.graphWorkCopy.paramCount)
                 {
-                    while (newWay[nomParam] == startWay[nomParam] && nomParam < (dataTask.graf.paramCount - 1))
+                    while (newWay[nomParam] == startWay[nomParam] && nomParam < (dataTask.graphWorkCopy.paramCount - 1))
                     {
                         nomParam += 1;
-                        NextWay(newWay, nomParam, dataTask.graf);
+                        NextWay(newWay, nomParam, dataTask.graphWorkCopy);
                     }
                     nomParam = 0;
                 }

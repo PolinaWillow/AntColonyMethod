@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace AntColonyLib
 {
-    public class Graf
+    public class Graph
     {
         /// <summary>
         /// Список параметров
         /// </summary>
-        public List<GrafParams> Params { get; set; }
+        public List<GraphParams> Params { get; set; }
 
         /// <summary>
         /// Список id первых значений параметра
@@ -32,9 +32,9 @@ namespace AntColonyLib
         /// Инициализация графа
         /// </summary>
         /// <returns></returns>
-        public int InitialGraf()
+        public int InitialGraph()
         {
-            foreach (GrafParams element in Params)
+            foreach (GraphParams element in Params)
             {
                 element.InitialState();
             }
@@ -45,9 +45,9 @@ namespace AntColonyLib
         /// Печать графа
         /// </summary>
         /// <returns></returns>
-        public int PrintGraf()
+        public int PrintGraph()
         {
-            foreach (GrafParams element in Params)
+            foreach (GraphParams element in Params)
             {
                 Console.WriteLine(element);
             }
@@ -126,15 +126,15 @@ namespace AntColonyLib
                 x++;
             }
 
-            way[Params[i].numParam] = Idij[parametrNum - 1];
+            way[Params[i].numParamFact] = Idij[parametrNum - 1];
             //Поднятие флага выбора параметра           
             Params[i + parametrNum - 1].selectNum++;
 
             return 0;
         }
 
-        public Graf() {
-            Params = new List<GrafParams>();
+        public Graph() {
+            Params = new List<GraphParams>();
             valueCount = new List<int>();
             paramCount = 0;
         }

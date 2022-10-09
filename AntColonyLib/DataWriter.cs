@@ -39,7 +39,7 @@ namespace AntColonyLib
                 }
                 //Запись графа
                 sw.WriteLine("Исходный граф");
-                foreach (GrafParams elem in dataTask.graf.Params)
+                foreach (GraphParams elem in dataTask.graphWorkCopy.Params)
                 {
                     sw.WriteLine(Convert.ToString(elem));
                 }
@@ -138,32 +138,32 @@ namespace AntColonyLib
                 sw.WriteLine("Число итераций: \t" + dataTask.iterationCount);
                 sw.WriteLine("Время работы алгоритма: \t" + statistics.WorkTime.ToString() + "\tмс");
                 sw.WriteLine("MIteration: \t DIteration: \t MSolution: \t DSolution: \t Среднее количество переборов путей за интервал: \t");
-                sw.WriteLine(statistics.MIteration.ToString() + "\t" + statistics.DIteration.ToString() + "\t" + statistics.MSolution.ToString() + "\t" + statistics.DSolution.ToString() + "\t" + statistics.AntEnumI);
-                sw.WriteLine("Количество попаданий в интервал: ");
-
-                //Вывод статистики нахождения количества решенияй составляющих какой-либо процент от оптимального решения
-                sw.Write("Проценты             : \t100%: \t");
+                sw.Write("100%: \t");
                 for (int i = 1; i < statistics.NumHitPercentage; i++)
                 {
                     sw.Write((statistics.PercentageList[i] * 100) + "% \t");
                 }
                 sw.Write("\n");
+                sw.Write(statistics.LaunchesCount + 1+"\t" +statistics.MIteration.ToString() + "\t" + statistics.DIteration.ToString() + "\t" + statistics.MSolution.ToString() + "\t" + statistics.DSolution.ToString() + "\t" + statistics.AntEnumI + "\t");
 
-                sw.Write("Количество попаданий : \t" + statistics.HitCount[0] + "\t");
+
+                //Вывод статистики нахождения количества решенияй составляющих какой-либо процент от оптимального решения
+
+
+                sw.Write(statistics.HitCount[0] + " \t");
                 for (int i = 1; i < statistics.NumHitPercentage; i++)
                 {
                     sw.Write(statistics.HitCount[i] + " \t");
                 }
-                sw.Write("\n");
+                sw.Write("\t");
 
-                sw.Write("МFinctionI | DFinctionI: \t" + statistics.МFinctionI[0] + "\t" + statistics.DFinctionI[0] + "\t");
+                sw.Write(statistics.МFinctionI[0] + "\t" + statistics.DFinctionI[0] + "\t");
                 for (int i = 1; i < statistics.NumHitPercentage; i++)
                 {
                     sw.Write(statistics.МFinctionI[i] + " \t" + statistics.DFinctionI[i] + " \t");
                 }
-                sw.Write("\n");
-
-                sw.Write("MFinctionS | DFinctionI:\t" + statistics.МFinctionS[0] + "\t" + statistics.DFinctionS[0] + "\t");
+                
+                sw.Write("\t"+ statistics.МFinctionS[0] + "\t" + statistics.DFinctionS[0] + "\t");
                 for (int i = 1; i < statistics.NumHitPercentage; i++)
                 {
                     sw.Write(statistics.МFinctionS[i] + " \t" + statistics.DFinctionS[i] + " \t");

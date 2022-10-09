@@ -28,14 +28,14 @@ namespace AntColonyLib
         public Hashtable hashTable { get; set; }
 
         /// <summary>
-        /// Граф параметров
+        /// Оригинальный граф параметров
         /// </summary>
-        public Graf graf { get; set; }
+        public Graph graphOriginal { get; set; }
 
         /// <summary>
         /// Граф параметров (Упорядоченная копия)
         /// </summary>
-        public Graf grafCopy { get; set; }
+        public Graph graphWorkCopy { get; set; }
 
         /// <summary>
         /// Число итераций в алгоритме
@@ -57,8 +57,8 @@ namespace AntColonyLib
             
             valueData = new List<string>();
             hashTable = new Hashtable();
-            graf = new Graf();
-            grafCopy = new Graf();
+            graphOriginal = new Graph();
+            graphWorkCopy = new Graph();
             availabilityThread = false;
             antCount = ChangeableParams.ANT_COUNT;
             iterationCount = 0;
@@ -71,37 +71,38 @@ namespace AntColonyLib
         /// </summary>
         public void ResetDatatTask()
         {
-            graf.InitialGraf();
+            graphOriginal.InitialGraph();
+            graphWorkCopy.InitialGraph();
             hashTable.Clear();
         }
 
         /// <summary>
         /// Заполнение графа
         /// </summary>       
-        public int CreateGraf() //Создание графа 
+        public int CreateGraph() //Создание графа 
         {
             //Заполнение списка элементов графа 
             int id = 0;
-            for (int i = 0; i < graf.paramCount; i++)
+            for (int i = 0; i < graphOriginal.paramCount; i++)
             {
-                graf.IDFirstValueParam.Add(id);
-                for (int j = 0; j < graf.valueCount[i]; j++)
+                graphOriginal.IDFirstValueParam.Add(id);
+                for (int j = 0; j < graphOriginal.valueCount[i]; j++)
                 {
-                    graf.Params.Add(new GrafParams() { idParam = id, numParamFact = i, numParam = i, pheromones = 1, selectNum = 0 });
+                    graphOriginal.Params.Add(new GraphParams() { idParam = id, numParamFact = i, numParam = i, pheromones = 1, selectNum = 0 });
 
                     //Опредление типа значения параметра
                     if (double.TryParse(valueData[id], out double res))
                     {
-                        graf.Params[id].typeParam = TypeNumerator.Double;
+                        graphOriginal.Params[id].typeParam = TypeNumerator.Double;
                     }
-                    else { graf.Params[id].typeParam = TypeNumerator.String; }
-                    graf.Params[id].numValueParam = j;
-                    graf.Params[id].valueParam = valueData[id];
+                    else { graphOriginal.Params[id].typeParam = TypeNumerator.String; }
+                    graphOriginal.Params[id].numValueParam = j;
+                    graphOriginal.Params[id].valueParam = valueData[id];
 
                     id++;
                 }
             }
-            graf.PrintGraf();
+            graphOriginal.PrintGraph();
             return 0;
         }
 
@@ -113,22 +114,23 @@ namespace AntColonyLib
         /// <param name="key">Ключ упорядочения</param>
         /// <param name="NumParam">Номер параметра</param>
         /// <returns></returns>
-        public int CreateGrafClone(string key, int NumParam)
+        public int CreateGraphClone(string key, int NumParam)
         {
+            graphWorkCopy.paramCount = graphOriginal.paramCount;
             if (string.Compare(key, "ParamsIncreasing") == 0)
             { //Упорядочивание № параметров по количеству значений по возрастанию 
                 //Упорядочивание номеров параметров
-                int[,] NumsParams = new int[graf.valueCount.Count, 2];
-                for (int i = 0; i < graf.valueCount.Count; i++)
+                int[,] NumsParams = new int[graphOriginal.valueCount.Count, 2];
+                for (int i = 0; i < graphOriginal.valueCount.Count; i++)
                 {
                     NumsParams[i, 0] = i;
-                    NumsParams[i, 1] = graf.valueCount[i];
+                    NumsParams[i, 1] = graphOriginal.valueCount[i];
                 }
 
                 //Сортировка номеров параметров
-                for (int i = 1; i < graf.valueCount.Count; i++)
+                for (int i = 1; i < graphOriginal.valueCount.Count; i++)
                 {
-                    for (int j = 0; j < graf.valueCount.Count - 1; j++)
+                    for (int j = 0; j < graphOriginal.valueCount.Count - 1; j++)
                     {
                         if (NumsParams[j, 1] > NumsParams[j + 1, 1])
                         {
@@ -143,19 +145,32 @@ namespace AntColonyLib
                 }
 
                 //Создание клона графа
-                for (int i = 0; i < graf.valueCount.Count; i++)
+                for (int i = 0; i < graphOriginal.valueCount.Count; i++)
                 {
+                    graphWorkCopy.IDFirstValueParam.Add(graphOriginal.IDFirstValueParam[NumsParams[i, 0]]);
                     for (int j = 0; j < NumsParams[i, 1]; j++)
                     {
-                        grafCopy.Params.Add(graf.Params[graf.IDFirstValueParam[NumsParams[i, 0]] + j]);
+                        graphWorkCopy.Params.Add(graphOriginal.Params[graphOriginal.IDFirstValueParam[NumsParams[i, 0]] + j]);
                     }
+                    graphWorkCopy.valueCount.Add(NumsParams[i, 1]);
+                }
+                //Переинициализация Id значений
+                for (int i = 0; i < graphWorkCopy.Params.Count; i++) {                      
+                    graphWorkCopy.Params[i].idParam = i;
+                }
+                int g = -1;
+                for (int i = 0; i < graphWorkCopy.Params.Count; i += graphWorkCopy.valueCount[g]) 
+                {
+                    graphWorkCopy.IDFirstValueParam[g+1]=i;
+                    g++;
+                    if (g >= graphWorkCopy.valueCount.Count) { break; }
                 }
 
                 //Перенумерация параметров
                 int f = 0;
                 int k = 0;
                 int h = 0;
-                while (k < graf.Params.Count)
+                while (k < graphOriginal.Params.Count)
                 {
                     h++;
                     if (h > NumsParams[f, 1])
@@ -163,14 +178,28 @@ namespace AntColonyLib
                         f++;
                         h = 1;
                     }
-                    grafCopy.Params[k].numParamFact = f;
+                    graphWorkCopy.Params[k].numParamFact = f;
 
                     k++;
                 }
-
-                //GrafCopy.PrintGraf();
+            } 
+            else if (string.Compare(key, "NoSort") == 0) {
+                graphWorkCopy.Params.AddRange(graphOriginal.Params);
+                graphWorkCopy.IDFirstValueParam.AddRange(graphOriginal.IDFirstValueParam);
+                graphWorkCopy.valueCount.AddRange(graphOriginal.valueCount);
             }
 
+            graphWorkCopy.PrintGraph();
+            Console.WriteLine(graphWorkCopy.paramCount);
+            foreach (int elem in graphWorkCopy.IDFirstValueParam)
+            {
+                Console.Write("\t" + elem);
+            }
+            Console.WriteLine();
+            foreach (int elem in graphWorkCopy.valueCount)
+            {
+                Console.Write("\t" + elem);
+            }
 
             return 0;
         }

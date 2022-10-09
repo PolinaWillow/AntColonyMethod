@@ -95,9 +95,9 @@ namespace AntColonyMethod
             double eps = 0.0000000000000001;
             double delta = ChangeableParams.Q / (functionValue + eps);
 
-            for (int i = 0; i < dataTask.graf.paramCount; i++)
+            for (int i = 0; i < dataTask.graphWorkCopy.paramCount; i++)
             {
-                dataTask.graf.Params[way[i]].pheromones += delta;
+                dataTask.graphWorkCopy.Params[way[i]].pheromones += delta;
             }
 
             return delta;
@@ -111,21 +111,21 @@ namespace AntColonyMethod
         public int PheromoneEvaporation(List<Agent> agents, DataTask dataTask) //Испарение феромона
         {
             //Умножаем для максимума, делаим для минимума
-            foreach (GrafParams grafElem in dataTask.graf.Params)
+            foreach (GraphParams graphElem in dataTask.graphWorkCopy.Params)
             {
-                double Evaporation = ChangeableParams.L * Convert.ToDouble(grafElem.pheromones);
+                double Evaporation = ChangeableParams.L * Convert.ToDouble(graphElem.pheromones);
 
                 foreach (Agent agentElem in agents)
                 {
                     foreach (int wayElem in agentElem.wayAgent)
                     {
-                        if (wayElem == grafElem.idParam)
+                        if (wayElem == graphElem.idParam)
                         {
                             Evaporation += (1 - ChangeableParams.L) * agentElem.delta;
                         }
                     }
                 }
-                grafElem.pheromones = Evaporation;
+                graphElem.pheromones = Evaporation;
             }
             return 0;
         }

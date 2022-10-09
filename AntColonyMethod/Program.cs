@@ -20,10 +20,11 @@ namespace AntColonyMethod
             dataTask = dataReader.GettingInputData();
 
             //Создание графа  
-            dataTask.CreateGraf();
+            dataTask.CreateGraph();
+            dataTask.CreateGraphClone("NoSort", 0);
            
-            string[] maxFunction = new string[dataTask.graf.paramCount + 1]; //Массив хранения максимума функции и значения параметров
-            string[] minFunction = new string[dataTask.graf.paramCount + 1]; //Массив хранения минимума функции и значения параметров
+            string[] maxFunction = new string[dataTask.graphWorkCopy.paramCount + 1]; //Массив хранения максимума функции и значения параметров
+            string[] minFunction = new string[dataTask.graphWorkCopy.paramCount + 1]; //Массив хранения минимума функции и значения параметров
 
             double max = double.MinValue;
             double min = double.MaxValue;
@@ -93,7 +94,7 @@ namespace AntColonyMethod
                         //Занесение феромона
                         for (int i = 0; i < agentGroup.Agents.Count(); i++)
                         {
-                            double functionValue = targetFun.FindValue(agentGroup.Agents[i].wayAgent, dataTask.graf.Params, dataTask.graf.paramCount);
+                            double functionValue = targetFun.FindValue(agentGroup.Agents[i].wayAgent, dataTask.graphWorkCopy.Params, dataTask.graphWorkCopy.paramCount);
                             agentGroup.Agents[i].delta = agentGroup.AddPheromone(dataTask, agentGroup.Agents[i].wayAgent, functionValue);
                         }
 
@@ -157,7 +158,7 @@ namespace AntColonyMethod
             //Сбор статистики о количестве найденных оптимумов
             List<int> way = new List<int>();
             way.AddRange(wayAgent);
-            statistics.FindOptimalCount(targetFunction.FindValue(way, dataTask.graf.Params, dataTask.graf.paramCount), (nomIteration+1), agentGroup.Agents.Count());
+            statistics.FindOptimalCount(targetFunction.FindValue(way, dataTask.graphWorkCopy.Params, dataTask.graphWorkCopy.paramCount), (nomIteration+1), agentGroup.Agents.Count());
 
 
             targetFunction.FindMaxFunction(dataTask, agent.wayAgent, max, maxFunction, wayAgent);
@@ -173,7 +174,7 @@ namespace AntColonyMethod
             // Сброс феромонов
             if (attempt == ChangeableParams.ATTEMPTS_COUNT)
             {
-                dataTask.graf.InitialGraf();
+                dataTask.graphWorkCopy.InitialGraph();
                 attempt = 0;
             }            
         }

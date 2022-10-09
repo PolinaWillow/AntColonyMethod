@@ -11,7 +11,7 @@ namespace AntColonyLib
         /// <summary>
         /// Файл исходных тестовых значений
         /// </summary>
-        public static string PATH_TEST_FILE_DATA { get; } = "TestData6.txt";
+        public static string PATH_TEST_FILE_DATA { get; } = "TestData1.txt";
 
         /// <summary>
         /// Ключ упорядочения графа
@@ -43,7 +43,7 @@ namespace AntColonyLib
         /// <summary>
         /// Начальное количество муравьем
         /// </summary>
-        public static int ANT_COUNT { get; } = 5;
+        public static int ANT_COUNT { get; } = 45;
 
         /// <summary>
         /// Число запусков программы

@@ -86,20 +86,38 @@ namespace AntColonyLib
         /// Подсчет значения целефой функции
         /// </summary>
         /// <param name="way">Выбранный путь</param>
-        /// <param name="graf">Граф</param>
+        /// <param name="graph">Граф</param>
         /// <param name="paramCount">Количество параметров</param>
         /// <returns></returns>
-        public double FindValue(List<int> way, List<GrafParams> graf, int paramCount) //Подсчет целивой функции
+        public double FindValue(List<int> way, Graph graph, int paramCount) //Подсчет целивой функции
         {
+            //Отсортировка пути в исходную последовательность
+            //Console.WriteLine();
+            //foreach (int elem in way) {
+            //    Console.Write(elem + "\t");
+            //}
+            //Console.WriteLine();
+            int[] wayCopy = new int[way.Count];
+
+            for (int i = 0; i < way.Count; i++)
+            {
+                int k = graph.Params[way[i]].numParam;
+                wayCopy[k] = way[i];           
+            }
+            //foreach (int elem in wayCopy)
+            //{
+            //    Console.Write(elem + "\t");
+            //}
+
             double[] path = new double[paramCount - 1];
             for (int i = 0; i < paramCount - 1; i++)
             {
-                path[i] = Convert.ToDouble(graf[way[i]].valueParam);
+                path[i] = Convert.ToDouble(graph.Params[wayCopy[i]].valueParam);
             }
 
             double Value = path[0] - path[1] + 2 * path[2] + path[3] + 2 * path[4] + 0.5 * path[5] - 0.12 * path[6] - path[7] + 80 * path[8] + 0.00001 * path[9];
 
-            if (string.Compare(graf[way[10]].valueParam, "Сильное") == 0)
+            if (string.Compare(graph.Params[wayCopy[10]].valueParam, "Сильное") == 0)
             {
                 Value += 20;
             }
@@ -117,14 +135,14 @@ namespace AntColonyLib
         /// <returns></returns>
         public double FindMaxFunction(DataTask dataTask, List<int> way, double max, string[] maxFunction, int[] wayAgent)
         {
-            double valueFunction = FindValue(way, dataTask.graf.Params, dataTask.graf.paramCount); //Вычисление значений критериев
+            double valueFunction = FindValue(way, dataTask.graphWorkCopy, dataTask.graphWorkCopy.paramCount); //Вычисление значений критериев
                                                                                                          //Console.WriteLine("Значение критерия: " + valueFunction + "\n");
             if (valueFunction >= max)
             {
                 maxFunction[0] = Convert.ToString(valueFunction);
-                for (int k = 1; k < dataTask.graf.paramCount + 1; k++)
+                for (int k = 1; k < dataTask.graphWorkCopy.paramCount + 1; k++)
                 {
-                    maxFunction[k] = dataTask.graf.Params[wayAgent[k - 1]].valueParam;
+                    maxFunction[k] = dataTask.graphWorkCopy.Params[wayAgent[k - 1]].valueParam;
                 }
                 max = valueFunction;
             }
@@ -143,14 +161,14 @@ namespace AntColonyLib
         /// <returns></returns>
         public double FindMinFunction(DataTask dataTask, List<int> way, double min, string[] minFunction, int[] wayAgent)
         {
-            double valueFunction = FindValue(way, dataTask.graf.Params, dataTask.graf.paramCount); //Вычисление значений критериев
+            double valueFunction = FindValue(way, dataTask.graphWorkCopy, dataTask.graphWorkCopy.paramCount); //Вычисление значений критериев
 
             if (valueFunction <= min)
             {
                 minFunction[0] = Convert.ToString(valueFunction);
-                for (int k = 1; k < dataTask.graf.paramCount + 1; k++)
+                for (int k = 1; k < dataTask.graphWorkCopy.paramCount + 1; k++)
                 {
-                    minFunction[k] = dataTask.graf.Params[wayAgent[k - 1]].valueParam;
+                    minFunction[k] = dataTask.graphWorkCopy.Params[wayAgent[k - 1]].valueParam;
                 }
                 min = valueFunction;
             }
