@@ -94,7 +94,7 @@ namespace AntColonyMethod
                         //Занесение феромона
                         for (int i = 0; i < agentGroup.Agents.Count(); i++)
                         {
-                            double functionValue = targetFun.FindValue(agentGroup.Agents[i].wayAgent, dataTask.graphWorkCopy.Params, dataTask.graphWorkCopy.paramCount);
+                            double functionValue = targetFun.FindValue(agentGroup.Agents[i].wayAgent, dataTask.graphWorkCopy, dataTask.graphWorkCopy.paramCount);
                             agentGroup.Agents[i].delta = agentGroup.AddPheromone(dataTask, agentGroup.Agents[i].wayAgent, functionValue);
                         }
 
@@ -158,7 +158,7 @@ namespace AntColonyMethod
             //Сбор статистики о количестве найденных оптимумов
             List<int> way = new List<int>();
             way.AddRange(wayAgent);
-            statistics.FindOptimalCount(targetFunction.FindValue(way, dataTask.graphWorkCopy.Params, dataTask.graphWorkCopy.paramCount), (nomIteration+1), agentGroup.Agents.Count());
+            statistics.FindOptimalCount(targetFunction.FindValue(way, dataTask.graphWorkCopy, dataTask.graphWorkCopy.paramCount), (nomIteration+1), agentGroup.Agents.Count());
 
 
             targetFunction.FindMaxFunction(dataTask, agent.wayAgent, max, maxFunction, wayAgent);
