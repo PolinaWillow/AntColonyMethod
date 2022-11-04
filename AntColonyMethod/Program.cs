@@ -14,6 +14,10 @@ namespace AntColonyMethod
     {
         static void Main(string[] args)
         {
+            //Подключение к базе данных:
+            SqliteWork squliteBD = new SqliteWork();
+            squliteBD.ConnectionToBd();
+
             //Получение входных данных
             DataTask dataTask = new DataTask();
             DataReader dataReader = new DataReader();
