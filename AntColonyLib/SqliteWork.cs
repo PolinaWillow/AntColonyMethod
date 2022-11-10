@@ -23,8 +23,9 @@ namespace AntColonyLib
         {
             connection.Open();
             Console.WriteLine("Подключение к БД");
+            DeleteTable();
 
-            //CreateTable();
+            CreateTable();
         }
 
         /// <summary>
@@ -47,7 +48,7 @@ namespace AntColonyLib
             command.Connection = connection;
             command.CommandText = "DROP TABLE Hashes";
             command.ExecuteNonQuery();
-
+            //connection.Close();
             Console.WriteLine("Таблица Hashes удалена");
         }
 
@@ -60,17 +61,16 @@ namespace AntColonyLib
             if (FindHashInTable(hash) == 1)//Если Hash не записан в таблицу
             {
 
-                Console.WriteLine(hash);
+                //Console.WriteLine(hash);
 
-                connection.Open();
                 string sqlExpression = $"INSERT INTO Hashes (Hash) VALUES (\"{hash}\")";
                 SqliteCommand command = new SqliteCommand(sqlExpression, connection);
                 int res = command.ExecuteNonQuery();
-                Console.WriteLine("В таблицу Hashes добавлен новый объект" + res);
+                //Console.WriteLine("В таблицу Hashes добавлен новый объект" + res);
             }
             else
             {
-                Console.WriteLine("Данный hash уже добавлен в таблицу");
+                //Console.WriteLine("Данный hash уже добавлен в таблицу");
             }
 
         }
@@ -91,7 +91,6 @@ namespace AntColonyLib
             }
 
 
-            connection.Open();
             SqliteCommand command = new SqliteCommand(sqlExpression, connection);
 
             using (SqliteDataReader reader = command.ExecuteReader())
@@ -100,10 +99,28 @@ namespace AntColonyLib
                 {
                     return 0;
                 }
+                return 1; //Нет значения
+            }
+           
+        }
 
-                return 1;
+        /// <summary>
+        /// Определение количества записей в БД
+        /// </summary>
+        public int RecordsCount() {
+            int recordCount = 0; //Общие число записей
+
+            string sqlExpression = "SELECT * FROM Hashes";
+            SqliteCommand command = new SqliteCommand(sqlExpression, connection);
+            using (SqliteDataReader reader = command.ExecuteReader())
+            {
+                while (reader.Read())
+                {
+                    recordCount++;
+                }
             }
 
+            return recordCount;
         }
 
         /// <summary>
@@ -118,11 +135,12 @@ namespace AntColonyLib
             else
             {
                 string sqlExpression = "DELETE  FROM Hashes";
-                connection.Open();
+
                 SqliteCommand command = new SqliteCommand(sqlExpression, connection);
                 int number = command.ExecuteNonQuery();
                 Console.WriteLine($"Удалено объектов: {number}");
                 Console.WriteLine("Таблица очищена");
+
             }
         }
 

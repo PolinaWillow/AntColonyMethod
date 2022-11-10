@@ -63,11 +63,22 @@ namespace AntColonyMethod2
                     for (int j = 0; j < dataTask.iterationCount; j++)
                     {
                         //Если все решения просмотрениы, а итерации еще не закончены
-                        if (dataTask.hashTable.Count == dataTask.controlCount)
+                        if (ChangeableParams.HASH_SAVE)
                         {
-                            Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено 2");
-                            break;
+                            if (dataTask.squliteBD.RecordsCount()/*hashTable.Count*/ == dataTask.controlCount)
+                            {
+                                Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено 2");
+                                break;
+                            }
                         }
+                        else {
+                            if (dataTask.hashTable.Count == dataTask.controlCount)
+                            {
+                                Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено 2");
+                                break;
+                            }
+                        }
+                        
                         //Создание группы агентов
                         AgentGroup agentGroup = new AgentGroup(); //Список агентов
 
@@ -135,11 +146,22 @@ namespace AntColonyMethod2
 
         {
             //Если все решения просмотрениы, а итерации еще не закончены
-            if (dataTask.hashTable.Count == dataTask.controlCount)
+            if (ChangeableParams.HASH_SAVE)
             {
-                Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено 3");
-                return;
+                if (dataTask.squliteBD.RecordsCount()/*hashTable.Count*/ == dataTask.controlCount)
+                {
+                    Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено 3");
+                    return;
+                }
             }
+            else {
+                if (dataTask.hashTable.Count == dataTask.controlCount)
+                {
+                    Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено 3");
+                    return;
+                }
+            }
+            
 
             CountAgent++;
 
@@ -168,11 +190,22 @@ namespace AntColonyMethod2
             targetFunction.FindMinFunction(dataTask, agent.wayAgent, min, minFunction, wayAgent);
 
             //Если все решения просмотрениы, а итерации еще не закончены
-            if (dataTask.hashTable.Count == dataTask.controlCount)
+            if (ChangeableParams.HASH_SAVE)
             {
-                Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено 1");
-                return;
+                if (dataTask.squliteBD.RecordsCount()/*hashTable.Count*/ == dataTask.controlCount)
+                {
+                    Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено 1");
+                    return;
+                }
             }
+            else {
+                if (dataTask.hashTable.Count == dataTask.controlCount)
+                {
+                    Console.WriteLine("Все пути найдены, выполнение алгоритма остановлено 1");
+                    return;
+                }
+            }
+            
 
             // Сброс феромонов
             if (attempt == ChangeableParams.ATTEMPTS_COUNT)

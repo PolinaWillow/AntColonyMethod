@@ -48,19 +48,38 @@ namespace AntColonyMethod2
             //Вычисление Хэша пути
             Hash hash = new Hash();
             string hashWay = hash.GetHash(wayAgent);
-            if (!dataTask.hashTable.ContainsKey(hashWay))
+            if (ChangeableParams.HASH_SAVE)
             {
-                hash.AddNewHash(hashWay, wayAgent, dataTask.hashTable); //Добавление нового ключа в таблицй                            
-            }
-            else
-            {
+                if (dataTask.squliteBD.FindHashInTable(hashWay) == 1/*hashTable.ContainsKey(hashWay)*/)
+                {
+                    hash.AddNewHash(hashWay, wayAgent, dataTask); //Добавление нового ключа в таблицй                            
+                }
+                else
+                {
 
-                int[] newWayAgent = FindAlternativeWay(dataTask, wayAgent, hashWay, statistics);
-                hashWay = hash.GetHash(newWayAgent);
-                hash.AddNewHash(hashWay, wayAgent, dataTask.hashTable);
-                Array.Copy(newWayAgent, 0, wayAgent, 0, dataTask.graphWorkCopy.paramCount);
+                    int[] newWayAgent = FindAlternativeWay(dataTask, wayAgent, hashWay, statistics);
+                    hashWay = hash.GetHash(newWayAgent);
+                    hash.AddNewHash(hashWay, wayAgent, dataTask);
+                    Array.Copy(newWayAgent, 0, wayAgent, 0, dataTask.graphWorkCopy.paramCount);
 
+                }
             }
+            else {
+                if (!dataTask.hashTable.ContainsKey(hashWay))
+                {
+                    hash.AddNewHash(hashWay, wayAgent, dataTask); //Добавление нового ключа в таблицй                            
+                }
+                else
+                {
+
+                    int[] newWayAgent = FindAlternativeWay(dataTask, wayAgent, hashWay, statistics);
+                    hashWay = hash.GetHash(newWayAgent);
+                    hash.AddNewHash(hashWay, wayAgent, dataTask);
+                    Array.Copy(newWayAgent, 0, wayAgent, 0, dataTask.graphWorkCopy.paramCount);
+
+                }
+            }
+            
 
             return wayAgent;
 
@@ -104,25 +123,48 @@ namespace AntColonyMethod2
             Hash hash = new Hash();
             Array.Copy(startWay, 0, newWay, 0, dataTask.graphWorkCopy.paramCount);
 
-
-            while (dataTask.hashTable.ContainsKey(hashWay) && (nomParam < dataTask.graphWorkCopy.paramCount))
+            if (ChangeableParams.HASH_SAVE)
             {
-                //Сохраняем количество переборов
-                statistics.KolEnumI++;
-
-                NextWay(newWay, nomParam, dataTask.graphWorkCopy);
-
-                if (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.graphWorkCopy.paramCount)
+                while ((dataTask.squliteBD.FindHashInTable(hashWay) == 0)/*hashTable.ContainsKey(hashWay)*/ && (nomParam < dataTask.graphWorkCopy.paramCount))
                 {
-                    while (newWay[nomParam] == startWay[nomParam] && nomParam < (dataTask.graphWorkCopy.paramCount - 1))
+                    //Сохраняем количество переборов
+                    statistics.KolEnumI++;
+
+                    NextWay(newWay, nomParam, dataTask.graphWorkCopy);
+
+                    if (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.graphWorkCopy.paramCount)
                     {
-                        nomParam += 1;
-                        NextWay(newWay, nomParam, dataTask.graphWorkCopy);
+                        while (newWay[nomParam] == startWay[nomParam] && nomParam < (dataTask.graphWorkCopy.paramCount - 1))
+                        {
+                            nomParam += 1;
+                            NextWay(newWay, nomParam, dataTask.graphWorkCopy);
+                        }
+                        nomParam = 0;
                     }
-                    nomParam = 0;
+                    hashWay = hash.GetHash(newWay);
                 }
-                hashWay = hash.GetHash(newWay);
             }
+            else {
+                while (dataTask.hashTable.ContainsKey(hashWay)&& (nomParam < dataTask.graphWorkCopy.paramCount))
+                {
+                    //Сохраняем количество переборов
+                    statistics.KolEnumI++;
+
+                    NextWay(newWay, nomParam, dataTask.graphWorkCopy);
+
+                    if (newWay[nomParam] == startWay[nomParam] && nomParam < dataTask.graphWorkCopy.paramCount)
+                    {
+                        while (newWay[nomParam] == startWay[nomParam] && nomParam < (dataTask.graphWorkCopy.paramCount - 1))
+                        {
+                            nomParam += 1;
+                            NextWay(newWay, nomParam, dataTask.graphWorkCopy);
+                        }
+                        nomParam = 0;
+                    }
+                    hashWay = hash.GetHash(newWay);
+                }
+            }
+            
 
             return newWay;
         }

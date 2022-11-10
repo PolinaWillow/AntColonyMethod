@@ -18,10 +18,16 @@ namespace AntColonyLib
             _monitor = new object();
         }
 
-        public void AddNewHash(string hashWay, int[] wayAgent, Hashtable hashTable)
+        public void AddNewHash(string hashWay, int[] wayAgent, DataTask dataTask)
         {
             Monitor.Enter(_monitor);
-            hashTable.Add(hashWay, wayAgent);
+            if (ChangeableParams.HASH_SAVE)
+            {
+                dataTask.squliteBD.AddHashToTable(hashWay);
+            }
+            else {
+                dataTask.hashTable.Add(hashWay, wayAgent);
+            }
             Monitor.Exit(_monitor);
         }
 

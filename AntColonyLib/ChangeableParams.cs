@@ -21,6 +21,13 @@ namespace AntColonyLib
         public static string ORDERING_KEY { get; } = "ParamsIncreasing";
 
         /// <summary>
+        /// Флаг определения способа хранения хэшей
+        /// true - База данных
+        /// false - Хэш-таблица
+        /// </summary>
+        public static bool HASH_SAVE { get; } = false;
+
+        /// <summary>
         /// Количество попыток генерации нового пути
         /// </summary>
         public static int ATTEMPTS_COUNT { get; } = 10000000;

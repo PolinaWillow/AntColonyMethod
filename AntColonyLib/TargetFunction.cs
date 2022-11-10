@@ -23,7 +23,7 @@ namespace AntColonyLib
         /// <summary>
         /// Файл конфигурации
         /// </summary>
-        private string ConfigFile = "../../../config/config.txt";
+        private string ConfigFile = "../../../../AntColonyLib/config/config.txt";
 
         /// <summary>
         /// Значение целефой функции

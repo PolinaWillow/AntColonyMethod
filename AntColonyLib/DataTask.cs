@@ -28,6 +28,11 @@ namespace AntColonyLib
         public Hashtable hashTable { get; set; }
 
         /// <summary>
+        /// База данных для временного хранения Хэшей путей
+        /// </summary>
+        public SqliteWork squliteBD { get; set; }
+
+        /// <summary>
         /// Оригинальный граф параметров
         /// </summary>
         public Graph graphOriginal { get; set; }
@@ -56,14 +61,24 @@ namespace AntColonyLib
         {
             
             valueData = new List<string>();
-            hashTable = new Hashtable();
             graphOriginal = new Graph();
             graphWorkCopy = new Graph();
             availabilityThread = false;
             antCount = ChangeableParams.ANT_COUNT;
             iterationCount = 0;
             controlCount = 1;
+            if (ChangeableParams.HASH_SAVE)
+            {
+                squliteBD = new SqliteWork();
+                squliteBD.ConnectionToBd();
+            }
+            else {
+                hashTable = new Hashtable();
+            }
             
+
+           
+
         }
 
         /// <summary>
@@ -73,7 +88,13 @@ namespace AntColonyLib
         {
             graphOriginal.InitialGraph();
             graphWorkCopy.InitialGraph();
-            hashTable.Clear();
+            if (ChangeableParams.HASH_SAVE)
+            {
+                squliteBD.ClearTable();
+            }
+            else {
+                hashTable.Clear();
+            }
         }
 
         /// <summary>
