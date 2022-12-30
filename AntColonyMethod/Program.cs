@@ -26,6 +26,7 @@ namespace AntColonyMethod
             //Создание графа  
             dataTask.CreateGraph();
             dataTask.CreateGraphClone("NoSort", 0);
+
            
             string[] maxFunction = new string[dataTask.graphWorkCopy.paramCount + 1]; //Массив хранения максимума функции и значения параметров
             string[] minFunction = new string[dataTask.graphWorkCopy.paramCount + 1]; //Массив хранения минимума функции и значения параметров

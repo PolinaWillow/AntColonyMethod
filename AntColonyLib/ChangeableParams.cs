@@ -25,7 +25,7 @@ namespace AntColonyLib
         /// true - База данных
         /// false - Хэш-таблица
         /// </summary>
-        public static bool HASH_SAVE { get; } = false;
+        public static bool HASH_SAVE { get; } = true;
 
         /// <summary>
         /// Количество попыток генерации нового пути

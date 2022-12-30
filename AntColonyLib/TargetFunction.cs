@@ -10,20 +10,7 @@ namespace AntColonyLib
 {
     public class TargetFunction
     {
-        /// <summary>
-        /// Номер порта
-        /// </summary>
-        private int PORT { get; set; } = 0;
-
-        /// <summary>
-        /// IP адрес подключения
-        /// </summary>
-        private string IP { get; set; } = "";
-
-        /// <summary>
-        /// Файл конфигурации
-        /// </summary>
-        private string ConfigFile = "../../../../AntColonyLib/config/config.txt";
+        public SenderData sender { get; set; }
 
         /// <summary>
         /// Значение целефой функции
@@ -32,60 +19,14 @@ namespace AntColonyLib
 
         public TargetFunction()
         {
-            GetConfig();
+            sender = new SenderData(); 
             valueTarget = 0;
-        }
-
-        /// <summary>
-        /// Чтение файла конфигурации для получения порта и IP подключения
-        /// </summary>
-        /// <returns></returns>
-        private int GetConfig()
-        {
-            using (var sr = new StreamReader(ConfigFile))
-            {
-                string port = sr.ReadLine();
-                PORT = Convert.ToInt32(port);
-                IP = sr.ReadLine();
-            }
-            //Console.WriteLine("PORT: " + PORT + " IP: " + IP);
-            return 0;
-        }
-
-        /// <summary>
-        /// Отправление данных для подсчета значения целевой функции
-        /// </summary>
-        /// <param name="path">Массив значений параметров</param>
-        /// <param name="pathLength">Длина массива</param>
-        /// <returns></returns>
-        private int SendData(string[] path, int pathLength)
-        {
-            try
-            {
-                //Определение точки подключения
-                var EndPoint = new IPEndPoint(IPAddress.Parse(IP), PORT);
-                //Создание сокета
-                var newSocket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-                //Подключение к серверу
-                newSocket.Connect(EndPoint);
-
-                //Отправление длины массива
-                string lengthMas = Convert.ToString(pathLength);
-                byte[] data = Encoding.Unicode.GetBytes(lengthMas);
-                newSocket.Send(data);
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine(ex.Message);
-            }
-            return 0;
         }
 
         /// <summary>
         /// Подсчет значения целефой функции
         /// </summary>
-        /// <param name="way">Выбранный путь</param>
+        /// <param name="way">Выбранный путь (id значений параметров)</param>
         /// <param name="graph">Граф</param>
         /// <param name="paramCount">Количество параметров</param>
         /// <returns></returns>
@@ -175,5 +116,25 @@ namespace AntColonyLib
 
             return min;
         }
+
+        public double FindValue_Send(List<int> way, Graph graph, int paramCount) {
+            double resultValue = 0;
+            //Получение массива значений параметров и их типов
+            List<string[]> path = new List<string[]>();
+
+            return resultValue;
+        }
+
+        private List<string[]> getPath(List<int> way, Graph graph)
+        {
+            List<string[]> path = new List<string[]>();
+            foreach (int elem in way)
+            {
+                path.Add(graph.GetValueById(elem));
+            }
+
+            return path;
+        }
+
     }
 }

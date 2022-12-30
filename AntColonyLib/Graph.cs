@@ -42,6 +42,25 @@ namespace AntColonyLib
         }
 
         /// <summary>
+        /// Функция получения значения параметра и его типа по Id
+        /// </summary>
+        /// <param name="IdParam">Id параметра</param>
+        /// <returns>массив: [Значение][Тип]</returns>
+        public string[] GetValueById(int IdParam) {
+            string[] element = new string[2];
+            if((IdParam > this.Params.Count)||(IdParam<0))
+            {
+                Console.WriteLine("Ошибка Id");
+                return null;
+            }
+            element[0] = this.Params[IdParam].valueParam;
+            element[1] = Convert.ToString(this.Params[IdParam].typeParam);
+            element[2] = Convert.ToString(this.Params[IdParam].numParam);
+            //Console.WriteLine("id = "+IdParam+"; value = " + element[0]+"; type = " + element[1]);
+            return element;
+        }
+
+        /// <summary>
         /// Печать графа
         /// </summary>
         /// <returns></returns>
