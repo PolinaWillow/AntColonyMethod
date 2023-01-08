@@ -1,0 +1,16 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Выберите способ ввода данных</h1>
+    <div class="btnPadding">
+        <a asp-page="/InputFile" class="butPage">Загрузить файл</a>
+    </div>
+    <div class="btnPadding">
+        <a asp-page="/InputManual" class="butPage">Ввести вручную</a>
+    </div>
+    
+</div>

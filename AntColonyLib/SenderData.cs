@@ -63,7 +63,7 @@ namespace AntColonyLib
                 newSocket.Connect(EndPoint);
 
                 // конвертируем данные в массив байтов
-                var messageBytes;
+                //var messageBytes;
 
 
                 newSocket.Close();

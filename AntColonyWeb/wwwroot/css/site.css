@@ -1,0 +1,51 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+}
+
+.butPage:active,
+.butPage:hover,
+.butPage {
+    width: 20%;
+    border-style: solid;
+    border-color: darkgray;
+    border-radius: 20px;
+    color: black;
+    padding: 1% 4% 1% 4%;
+    margin: 4% 2% 1% 2%;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btnPadding {
+    padding-top: 2%;
+    padding-bottom:2%;
+
+}
+
+.butAdd {
+   /* width: 20%;*/
+    border-style: solid;
+    border-color: darkgray;
+    border-radius: 20px;
+    border-width: 1px;
+    color: black;
+    padding: 0.5% 1% 0.5% 1%;
+    /*margin: 2% 1% 1% 1%;*/
+    /*cursor: pointer;*/
+    text-decoration: none;
+}

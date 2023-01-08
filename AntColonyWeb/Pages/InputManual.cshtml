@@ -1,0 +1,25 @@
+﻿@page
+@model AntColonyWeb.Pages.InputManualModel
+@{
+
+}
+
+<div class="text-center">
+    <h1 class="display-4">Ручной ввод данных</h1>
+    <form method="post">
+        <p>
+            <label>Количество параметров</label>
+            <input type="number" name="paramCount" />
+            <input type="submit" value="Добавить" asp-page-handler="SaveParamCount" class="butAdd" />
+        </p>
+
+        <input type="submit" value="Расчет" asp-page-handler="StartWork" class="butPage" />
+    </form>
+    
+
+
+    <h3>@Model.ParamCount</h3>
+  @*  <form method="post"><button class="btn btn-default">Click to post</button></form>
+    <p><a href="/" class="btn btn-default">Click to Get</a></p>*@
+</div>
+

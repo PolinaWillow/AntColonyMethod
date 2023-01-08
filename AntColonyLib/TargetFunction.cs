@@ -117,10 +117,17 @@ namespace AntColonyLib
             return min;
         }
 
-        public double FindValue_Send(List<int> way, Graph graph, int paramCount) {
+        /// <summary>
+        /// Отравка наборов параметров на вычеслительный кластер
+        /// </summary>
+        /// <param name="way">Путь в графе</param>
+        /// <param name="graph">Граф</param>
+        /// <param name="paramCount">Количество параметров</param>
+        /// <param name="find">Тип значения (maxFunction, minFunction, value)</param>
+        /// <returns></returns>
+        public double FindValue_Send(List<int> way, Graph graph, int paramCount, string find = "value") {
             double resultValue = 0;
-            //Получение массива значений параметров и их типов
-            List<string[]> path = new List<string[]>();
+            
 
             return resultValue;
         }
