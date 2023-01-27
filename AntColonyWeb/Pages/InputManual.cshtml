@@ -12,14 +12,38 @@
             <input type="number" name="paramCount" />
             <input type="submit" value="Добавить" asp-page-handler="SaveParamCount" class="butAdd" />
         </p>
+        @if (Model.SaveFlag)
+        {
+            if (Model.ParamCount <= 0)
+            {
+                <h2>Количество параметров должно быть не меньше 1</h2>
+            }
+            <lable>Количество параметров: @Model.ParamCount</lable>
+            <br />
+            for (int i = 1; i <= Model.ParamCount; i++)
+            {
+                <div>
+                    <label>P@(i): от </label>
+                    <input type="number" name="vStartP@(i)" />
+                    <label> до </label>
+                    <input type="number" name="vFinishP@(i)" />
+                    <label> шаг </label>
+                    <input type="number" name="vStepP@(i)" />
+                    <label for="symbolFlag">Текстовый парамер: </label>
+                    <input type="checkbox" id="symbolFlag" name="symbolFlag" value="Symbol">
+                </div>
+                <br/>
+            }
+            <input type="submit" value="Расчет" asp-page-handler="StartWork" class="butPage" />
+        }
 
-        <input type="submit" value="Расчет" asp-page-handler="StartWork" class="butPage" />
+        
     </form>
-    
 
 
-    <h3>@Model.ParamCount</h3>
-  @*  <form method="post"><button class="btn btn-default">Click to post</button></form>
+
+    @* <h3>@Model.ParamCount</h3>
+     <form method="post"><button class="btn btn-default">Click to post</button></form>
     <p><a href="/" class="btn btn-default">Click to Get</a></p>*@
 </div>
 

@@ -10,7 +10,10 @@ namespace AntColonyWeb.Pages
         /// Количество параметров
         /// </summary>
         public int ParamCount { get; set; } = 0;
-
+        /// <summary>
+        /// Флаг нажатия кнопки добавления (true - нажата; false - не нажата)
+        /// </summary>
+        public bool SaveFlag { get; set; } = false;
         public void OnGet()
         {
             //ParamCount = 3;
@@ -22,6 +25,7 @@ namespace AntColonyWeb.Pages
         /// <param name="paramCount">Количество параметров</param>
         public void OnPostSaveParamCount(int paramCount)
         {
+            SaveFlag = true;
             if (paramCount <= 0) //Проверка на отрицательные значения
             {
                 ParamCount = 0;
@@ -37,6 +41,7 @@ namespace AntColonyWeb.Pages
         /// Сохранение значений параметров, генерация файла, отправка на сервер, вывод загрузочной понели расчета, начало расчета
         /// </summary>
         public void OnPostStartWork() {
+            //Начало расчета, вывод поля загрузки
         }
     }
 }
