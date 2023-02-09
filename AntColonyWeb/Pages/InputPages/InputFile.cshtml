@@ -1,0 +1,17 @@
+﻿@page
+@model AntColonyWeb.Pages.InputPages.InputFileModel
+@{
+    ViewData["Title"] = "Input from file";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Ввод данных из файла</h1>
+    <br />
+    <form method="post" asp-antiforgery="true" enctype="multipart/form-data">
+        <div class="mb-4 custom-file">
+            <input asp-for="inputFile" class="form-control custom-file-input" id="formFile"/>
+        </div>
+        <input type="submit" value="Расчет" class="butPage" />
+    </form>
+
+</div>

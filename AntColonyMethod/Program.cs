@@ -7,6 +7,8 @@ using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using AntColonyLib;
+using AntColonyLib.DataModel;
+using AntColonyLib.Processing;
 
 namespace AntColonyMethod
 {
@@ -82,7 +84,7 @@ namespace AntColonyMethod
                         }
                        
                         //Создание группы агентов
-                        AgentGroup agentGroup = new AgentGroup(); //Список агентов
+                        AgentGroupM1 agentGroup = new AgentGroupM1(); //Список агентов
 
                         int CountAgent = 0;
 
@@ -149,7 +151,7 @@ namespace AntColonyMethod
             }
         }
 
-        public static void AgentPassage(DataTask dataTask, AgentGroup agentGroup, int CountAgent, int attempt, double min, double max, string[] maxFunction, string[] minFunction, StatisticsCollection statistics, int nomIteration)
+        public static void AgentPassage(DataTask dataTask, AgentGroupM1 agentGroup, int CountAgent, int attempt, double min, double max, string[] maxFunction, string[] minFunction, StatisticsCollection statistics, int nomIteration)
 
         {
             //Если все решения просмотрениы, а итерации еще не закончены
@@ -174,7 +176,7 @@ namespace AntColonyMethod
 
             //Создание нового агента
             string id = agentGroup.AddNewAgent();
-            Agent agent = agentGroup.FindAgent(id);
+            AgentM1 agent = agentGroup.FindAgent(id);
 
             //Определение пути агента
             int[] wayAgent = agent.FindAgentWay_Method(dataTask, statistics);

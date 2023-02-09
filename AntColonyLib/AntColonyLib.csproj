@@ -9,4 +9,8 @@
     <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="6.0.10" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Processing\SettlementBlock\" />
+  </ItemGroup>
+
 </Project>

@@ -1,0 +1,24 @@
+﻿.cardDisplayParam {
+    margin-top: 1%;
+}
+
+.displayValP {
+    margin-left:2%;
+    padding-left: 3%;
+    float: left;
+}
+
+.displayH {
+    float: left;
+    margin-right: 1%;
+}
+
+.typeH {
+    text-align: justify !important;
+}
+
+.headerCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}

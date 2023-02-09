@@ -1,0 +1,127 @@
+﻿@page
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@model AntColonyWeb.Pages.InputPages.InputManualModel
+@{
+    ViewData["Title"] = "Manual input";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Ручной ввод данных</h1>
+    <p>
+        <input type="button" value="Добавить параметр" data-bs-toggle="modal" data-bs-target="#addParamModal" class="butAdd" />
+    </p>
+
+    @*Модальное окно для добавления параметра*@
+    <div class="modal fade" id="addParamModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content addParamForm">
+                <form method="post" asp-antiforgery="true">
+                    <div class="modal-header">
+                        <label>Номер параметра: </label>
+                        <input type="number" name="numParam" />
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="table">
+                            <div class="listTypes table-cell">
+                                <lable>Типы:</lable>
+                                <br />
+                                @for (int i = 0; i < Model.typesParam.Length; i++)
+                                {
+                                    <input asp-for="newParam.typeParam" type="radio" value="@(Model.typesParam[i])" id="Model.typesParam@(i)" onclick="ShowAddValueForm(@(i));" />
+                                    <label asp-for="newParam.typeParam"> @(Model.typesParam[i]) </label>
+                                    <br />
+                                }
+                            </div>
+
+                            <div class="valuesParam table-cell hideAddValue" id="@(Model.idsTypesValue[0])">
+                                <label asp-for="newParam.valueCountParam">Количество</label>
+                                <input asp-for="newParam.valueCountParam" type="number" class="inputNumValue" />
+                                <br />
+                                @for (int i = 0; i < Model.newParam.valueCountParam; i++)
+                                {
+                                    <label>@(i + 1)) </label>
+                                    <input type="text" />
+                                }
+                                <br />
+                            </div>
+
+                            <div class="valuesParam table-cell hideAddValue" id="@(Model.idsTypesValue[1])">
+                                <lable>Количество значений:</lable>
+                                <input type="number" name="countValueParam" class="inputNumValue" />
+                            </div>
+
+                            <div class="valuesParam table-cell hideAddValue" id="@(Model.idsTypesValue[2])">
+                                <label for="vNumStartP"> от: </label>
+                                <input type="number" name="vNumStartP" id="vNumStartP" class="inputValueWithStap" />
+                                <br />
+                                <label for="vNumFinishP"> до: </label>
+                                <input type="number" name="vNumFinishP" id="vNumFinishP" class="inputValueWithStap" />
+                                <br />
+                                <label for="vNumStepP"> шаг: </label>
+                                <input type="number" name="vNumStepP" id="vNumStepP" class="inputValueWithStap" />
+                                <br />
+                            </div>
+
+                            <div class="valuesParam table-cell hideAddValue" id="@(Model.idsTypesValue[3])">
+                                <input type="checkbox" name="vboolParam" id="trueParam" />
+                                <label for="trueParam"> True </label>
+                                <br />
+                                <input type="checkbox" name="vboolParam" id="falseParam" />
+                                <label for="falseParam"> False </label>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="submit" value="Добавить" class="addParamBtn" />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+    @*Отображение всех введенных параметров*@
+    <div class="row" id="displayBlock">
+        @foreach (var param in Model.Params)
+        {
+            <div class="col-12 col-sm-6 col-lg-4 cardDisplayParam">
+                <div class="card ">
+                    
+                    <div class="card-body ">
+                        <div class="headerCard">
+                            <h5 class="card-title">Параметр №: @(param.numParam)</h5>
+                            <button type="button" class="btn-close deleteBtn" aria-label="Удалить"></button>
+                        </div>
+                        <p class="typeH">Тип: @(param.typeParam)</p>
+                        <p class="displayH">Значения:</p>
+                        <ol class="displayValP">
+                            @foreach (var valParam in param.valuesParam)
+                            {
+                                <li>@(valParam) </li>
+                            }
+                        </ol>
+                    </div>
+                    
+                </div>
+                
+            </div>
+            @*
+        <div class="cardDisplayParam">
+        <h5>Параметр №: @(param.numParam)</h5>
+        <p>Тип: @(param.typeParam)</p>
+        <p class="displayH">Значения:</p>
+        <ol class="displayValP">
+        @foreach (var valParam in param.valuesParam)
+        {
+        <li>@(valParam) </li>
+        }
+        </ol>
+        </div>
+            *@
+        }
+    </div>
+
+</div>
+

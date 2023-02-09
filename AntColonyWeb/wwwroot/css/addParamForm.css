@@ -1,0 +1,73 @@
+﻿.addParamForm {
+    display: inline-block;
+    text-align: justify !important;
+
+    /*Оформление рамки*/
+    border-style: solid;
+    border-color: black;
+    border-radius: 10px;
+}
+
+.addParamBtn {
+    border-style: solid;
+    border-color: darkgray;
+    border-radius: 20px;
+    border-width: 1px;
+    color: black;
+    padding: 0.5% 1% 0.5% 1%;
+    /*margin: 2% 1% 1% 1%;*/
+    /*cursor: pointer;*/
+    text-decoration: none;
+}
+
+.listTypes {
+    width: 40%;
+    padding: 1%;
+    margin-top: 1%;
+    
+
+    border-right-style: solid;
+    border-color: silver;
+    border-width: thin;
+    /*border-radius: 5px;*/
+}
+
+.valuesParam {
+    width: 58%;
+    height: 100%;
+    padding: 1%;
+    margin-top: 1%;
+    
+    /*border-right-style: solid;
+    border-color: black;
+    border-width: thin;
+    /*border-radius: 5px;*/
+}
+
+.inputNumValue {
+    width: 25%;
+}
+
+.inputValueWithStap {
+    margin: 1%;
+}
+
+.table {
+    width: 100%;
+    display: table;
+    table-layout: fixed;
+}
+
+.table-cell {
+    display: table-cell;
+    vertical-align: top;
+    padding-left: 2%;
+}
+
+.showAddValue {
+    display: table-cell;
+}
+
+.hideAddValue {
+    display: none;
+}

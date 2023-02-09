@@ -17,24 +17,12 @@ body {
   margin-bottom: 60px;
 }
 
-.butPage:active,
-.butPage:hover,
-.butPage {
-    width: 20%;
-    border-style: solid;
-    border-color: darkgray;
-    border-radius: 20px;
-    color: black;
-    padding: 1% 4% 1% 4%;
-    margin: 4% 2% 1% 2%;
-    cursor: pointer;
-    text-decoration: none;
+input {
+    border-radius: 5%;
 }
 
-.btnPadding {
-    padding-top: 2%;
-    padding-bottom:2%;
-
+p {
+    margin: 0%;
 }
 
 .butAdd {
@@ -48,4 +36,22 @@ body {
     /*margin: 2% 1% 1% 1%;*/
     /*cursor: pointer;*/
     text-decoration: none;
+}
+
+.inputParamDiv {
+    display: inline;
+}
+
+.strInputForm {
+    display: none;
+    margin-left: 2%;
+}
+
+.formDataAline {
+    /*text-align: center !important;
+    padding-left: 15%;*/
+}
+
+.cursorSvg:active, .cursorSvg:hover {
+    cursor: pointer;
 }

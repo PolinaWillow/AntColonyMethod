@@ -1,0 +1,18 @@
+﻿.butPage:active,
+.butPage:hover,
+.butPage {
+    width: 20%;
+    border-style: solid;
+    border-color: darkgray;
+    border-radius: 20px;
+    color: black;
+    padding: 1% 4% 1% 4%;
+    margin: 4% 2% 1% 2%;
+    cursor: pointer;
+    text-decoration: none;
+}
+
+.btnPadding {
+    padding-top: 2%;
+    padding-bottom: 2%;
+}
