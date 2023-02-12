@@ -16,3 +16,42 @@ html {
 body {
   margin-bottom: 60px;
 }
+
+.btn-addNew:active,
+.btn-addNew:hover,
+.btn-addNew {
+    display: inline-block;
+    width: 50px;
+    height: 50px;
+    border-style: solid;
+    border-color: darkgray;
+    border-radius: 50%;
+    cursor: pointer;
+    color: darkgray;
+    font-size: 2rem;
+    text-align: center;
+    box-shadow: 0 3px 20px rgba(0,0,0,.25);
+    margin: 4% 2% 1% 2%;
+    text-decoration: none;
+}
+
+.divPos {
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 10%;
+}
+
+.form-create {
+    width: 50%;
+    margin-left: 25%;
+    margin-top: 3%;
+}
+
+.div-marg {
+    margin-top: 2%;
+}
+
+.btn-create {
+
+}

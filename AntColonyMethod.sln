@@ -13,7 +13,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntColonyWeb", "AntColonyWe
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntColonyExtLib", "AntColonyExtLib\AntColonyExtLib.csproj", "{3894887A-2321-4C95-9452-DA4B8E794E15}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AntColonyClient", "AntColonyClient\AntColonyClient.csproj", "{55343941-FDF2-4CFF-AE67-F7B601A0ECD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntColonyClient", "AntColonyClient\AntColonyClient.csproj", "{55343941-FDF2-4CFF-AE67-F7B601A0ECD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

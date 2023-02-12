@@ -14,7 +14,6 @@ namespace AntColonyClient.Pages
 
         public void OnGet()
         {
-
         }
     }
 }

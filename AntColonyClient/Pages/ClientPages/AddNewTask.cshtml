@@ -1,0 +1,38 @@
+﻿@page
+@model AntColonyClient.Pages.ClientPages.AddNewTaskModel
+@{
+    ViewData["Title"] = "Add Task";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Новая задача</h1>
+    <form method="post" class="form-create">
+        <div class="row g-2 align-items-center">
+            <div class="col-auto">
+                <label for="nameNewTask" class="col-form-label">Название:</label>
+            </div>
+            <div class="col-auto">
+                <input type="text" id="nameNewTask" class="form-control" aria-describedby="nameNewTask">
+            </div>           
+        </div>
+        <div class="row g-2 align-items-center div-marg">
+            <div class="col-auto">
+                <label for="methAddParams" class="col-form-label">Способ добавления параметов:</label>
+            </div>
+            <div class="col-auto">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="radioMethAdd" id="radioFile">
+                    <label class="form-check-label" for="radioFile">
+                        Ввод через файл
+                    </label>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="radioMethAdd" id="radioManual" checked>
+                    <label class="form-check-label" for="radioManual">Ручной ввод</label>
+                </div>
+            </div>           
+        </div>
+        <button type="submit" class="btn-form btn-create">Создать</button>
+    </form>
+
+</div>
