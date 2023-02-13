@@ -5,8 +5,13 @@ namespace AntColonyClient.Pages.ClientPages
 {
     public class AddNewTaskModel : PageModel
     {
-        public void OnGet()
+        public IActionResult OnGet()
         {
+            return Page();
+        }
+
+        public IActionResult OnPost() {
+            return RedirectToPage("/Index");
         }
     }
 }

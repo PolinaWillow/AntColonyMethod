@@ -29,7 +29,8 @@ namespace AntColonyExtLib.DataModel
         /// </summary>
         public int antCount { get; set; }
 
-        public InputData() {
+        public InputData()
+        {
             inputParams = new ParamsList();
             hashTable = new Hashtable();
             iterationCount = 0;

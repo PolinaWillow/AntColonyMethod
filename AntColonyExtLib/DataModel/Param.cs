@@ -22,5 +22,17 @@ namespace AntColonyExtLib.DataModel
             defParam = new ParamDefinition();
             valuesParam = new List<ParamValue>();
         }
+
+        /// <summary>
+        /// Инициализация параметра
+        /// </summary>
+        /// <returns></returns>
+        public int InitialStateParam()
+        {
+            foreach (ParamValue v in valuesParam) {
+                v.pheromones = 1;
+            }
+            return 0;
+        }
     }
 }

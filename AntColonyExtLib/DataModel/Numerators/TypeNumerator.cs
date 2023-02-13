@@ -4,14 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntColonyExtLib.DataModel
+namespace AntColonyExtLib.DataModel.Numerators
 {
-    internal enum TypeNumerator
+    public enum TypeNumerator
     {
         None = 0,
         String,
         Number,
-        NumberWithStep,
         Bool
     }
 }
