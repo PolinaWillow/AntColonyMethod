@@ -15,6 +15,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntColonyExtLib", "AntColon
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntColonyClient", "AntColonyClient\AntColonyClient.csproj", "{55343941-FDF2-4CFF-AE67-F7B601A0ECD9}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntColonyClient.Models", "AntColonyClientModels\AntColonyClient.Models.csproj", "{DA3CE403-0F38-4CED-84EC-97794E4A0427}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntColonyClient.Service", "AntColonyClientService\AntColonyClient.Service.csproj", "{3E8959D9-FB05-4589-A3D8-5FC9DCF35B42}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -45,6 +49,14 @@ Global
 		{55343941-FDF2-4CFF-AE67-F7B601A0ECD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{55343941-FDF2-4CFF-AE67-F7B601A0ECD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{55343941-FDF2-4CFF-AE67-F7B601A0ECD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DA3CE403-0F38-4CED-84EC-97794E4A0427}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DA3CE403-0F38-4CED-84EC-97794E4A0427}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DA3CE403-0F38-4CED-84EC-97794E4A0427}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DA3CE403-0F38-4CED-84EC-97794E4A0427}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3E8959D9-FB05-4589-A3D8-5FC9DCF35B42}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3E8959D9-FB05-4589-A3D8-5FC9DCF35B42}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3E8959D9-FB05-4589-A3D8-5FC9DCF35B42}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3E8959D9-FB05-4589-A3D8-5FC9DCF35B42}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

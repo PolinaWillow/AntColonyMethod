@@ -1,20 +1,21 @@
 html {
-  font-size: 14px;
+    font-size: 14px;
 }
 
 @media (min-width: 768px) {
-  html {
-    font-size: 16px;
-  }
+    html {
+        font-size: 16px;
+    }
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+    margin-top: 3.5rem !important;
 }
 
 hr {
@@ -25,20 +26,20 @@ hr {
     box-shadow: 0 0.1em 0.1em -0.1em #bdbdbd inset;
 }
 
+.block-btn-add {
+    width: 3%;
+    margin: 1%
+}
+
 .btn-addNew:active,
 .btn-addNew:hover,
 .btn-addNew {
     display: inline-block;
     width: 50px;
     height: 50px;
-    border-style: solid;
-    border-color: darkgray;
-    border-radius: 50%;
     cursor: pointer;
     color: darkgray;
-    font-size: 2rem;
     text-align: center;
-    box-shadow: 0 3px 20px rgba(0,0,0,.25);
     margin: 4% 2% 1% 2%;
     text-decoration: none;
 }
@@ -82,14 +83,68 @@ hr {
     width: 90%;
     margin-top: 1%;
     padding: 1% 1% 1% 1%;
-
     border-style: solid;
     border-color: darkgray;
     border-radius: 20px;
     border-width: 0.1em;
 }
 
-.h-details { 
+.h-details {
     font-weight: 300;
     line-height: 1.2;
+}
+
+.card-body {
+    display: inline-block;
+    width: 60%;
+    margin-top: 1%;
+    padding: 1% 1% 1% 1%;
+    border-style: solid;
+    border-color: darkgray;
+    border-radius: 20px;
+    border-width: 0.1em;
+}
+
+.card-link {
+    margin: 0% 2% 0% 2%;
+    color: black;
+    font-size: 1.2em;
+    text-decoration: none;
+}
+
+    .card-link:hover {
+        color: lightslategray;
+        cursor: pointer;
+    }
+
+
+.btn-href {
+    display: inline-block;
+    width: auto;
+    padding: 1%;
+    text-decoration: none;
+    color: #000;
+    background-color: #e8e6e6;
+    border-color: black;
+    border-width: 0.1em;
+    border-radius: 30px;
+}
+
+    .btn-href:hover {
+        color: lightslategray;
+        cursor: pointer;
+    }
+
+#img_notFount {
+    width: 60%;
+    height: 10%
+}
+
+.btn-icon {
+    box-sizing: content-box;
+    padding: .25em .25em;
+    color: #000;
+    border: 0;
+    border-radius: .25rem;
+    opacity: .5;
 }

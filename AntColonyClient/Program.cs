@@ -1,7 +1,16 @@
+using AntColonyClient.Service;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddScoped<IUserTaskRepository, MockUserTask>();
+builder.Services.Configure<RouteOptions>(options => {
+    //Корректное отображение URL (/ строчные буквы и т.д)
+    options.LowercaseUrls = true;
+    options.LowercaseQueryStrings = true;
+    options.AppendTrailingSlash = true;
+});
 
 var app = builder.Build();
 
