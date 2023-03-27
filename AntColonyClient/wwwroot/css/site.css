@@ -148,3 +148,12 @@ hr {
     border-radius: .25rem;
     opacity: .5;
 }
+
+.errMass {
+    color:indianred;
+    font-size: 1em;
+}
+
+.btn-pos-left {
+    float: right;
+}

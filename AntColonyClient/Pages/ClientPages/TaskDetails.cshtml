@@ -5,7 +5,7 @@
     ViewData["Title"] = "Task details";
 }
 
-<div class ="text-center">
+<div class="text-center">
     <h1 class="display-4">Детали задачи: @(Model.userTask.Name)</h1>
     <div class="div-block-detail">
         <div class="text-end">
@@ -18,10 +18,12 @@
             <button type="button" class="btn-close" aria-label="Закрыть" onclick="window.location.href='/ClientPages/UserTasks'"></button>
         </div>
 
-        @if (Model.userTask.InputMethod == Enum_InputMethods.Manual){
+        @if (Model.userTask.InputMethod == Enum_InputMethods.Manual)
+        {
             @*Отображение карточек спараметрами*@
             <div class="text-start">
                 <h5 class="h-details">Параметры: </h5>
+
             </div>
         }
         @if (Model.userTask.InputMethod == Enum_InputMethods.From_File)
@@ -31,15 +33,63 @@
                 <h5 class="h-details">Файл с данными: </h5>
             </div>
         }
-        <hr/>
+        <hr />
         <div class="text-center">
             @if (Model.userTask.InputMethod == Enum_InputMethods.Manual)
             {
-                <a class="btn-href">Добавить параметр</a>
+                <button class="btn-href" data-bs-toggle="modal" data-bs-target="#AddTaskParamModal">Добавить параметр</button>
+
+                @*Модальное окно для добавления параметра*@
+                <div class="modal fade" id="AddTaskParamModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+                    <form method="post">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">                                   
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <input type="hidden" asp-for="TaskParam.IdTask" value="Model.userTask.Id">
+
+                                    <div class="row g-2 align-items-center">
+                                        <div class="col-auto">
+                                            <label asp-for="TaskParam.NumParam" class="col-form-label">Номер параметра:</label>
+                                        </div>
+                                        <div class="col-auto">
+                                            <input asp-for="TaskParam.NumParam" type="text" id="numNewParam" class="form-control" aria-describedby="numNewParam">
+                                        </div>
+                                    </div>
+                                    <div class="text-start errMass">
+                                        <span asp-validation-for="TaskParam.NumParam"></span>
+                                    </div>
+
+                                    <div class="row g-2 div-marg">
+                                        <div class="col-auto ">
+                                            <label for="typeAddParams" class="col-form-label">Способ ввода параметов:</label>
+                                        </div>
+                                        <div class="col-auto text-start">
+
+
+                                            <select asp-for="TaskParam.TypeParam" asp-items="Html.GetEnumSelectList<Enum_TypesParams>()">
+                                                <option selected="selected" value="">Выбирете тип параметра</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="text-start errMass">
+                                        <span asp-validation-for="TaskParam.TypeParam"></span>
+                                    </div>
+                                </div>                               
+                                <hr />
+                                <div class="modal-footer">
+                                    <button type="submit" class="btn btn-form btn-create btn-href">Создать</button>                                  
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
             }
             @if (Model.userTask.InputMethod == Enum_InputMethods.From_File)
             {
-                <a class="btn-href">Добавить файл</a>
+                <button class="btn-href">Добавить файл</button>
             }
             <a class="btn-href">Запустить</a>
         </div>

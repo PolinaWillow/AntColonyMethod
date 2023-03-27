@@ -24,11 +24,15 @@ namespace AntColonyClient.Pages.ClientPages
             return Page();
         }
 
-        public IActionResult OnPost() {
+        public IActionResult OnPost()
+        {
+            if (ModelState.IsValid)
+            {               
+                UserTask = _userTaskRepository.AddTask(UserTask);
+                return RedirectToPage("UserTasks");
+            }
+            return Page();
 
-            UserTask = _userTaskRepository.AddTask(UserTask);
-            Console.WriteLine(UserTask);
-            return RedirectToPage("UserTasks");
         }
     }
 }

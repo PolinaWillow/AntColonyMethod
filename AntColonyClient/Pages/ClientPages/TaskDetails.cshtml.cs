@@ -8,13 +8,19 @@ namespace AntColonyClient.Pages.ClientPages
     public class TaskDetailsModel : PageModel
     {
         private readonly IUserTaskRepository _userTaskRepository;
+        private readonly ITaskParamsRepository _taskParamRepository;
 
-        public TaskDetailsModel(IUserTaskRepository userTaskRepository) {
+        public IEnumerable<TaskParams> TaskParams { get; set; }
+
+        public TaskDetailsModel(IUserTaskRepository userTaskRepository, ITaskParamsRepository taskParamsRepository) {
             //Внедрение зависимостей интерфейса
             _userTaskRepository = userTaskRepository;
+            _taskParamRepository = taskParamsRepository;
         }
 
         public UserTask userTask { get; private set; }
+        [BindProperty]
+        public TaskParams TaskParam { get; set; }
 
         public IActionResult OnGet(int id)
         {
@@ -24,7 +30,21 @@ namespace AntColonyClient.Pages.ClientPages
             {
                 return RedirectToPage("/NotFound");
             }
-            else return Page();
+            else {
+                TaskParams = _taskParamRepository.GetAllTaskParams();
+                return Page();
+            }
+            
+        }
+
+        public IActionResult OnPost()
+        {
+            if (ModelState.IsValid)
+            {
+                TaskParam = _taskParamRepository.AddTaskParam(TaskParam);
+                return Page();
+            }
+            return Page();
         }
     }
 }
