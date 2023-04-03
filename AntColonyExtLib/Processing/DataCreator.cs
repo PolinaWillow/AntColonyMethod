@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace AntColonyExtLib.Processing
 {
-    internal class DataCreator
+    public class DataCreator
     {
         public DataCreator() { }
 
         public static InputData CreateInputData() {
             InputData inputData = new InputData();
-
+            
             return inputData; 
         }
 

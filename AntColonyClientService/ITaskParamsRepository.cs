@@ -9,7 +9,7 @@ namespace AntColonyClient.Service
 {
     public interface ITaskParamsRepository
     {
-        IEnumerable<TaskParams> GetAllTaskParams();
+        IEnumerable<TaskParams> GetAllTaskParams(int idTask);
 
         TaskParams GetTaskParamById(int id);
 
@@ -17,6 +17,8 @@ namespace AntColonyClient.Service
 
         TaskParams AddTaskParam(TaskParams newTaskParam);
 
-        TaskParams DeleteTaskParam(int id);
+        int DeleteTaskParam(int id);
+
+        int GetParamCount();
     }
 }

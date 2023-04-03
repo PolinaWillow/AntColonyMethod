@@ -20,6 +20,7 @@ namespace AntColonyClient.Models
         [Required]
         public int IdParam { get; set; }
 
+
         /// <summary>
         /// Значение параметра
         /// </summary>

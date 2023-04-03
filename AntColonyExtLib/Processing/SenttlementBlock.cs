@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace AntColonyExtLib.Processing
 {
-    internal class SenttlementBlock
+    public class SenttlementBlock
     {
-        public int Senttlement(int taskId)
+        public static int Senttlement(InputData inputData)
         {
 
-            InputData inputData = DataCreator.CreateInputData();
+            
             return 0;
         }
     }

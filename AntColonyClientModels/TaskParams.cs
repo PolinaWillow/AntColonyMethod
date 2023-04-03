@@ -18,14 +18,12 @@ namespace AntColonyClient.Models
         /// Id задачи
         /// </summary>
         [Required]
-        [MaxLength(50), MinLength(1)]
         public int IdTask { get; set; }
 
         /// <summary>
         /// Номер параметра
         /// </summary>
-        [Required (ErrorMessage = "Не указано номер параметра")]
-        [MaxLength(50), MinLength(1)]
+        [Required (ErrorMessage = "Не указано номер параметра")]      
         public int NumParam { get; set; }
 
         /// <summary>

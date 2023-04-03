@@ -17,6 +17,8 @@ namespace AntColonyClient.Service
 
         UserTask AddTask(UserTask newUserTask);
 
-        UserTask DeleteTask(int id);
+        int DeleteTask(int id);
+
+        int GetTaskCount();
     }
 }

@@ -157,3 +157,9 @@ hr {
 .btn-pos-left {
     float: right;
 }
+
+.Param_Card {
+    box-sizing: border-box;
+    width: 30%;
+    margin: 1%;
+}

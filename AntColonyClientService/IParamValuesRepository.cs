@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace AntColonyExtLib.Processing
+namespace AntColonyClient.Service
 {
-    public class BDSqliteWork
+    public interface IParamValuesRepository
     {
     }
 }

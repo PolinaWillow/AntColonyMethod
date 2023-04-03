@@ -19,17 +19,19 @@ namespace AntColonyClient.Pages.ClientPages
 
         [BindProperty]
         public UserTask userTask { get; set; } 
+        public int UserTaskCount { get; set; }
 
         public void OnGet()
         {
             //Заполнение модели
             UserTasks = _db.GetAllTasks();
+            UserTaskCount = _db.GetTaskCount();
         }
 
         public IActionResult OnPostDelete(int id) {
             userTask =  _db.GetTaskById(id);
             if (userTask != null) {
-                userTask = _db.DeleteTask(id);
+                _db.DeleteTask(id);
             }
 
             return RedirectToPage();

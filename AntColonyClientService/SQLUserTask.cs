@@ -1,4 +1,6 @@
 ﻿using AntColonyClient.Models;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,29 +22,38 @@ namespace AntColonyClient.Service
 
         public UserTask AddTask(UserTask newUserTask)
         {
-            _context.UserTasks.Add(newUserTask);
-            _context.SaveChanges();
+            _context.Database.ExecuteSqlRaw("AddNewUserTask @name, @createData, @inputMethod",
+                                             new SqlParameter("@name", newUserTask.Name),
+                                             new SqlParameter("@createData", newUserTask.Create_Data),
+                                             new SqlParameter("@inputMethod", newUserTask.InputMethod));
             return newUserTask;
         }
 
-        public UserTask DeleteTask(int id)
+        public int DeleteTask(int id)
         {
-            var userTaskToDelete = _context.UserTasks.Find(id);
+            /*var userTaskToDelete = _context.UserTasks.Find(id);
             if (userTaskToDelete != null) {
                 _context.UserTasks.Remove(userTaskToDelete);
                 _context.SaveChanges();
             }
-            return userTaskToDelete;
+            */
+            return _context.Database.ExecuteSqlRaw("DeleteUserTask @id", new SqlParameter("id", id));
+            
         }
 
         public IEnumerable<UserTask> GetAllTasks()
         {
-            return _context.UserTasks;
+            return _context.UserTasks.FromSqlRaw<UserTask>("GetAllTasks").ToList();
         }
 
         public UserTask GetTaskById(int id)
         {
-            return _context.UserTasks.Find(id);
+            return _context.UserTasks.FromSqlRaw<UserTask>("GetTaskById @id", new SqlParameter("@id", id)).ToList().FirstOrDefault(); //_context.UserTasks.Find(id);
+        }
+
+        public int GetTaskCount()
+        {
+            return _context.UserTasks.Count();
         }
 
         public UserTask UpdateTask(UserTask updateUserTask)

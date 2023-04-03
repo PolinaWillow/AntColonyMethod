@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AntColonyExtLib.DataModel
 {
-    internal class Param
+    public class Param
     {
         /// <summary>
         /// Определение параметра

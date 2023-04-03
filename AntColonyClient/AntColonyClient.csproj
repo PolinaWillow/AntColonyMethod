@@ -19,4 +19,8 @@
     <ProjectReference Include="..\AntColonyExtLib\AntColonyExtLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Components\" />
+  </ItemGroup>
+
 </Project>

@@ -18,7 +18,15 @@ namespace AntColonyClient.Pages.ClientPages
             _taskParamRepository = taskParamsRepository;
         }
 
+        //Получение деталей задачи
         public UserTask userTask { get; private set; }
+
+        //Получение параметров задачи
+        public TaskParams userTaskParams { get; private set; }
+
+        public int paramCount = 0;
+
+        //Добавление параметра
         [BindProperty]
         public TaskParams TaskParam { get; set; }
 
@@ -31,7 +39,10 @@ namespace AntColonyClient.Pages.ClientPages
                 return RedirectToPage("/NotFound");
             }
             else {
-                TaskParams = _taskParamRepository.GetAllTaskParams();
+                TaskParams = _taskParamRepository.GetAllTaskParams(userTask.Id);
+                paramCount = _taskParamRepository.GetParamCount();
+
+
                 return Page();
             }
             
@@ -39,12 +50,26 @@ namespace AntColonyClient.Pages.ClientPages
 
         public IActionResult OnPost()
         {
+            string url = Url.Page("TaskDetails", new { id = TaskParam.IdTask });
             if (ModelState.IsValid)
             {
                 TaskParam = _taskParamRepository.AddTaskParam(TaskParam);
-                return Page();
+                return Redirect(url ?? "NotFound");
             }
-            return Page();
+            return Redirect(url ?? "NotFound");
+        }
+
+        public IActionResult OnPostDelete(int id)
+        {
+            userTaskParams = _taskParamRepository.GetTaskParamById(id);
+            int IdTask=0;
+            if (userTaskParams != null)
+            {
+                IdTask = userTaskParams.IdTask;
+                _taskParamRepository.DeleteTaskParam(id);
+            }
+            string url = Url.Page("TaskDetails", new { id = IdTask });
+            return Redirect(url ?? "NotFound");
         }
     }
 }

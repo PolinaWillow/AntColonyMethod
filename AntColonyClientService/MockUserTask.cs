@@ -54,13 +54,13 @@ namespace AntColonyClient.Service
             return newUserTask;
         }
 
-        public UserTask DeleteTask(int id)
+        public int DeleteTask(int id)
         {
             UserTask deleteTask = _userTasks.FirstOrDefault(x=>x.Id==id);
             if (deleteTask != null) {
                 _userTasks.Remove(deleteTask);
             }
-            return deleteTask;
+            return 0;
         }
 
         public IEnumerable<UserTask> GetAllTasks()
@@ -72,6 +72,11 @@ namespace AntColonyClient.Service
         {
             //Возврат единственного пользователя, у которого id == заданному
             return _userTasks.FirstOrDefault(x => x.Id == id);
+        }
+
+        public int GetTaskCount()
+        {
+            throw new NotImplementedException();
         }
 
         public UserTask UpdateTask(UserTask updateUserTask)

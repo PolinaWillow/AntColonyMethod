@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AntColonyExtLib.DataModel
 {
-    internal class ParamsList
+    public class ParamsList
     {
         /// <summary>
         /// Список параметров

@@ -1,4 +1,6 @@
 ﻿using AntColonyClient.Models;
+using Microsoft.Data.SqlClient;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,25 +20,26 @@ namespace AntColonyClient.Service
 
         public TaskParams AddTaskParam(TaskParams newTaskParam)
         {
-            _context.TaskParams.Add(newTaskParam);
-            _context.SaveChanges();
+            _context.Database.ExecuteSqlRaw("AddTaskParam @idTask, @numParam, @typeParam",
+                                             new SqlParameter("@idTask", newTaskParam.IdTask),
+                                             new SqlParameter("@numParam", newTaskParam.NumParam),
+                                             new SqlParameter("@typeParam", newTaskParam.TypeParam));
             return newTaskParam;
         }
 
-        public TaskParams DeleteTaskParam(int id)
+        public int DeleteTaskParam(int id)
         {
-            var userParamToDelete = _context.TaskParams.Find(id);
-            if (userParamToDelete != null)
-            {
-                _context.TaskParams.Remove(userParamToDelete);
-                _context.SaveChanges();
-            }
-            return userParamToDelete;
+            return _context.Database.ExecuteSqlRaw("DeleteTaskParam @id", new SqlParameter("id", id));
         }
 
-        public IEnumerable<TaskParams> GetAllTaskParams()
+        public IEnumerable<TaskParams> GetAllTaskParams(int idTask)
         {
-            return _context.TaskParams;
+            return _context.TaskParams.Where(p => p.IdTask == idTask);
+        }
+
+        public int GetParamCount()
+        {
+            return _context.TaskParams.Count();
         }
 
         public TaskParams GetTaskParamById(int id)

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AntColonyExtLib.Processing
 {
-    internal class ParamsList_Processing
+    public class ParamsList_Processing
     {
         /// <summary>
         /// Создание списка параметров

@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace AntColonyExtLib.DataModel
 {
-    internal class InputData
+    public class InputData
     {
         /// <summary>
         /// Входные параметры

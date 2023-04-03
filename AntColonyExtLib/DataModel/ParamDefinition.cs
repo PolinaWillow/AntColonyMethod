@@ -7,7 +7,7 @@ using AntColonyExtLib.DataModel.Numerators;
 
 namespace AntColonyExtLib.DataModel
 {
-    internal class ParamDefinition
+    public class ParamDefinition
     {
         /// <summary>
         /// Номер параметра
