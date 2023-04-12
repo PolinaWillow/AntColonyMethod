@@ -34,7 +34,7 @@ namespace AntColonyClient.Service
 
         public IEnumerable<TaskParams> GetAllTaskParams(int idTask)
         {
-            return _context.TaskParams.Where(p => p.IdTask == idTask);
+            return _context.TaskParams.FromSqlRaw<TaskParams>("GetAllTaskParams @idTask", new SqlParameter("idTask", idTask)).ToList();
         }
 
         public int GetParamCount()

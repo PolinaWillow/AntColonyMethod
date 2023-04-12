@@ -1,19 +1,7 @@
-﻿using Microsoft.EntityFrameworkCore.Migrations;
-
-#nullable disable
-
-namespace AntColonyClient.Service.Migrations
-{
-    /// <inheritdoc />
-    public partial class DeleteTaskSQLProcedure : Migration
-    {
-        /// <inheritdoc />
-        protected override void Up(MigrationBuilder migrationBuilder)
-        {
-            string procedure = @"Create procedure DeleteTask
+﻿Create procedure DeleteUserTask
                                            @id int
                                            AS
-                                           BEGIN
+                                           BEGIN TRANSACTION
                                            	DELETE FROM  UserTasks 
                                                   WHERE Id = @id
                                             DELETE FROM  TaskParams 
@@ -27,19 +15,8 @@ namespace AntColonyClient.Service.Migrations
                                              END
                                             ELSE
                                              BEGIN
-                                                COMMIT TRANSACTION -- Подтверждаем сделанные изменения, так как никаких ошибок нет
+                                                COMMIT -- Подтверждаем сделанные изменения, так как никаких ошибок нет
                                              END
 
-                                           END
-                                           ";
-            migrationBuilder.Sql(procedure);
-        }
-
-        /// <inheritdoc />
-        protected override void Down(MigrationBuilder migrationBuilder)
-        {
-            string procedure = @"Drop procedure DeleteTask";
-            migrationBuilder.Sql(procedure);
-        }
-    }
-}
+                                          
+                                           

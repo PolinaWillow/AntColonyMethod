@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AntColonyClient.Service.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230403073209_DeleteTaskSQLProcedure")]
-    partial class DeleteTaskSQLProcedure
+    [Migration("20230406140451_GetAllTaskParams_SQLProcedure")]
+    partial class GetAllTaskParams_SQLProcedure
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
