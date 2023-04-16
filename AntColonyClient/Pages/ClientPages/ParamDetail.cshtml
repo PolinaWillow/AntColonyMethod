@@ -1,0 +1,41 @@
+﻿@page "{id}"
+@model AntColonyClient.Pages.ClientPages.ParamDetailModel
+@{
+    ViewData["Title"] = "Param details";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Значения параметра №@(Model.taskParam.NumParam)</h1>
+    <div class="div-block-detail">
+        <div class="text-end">
+            <button type="button" class="btn-close" aria-label="Закрыть" onclick="window.location.href='@Url.Page("/ClientPages/TaskDetails", new {id=Model.taskParam.IdTask})'"></button>
+        </div>
+        <div class="text-start">
+            <h5 class="h-details">Тип параметра: @(Model.taskParam.TypeParam)</h5>
+            <h5 class="h-details">Значения параметра:</h5>
+            <ul>
+            </ul>
+        </div>
+    </div>
+
+    @*Модальное окно для добавления значения параметра*@
+    <div class="modal fade" id="AddValueParamModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+        <form method="post">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Закрыть"></button>
+                    </div>
+                    <div class="modal-body">
+                        
+                    </div>
+                    <hr />
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-form btn-create btn-href">Добавить</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>

@@ -87,5 +87,12 @@
     <Build Include="dbo\Stored Procedures\GetAllTaskParams.sql" />
     <Build Include="Service Broker\AutoCreatedLocal.sql" />
     <Build Include="Server Objects\AlwaysOn_health.sql" />
+    <Build Include="dbo\Stored Procedures\GetParamCount.sql" />
+    <Build Include="dbo\Stored Procedures\AddNewParamValue.sql" />
+    <Build Include="dbo\Stored Procedures\DeleteParamValue.sql" />
+    <Build Include="dbo\Stored Procedures\GetParamById.sql" />
+    <Build Include="dbo\Stored Procedures\GetValueById.sql" />
+    <Build Include="dbo\Stored Procedures\GetValueCount.sql" />
+    <Build Include="dbo\Stored Procedures\GetAllParamValues.sql" />
   </ItemGroup>
 </Project>

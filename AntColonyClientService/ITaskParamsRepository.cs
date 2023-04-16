@@ -19,6 +19,6 @@ namespace AntColonyClient.Service
 
         int DeleteTaskParam(int id);
 
-        int GetParamCount();
+        int GetParamCount(int idTask);
     }
 }

@@ -37,9 +37,9 @@ namespace AntColonyClient.Service
             return _context.TaskParams.FromSqlRaw<TaskParams>("GetAllTaskParams @idTask", new SqlParameter("idTask", idTask)).ToList();
         }
 
-        public int GetParamCount()
+        public int GetParamCount(int idTask)
         {
-            return _context.TaskParams.Count();
+            return _context.TaskParams.FromSqlRaw<TaskParams>("GetParamCount @idTask", new SqlParameter("idTask", idTask)).Count();
         }
 
         public TaskParams GetTaskParamById(int id)
