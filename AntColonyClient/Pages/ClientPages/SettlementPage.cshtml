@@ -1,0 +1,34 @@
+﻿@page "{id}"
+@model AntColonyClient.Pages.ClientPages.SettlementPageModel
+@{
+    ViewData["Title"] = "Settlement Page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Подтвердите запуск задачи:</h1>
+    <div class="text-start">
+        <h5>Входные данные:</h5>
+        <h6>Количество агентов: @(Model.inputData.antCount)</h6>
+        <h6>Необходимое число итераций: @(Model.inputData.iterationCount)</h6>
+        <h6>Параметры:</h6>
+        @foreach (var elem in Model.inputData.inputParams.Params)
+        {
+            <div>
+                <h6>Параметр №: @elem.defParam.numParam</h6>
+                <h6>Тип: @elem.defParam.typeParam</h6>
+                <h6>Количество значений: @elem.defParam.valuesCount</h6>
+                <h6>Значения параметра:</h6>
+                @foreach (var elemValue in elem.valuesParam)
+                {
+                    <p>id: @(elemValue.idValue); num: @(elemValue.numValue); value: @(elemValue.valueParam); pheromones: @(elemValue.pheromones)</p>
+                }
+            </div>
+            <hr />
+        }
+    </div>
+    <div>
+        <input type="submit" value="Подтвердить" class="btn-href"/>
+        <input type="button" value="Отмена" class="btn-href" onclick="window.location.href='@Url.Page("/ClientPages/TaskDetails", new {id=Model.userTask.Id})'" />
+    </div>
+</div>
+

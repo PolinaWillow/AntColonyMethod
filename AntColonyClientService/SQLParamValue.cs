@@ -44,7 +44,8 @@ namespace AntColonyClient.Service
 
         public int GetValueCount(int idParam)
         {
-            return _context.ParamElems.FromSqlRaw<ParamElems>("GetValueCount @idParam", new SqlParameter("@idParam", idParam)).Count();
+            return _context.ParamElems.Count(u => u.IdParam == idParam);
+            //return _context.ParamElems.FromSqlRaw<ParamElems>("GetValueCount @idParam", new SqlParameter("@idParam", idParam)).Count();
         }
 
         public ParamElems UpdateParamValue(ParamElems updateParamValue)

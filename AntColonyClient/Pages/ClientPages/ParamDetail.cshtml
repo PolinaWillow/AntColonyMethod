@@ -1,4 +1,5 @@
 ﻿@page "{id}"
+@using AntColonyExtLib.DataModel.Numerators
 @model AntColonyClient.Pages.ClientPages.ParamDetailModel
 @{
     ViewData["Title"] = "Param details";
@@ -37,16 +38,18 @@
                     <div class="modal-body">
                         <input type="hidden" asp-for="newParamValue.IdParam" value="@(Model.taskParam.Id)">
                         @*Отображение ввода значения для разных типов параметров*@
-                        @if (Model.taskParam.TypeParam == Enum_TypesParams.Double)
+                        @if (Model.taskParam.TypeParam == TypeNumerator.Double)
                         {
                             <label asp-for="newParamValue.ValueParam" class="col-form-label">Введите числовое значение параметра:</label>
                             <input asp-for="newParamValue.ValueParam" type="text" id="newNumValueParam" class="form-control" aria-describedby="newNumValueParam">
                         }
-                        else if (Model.taskParam.TypeParam == Enum_TypesParams.String) {
+                        else if (Model.taskParam.TypeParam == TypeNumerator.String)
+                        {
                             <label asp-for="newParamValue.ValueParam" class="col-form-label">Введите строковое значение параметра:</label>
                             <input asp-for="newParamValue.ValueParam" type="text" id="newStrValueParam" class="form-control" aria-describedby="newStrValueParam">
                         }
-                        else if (Model.taskParam.TypeParam == Enum_TypesParams.Bool) {
+                        else if (Model.taskParam.TypeParam == TypeNumerator.Bool)
+                        {
                             <label asp-for="newParamValue.ValueParam" class="col-form-label">Выбирите значение параметра:</label>
                             <br />
                             <input asp-for="newParamValue.ValueParam" type="radio" value="true" name="vboolParam" id="trueValue" />

@@ -1,5 +1,6 @@
 using AntColonyClient.Models;
 using AntColonyClient.Service;
+using AntColonyExtLib.DataModel.Numerators;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 

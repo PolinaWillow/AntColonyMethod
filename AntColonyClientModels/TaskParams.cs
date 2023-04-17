@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using AntColonyExtLib.DataModel.Numerators;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -30,7 +31,7 @@ namespace AntColonyClient.Models
         /// Тип значений параметра
         /// </summary>
         [Required(ErrorMessage = "Не указан тип значений параметра")]
-        public Enum_TypesParams? TypeParam { get; set; }
+        public TypeNumerator TypeParam { get; set; }
 
 
     }

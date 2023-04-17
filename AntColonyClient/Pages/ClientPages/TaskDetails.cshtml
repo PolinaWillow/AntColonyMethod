@@ -1,5 +1,6 @@
 ﻿@page "{id}"
 @using AntColonyClient.Models
+@using AntColonyExtLib.DataModel.Numerators
 @model AntColonyClient.Pages.ClientPages.TaskDetailsModel
 @{
     ViewData["Title"] = "Task details";
@@ -115,7 +116,7 @@
                                         <div class="col-auto text-start">
 
 
-                                            <select asp-for="TaskParam.TypeParam" asp-items="Html.GetEnumSelectList<Enum_TypesParams>()">
+                                            <select asp-for="TaskParam.TypeParam" asp-items="Html.GetEnumSelectList<TypeNumerator>()">
                                                 <option selected="selected" value="">Выбирете тип параметра</option>
                                             </select>
                                         </div>
@@ -137,7 +138,7 @@
             {
                 <button class="btn-href">Добавить файл</button>
             }
-            <a class="btn-href">Запустить</a>
+            <a asp-page="/ClientPages/SettlementPage" asp-route-id="@(Model.userTask.Id)" class="btn-href">Запустить</a>
         </div>
     </div>
 
