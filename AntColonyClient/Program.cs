@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(conn
 //builder.Services.AddScoped<IUserTaskRepository, MockUserTask>();
 builder.Services.AddScoped<IUserTaskRepository, SQLUserTask>();
 builder.Services.AddScoped<ITaskParamsRepository, SQLTaskParam>();
+builder.Services.AddScoped<IParamValuesRepository, SQLParamValue>();
 //builder.Services.AddScoped<IUserTaskRepository, SQLUserTask>();
 
 builder.Services.Configure<RouteOptions>(options => {

@@ -40,7 +40,7 @@ namespace AntColonyClient.Pages.ClientPages
             }
             else {
                 TaskParams = _taskParamRepository.GetAllTaskParams(userTask.Id);
-                paramCount = _taskParamRepository.GetParamCount();
+                paramCount = _taskParamRepository.GetParamCount(userTask.Id);
 
 
                 return Page();
