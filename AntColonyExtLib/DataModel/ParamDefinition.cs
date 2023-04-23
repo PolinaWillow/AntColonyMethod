@@ -29,5 +29,11 @@ namespace AntColonyExtLib.DataModel
             typeParam= TypeNumerator.None; 
             valuesCount= 0;
         }
+
+        public void Print() {
+            Console.WriteLine("Number - " + this.numParam);
+            Console.WriteLine("Type of param - "+ this.typeParam);
+            Console.WriteLine("Count of values - " + this.valuesCount);
+        }
     }
 }

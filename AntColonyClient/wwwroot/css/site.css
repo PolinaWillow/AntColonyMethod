@@ -1,3 +1,7 @@
+:root {
+    --background-color: #ffffff;
+    --text-color: #000;
+}
 html {
     font-size: 14px;
 }
@@ -14,6 +18,8 @@ html {
 }
 
 body {
+    background-color: var(--background-color);
+    color: var(--text-color);
     margin-bottom: 60px;
     margin-top: 3.5rem !important;
 }

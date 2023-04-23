@@ -36,5 +36,12 @@ namespace AntColonyExtLib.DataModel
             iterationCount = 0;
             antCount = 0;
         }
+
+        public void Print() {
+            Console.WriteLine("Ant count - "+this.antCount);
+            Console.WriteLine("Iteraton count - " + this.iterationCount);
+            Console.WriteLine("Params:");
+            inputParams.Print();
+        }
     }
 }

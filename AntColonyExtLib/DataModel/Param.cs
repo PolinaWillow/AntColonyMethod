@@ -23,6 +23,14 @@ namespace AntColonyExtLib.DataModel
             valuesParam = new List<ParamValue>();
         }
 
+        public void Print() {
+            Console.WriteLine("\n");
+            this.defParam.Print();
+            foreach (var elem in this.valuesParam) {
+                elem.Print();
+            }
+        }
+
         /// <summary>
         /// Инициализация параметра
         /// </summary>

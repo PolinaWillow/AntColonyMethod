@@ -9,6 +9,7 @@
     <div class="text-start">
         <h5>Входные данные:</h5>
         <h6>Количество агентов: @(Model.inputData.antCount)</h6>
+        <h6>Количество всех возможных путей: @(Model.inputData.inputParams.countCombinationsV)</h6>
         <h6>Необходимое число итераций: @(Model.inputData.iterationCount)</h6>
         <h6>Параметры:</h6>
         @foreach (var elem in Model.inputData.inputParams.Params)
@@ -27,8 +28,31 @@
         }
     </div>
     <div>
-        <input type="submit" value="Подтвердить" class="btn-href"/>
-        <input type="button" value="Отмена" class="btn-href" onclick="window.location.href='@Url.Page("/ClientPages/TaskDetails", new {id=Model.userTask.Id})'" />
+        <form method="post">
+            <input type="hidden" asp-for="taskIsd" value="@(Model.userTask.Id)" />
+            <input type="submit" value="Подтвердить" asp-page-handler="StartSettlement" asp-route-id="@(Model.inputData)" class="btn-href" data-bs-toggle="modal" data-bs-target="#senttlementModal" />
+            <input type="button" value="Отмена" class="btn-href" onclick="window.location.href='@Url.Page("/ClientPages/TaskDetails", new {id=Model.taskIsd})'" />
+        </form>
     </div>
+</div>
+
+
+@*Модальное окно с ходом решения*@
+<div class="modal fade" id="senttlementModal" tabindex="-1" aria-labelledby="ModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <label>Идет расчет</label>
+            </div>
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <input type="submit" value="Остановить" class="btn-href"/>
+            </div>
+
+        </div>
+    </div>
+
 </div>
 

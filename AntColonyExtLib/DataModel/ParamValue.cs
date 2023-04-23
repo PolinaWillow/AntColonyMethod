@@ -35,5 +35,9 @@ namespace AntColonyExtLib.DataModel
             pheromones= 0;
         }
 
+        public void Print() {
+            Console.WriteLine("id - " + this.idValue + "; num - "+ this.numValue+"; value - "+this.valueParam+"; pheromones - "+this.pheromones) ;
+        }
+
     }
 }
