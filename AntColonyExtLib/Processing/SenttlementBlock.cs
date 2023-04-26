@@ -9,7 +9,7 @@ namespace AntColonyExtLib.Processing
 {
     public class SenttlementBlock
     {
-        public static async Task<int> Senttlement(InputData inputData)
+        public static async Task<int> Senttlement(InputData inputData, CancellationToken cancelToken)
         {
             Console.WriteLine("Начало расчета");
             int countFindWay=0; //Количество найденных путей
@@ -18,7 +18,7 @@ namespace AntColonyExtLib.Processing
             ResultValueFunction maxFunction = new ResultValueFunction();
 
             //Проход по всем итерациям
-            for (int i = 0; i < 4/*inputData.iterationCount*/; i++) {
+            for (int i = 0; i < inputData.iterationCount; i++) {
                 if (countFindWay == inputData.inputParams.countCombinationsV) {
                     Console.WriteLine("EXIT-1: Все пути найдены") ;
                     return 0;
@@ -29,9 +29,26 @@ namespace AntColonyExtLib.Processing
                 //Прохождение K агентов
                 Console.WriteLine ("Текущий максимум: ");
                 maxFunction.Print();
-                for (int j = 0; j < 2/*inputData.antCount*/; j++) {
+                for (int j = 0; j < inputData.antCount; j++) {
                     AgentPassage(inputData, countFindWay, countAgent, agentGroup, MAX, maxFunction);
                 }
+
+                //Занесение феромонов
+                agentGroup.AddPheromones(inputData);
+                //Испарение феромонов
+                agentGroup.PheromoneEvaporation(inputData);
+
+                //Занесение результатов прохода агентов в выходной файл
+
+                //Проверка на появление события останова расчетов
+                //Проверка токена
+                if (cancelToken.IsCancellationRequested) {
+                    Console.WriteLine("Отмена выполнения по сигналу от пользователя");
+                    return 0;
+                }
+
+                //Удаление агентов
+                agentGroup.Agents.Clear();
             }
             
             return 0;
@@ -52,18 +69,24 @@ namespace AntColonyExtLib.Processing
             //Определение пути агента
             int[] wayAgent = agent.FindAgentWay(inputData);
             agentGroup.AddWayAgent(wayAgent, id);
+            countFindWay++;
 
 
-            //Получение значения максимума целевой функции
+            //Получение значения целевой функции и определение текущего найденного максимума
             ClusterInteraction clusterInteractionMax = new ClusterInteraction("val", wayAgent, inputData);
             ResultValueFunction valFunction = clusterInteractionMax.SendWay();
             valFunction.Print();
 
-
-
             if (valFunction.valueFunction >= MAX) {
                 maxFunction=valFunction;
                 MAX = valFunction.valueFunction;
+            }
+
+            //Проверка просмотрены ли все решения:
+            if (countFindWay == inputData.inputParams.countCombinationsV)
+            {
+                Console.WriteLine("EXIT-3: Все пути найдены");
+                return;
             }
         }
     }

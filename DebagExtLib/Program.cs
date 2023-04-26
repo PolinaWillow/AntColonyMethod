@@ -124,7 +124,9 @@ namespace DebagExtLib
             };
             inputData.Print();
 
-            Task<int> result = SenttlementBlock.Senttlement(inputData);
+            CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
+            CancellationToken cancelToken = cancelTokenSource.Token;
+            Task<int> result = SenttlementBlock.Senttlement(inputData, cancelToken);
         }
     }
 }

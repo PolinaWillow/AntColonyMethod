@@ -29,9 +29,9 @@
     </div>
     <div>
         <form method="post">
-            <input type="hidden" asp-for="taskIsd" value="@(Model.userTask.Id)" />
+            <input type="hidden" asp-for="taskIsd" value="@(ViewData["view_taskId"])" />
             <input type="submit" value="Подтвердить" asp-page-handler="StartSettlement" asp-route-id="@(Model.inputData)" class="btn-href" data-bs-toggle="modal" data-bs-target="#senttlementModal" />
-            <input type="button" value="Отмена" class="btn-href" onclick="window.location.href='@Url.Page("/ClientPages/TaskDetails", new {id=Model.taskIsd})'" />
+            <input type="button" value="Отмена" class="btn-href" onclick="window.location.href='@Url.Page("/ClientPages/TaskDetails", new {id=ViewData["view_taskId"]})'" />
         </form>
     </div>
 </div>
@@ -48,7 +48,10 @@
 
             </div>
             <div class="modal-footer">
-                <input type="submit" value="Остановить" class="btn-href"/>
+                <form method="post">
+                    <input type="submit" name="StopSettlement_btn" value="Остановить" class="btn-href" />
+                </form>
+                
             </div>
 
         </div>
@@ -56,3 +59,9 @@
 
 </div>
 
+
+<script>
+    function stopPageReload(){
+        window.history.pushState({},document.title, window.location.pathname);
+    }
+</script>

@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AntColonyExtLib.Processing;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -71,6 +72,55 @@ namespace AntColonyExtLib.DataModel
             }
 
             Monitor.Exit(_monitor);
+        }
+
+        private double AddDelta(double functionValue, InputData inputData, List<int> way) {
+            double eps = 0.0000000000000001;
+            double delta = 100 / (functionValue + eps);
+
+            for(int i=0;i<inputData.inputParams.Params.Count();i++) {
+                foreach (var val in inputData.inputParams.Params[i].valuesParam) {
+                    if (val.idValue == way[i]) {
+                        val.pheromones += delta;
+                    }
+                }
+            }
+            
+            return delta;
+        }
+
+        public int AddPheromones(InputData inputData) {
+            
+            foreach (var agent in this.Agents) {
+                int[] way = new int[agent.wayAgent.Count()];
+                for (int i=0;i< agent.wayAgent.Count();i++) {
+                    way[i] = agent.wayAgent[i];
+                }
+                ClusterInteraction clusterInteraction = new ClusterInteraction("val", way, inputData);
+                double valueFunction = clusterInteraction.SendWay().valueFunction;
+                agent.delta = this.AddDelta(valueFunction, inputData, agent.wayAgent);
+            }
+            return 0;
+        }
+
+        public int PheromoneEvaporation(InputData inputData) {
+            //Умножаем для максимума, делаим для минимума
+            foreach (var elem in inputData.inputParams.Params)
+            {
+                foreach (var val in elem.valuesParam)
+                {
+                    double Evaporation = 0.9 * Convert.ToDouble(val.pheromones);
+                    foreach (var agent in this.Agents) {
+                        foreach (var node in agent.wayAgent) {
+                            if (node == val.idValue) {
+                                Evaporation += (1 - 0.9) * agent.delta;
+                            }
+                        }
+                    }
+                    val.pheromones = Evaporation;
+                }
+            }
+            return 0;
         }
     }
 }
