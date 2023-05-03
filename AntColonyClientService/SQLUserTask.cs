@@ -20,7 +20,7 @@ namespace AntColonyClient.Service
             this._context = context;
         }
 
-        public UserTask AddTask(UserTask newUserTask)
+        public async Task<UserTask> AddTask(UserTask newUserTask)
         {
             _context.Database.ExecuteSqlRaw("AddNewUserTask @name, @createData, @inputMethod",
                                              new SqlParameter("@name", newUserTask.Name),
@@ -29,7 +29,7 @@ namespace AntColonyClient.Service
             return newUserTask;
         }
 
-        public int DeleteTask(int id)
+        public async Task<int> DeleteTask(int id)
         {
             /*var userTaskToDelete = _context.UserTasks.Find(id);
             if (userTaskToDelete != null) {
@@ -41,22 +41,22 @@ namespace AntColonyClient.Service
             
         }
 
-        public IEnumerable<UserTask> GetAllTasks()
+        public async Task<IEnumerable<UserTask>> GetAllTasks()
         {
             return _context.UserTasks.FromSqlRaw<UserTask>("GetAllTasks").ToList();
         }
 
-        public UserTask GetTaskById(int id)
+        public async Task<UserTask> GetTaskById(int id)
         {
             return _context.UserTasks.FromSqlRaw<UserTask>("GetTaskById @id", new SqlParameter("@id", id)).ToList().FirstOrDefault(); //_context.UserTasks.Find(id);
         }
 
-        public int GetTaskCount()
+        public async Task<int> GetTaskCount()
         {
             return _context.UserTasks.Count();
         }
 
-        public UserTask UpdateTask(UserTask updateUserTask)
+        public async Task<UserTask> UpdateTask(UserTask updateUserTask)
         {
             var taskToUpdate = _context.UserTasks.Attach(updateUserTask);
             taskToUpdate.State = Microsoft.EntityFrameworkCore.EntityState.Modified;

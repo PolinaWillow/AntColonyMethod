@@ -15,23 +15,28 @@ namespace AntColonyClient.Pages.ClientPages
             _db = db;
         }
         
-        public IEnumerable<UserTask> UserTasks { get; set; }
-
         [BindProperty]
-        public UserTask userTask { get; set; } 
+        public UserTask userTask { get; set; }
+
+        public IEnumerable<UserTask> UserTasks { get; set; }
         public int UserTaskCount { get; set; }
 
-        public void OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
             //Заполнение модели
-            UserTasks = _db.GetAllTasks();
-            UserTaskCount = _db.GetTaskCount();
+             UserTasks = await _db.GetAllTasks();
+             UserTaskCount = await _db.GetTaskCount();
+
+             ViewData["view_UserTasks"] = UserTasks;
+             ViewData["view_UserTaskCount"] = UserTaskCount;
+
+            return Page();
         }
 
-        public IActionResult OnPostDelete(int id) {
-            userTask =  _db.GetTaskById(id);
+        public async Task<IActionResult> OnPostDeleteAsync(int id) {
+            var userTask = await _db.GetTaskById(id);
             if (userTask != null) {
-                _db.DeleteTask(id);
+                await _db.DeleteTask(id);
             }
 
             return RedirectToPage();

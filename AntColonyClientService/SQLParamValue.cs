@@ -19,7 +19,7 @@ namespace AntColonyClient.Service
             this._context = context;
         }
 
-        public ParamElems AddParamValue(ParamElems newParamValue)
+        public async Task<ParamElems> AddParamValue(ParamElems newParamValue)
         {
             _context.Database.ExecuteSqlRaw("AddNewParamValue @idParam, @valueParam",
                                              new SqlParameter("@idParam", newParamValue.IdParam),
@@ -27,28 +27,28 @@ namespace AntColonyClient.Service
             return newParamValue;
         }
 
-        public int DeleteParamValue(int id)
+        public async Task<int> DeleteParamValue(int id)
         {
             return _context.Database.ExecuteSqlRaw("DeleteParamValue @id", new SqlParameter("id", id));
         }
 
-        public IEnumerable<ParamElems> GetAllParamValues(int idParam)
+        public async Task<IEnumerable<ParamElems>> GetAllParamValues(int idParam)
         {
             return _context.ParamElems.FromSqlRaw<ParamElems>("GetAllParamValues @idParam", new SqlParameter("idParam", idParam)).ToList();
         }
 
-        public ParamElems GetParamValueById(int id)
+        public async Task<ParamElems> GetParamValueById(int id)
         {
             return _context.ParamElems.Find(id);
         }
 
-        public int GetValueCount(int idParam)
+        public async Task<int> GetValueCount(int idParam)
         {
             return _context.ParamElems.Count(u => u.IdParam == idParam);
             //return _context.ParamElems.FromSqlRaw<ParamElems>("GetValueCount @idParam", new SqlParameter("@idParam", idParam)).Count();
         }
 
-        public ParamElems UpdateParamValue(ParamElems updateParamValue)
+        public async Task<ParamElems> UpdateParamValue(ParamElems updateParamValue)
         {
             var valueToUpdate = _context.ParamElems.Attach(updateParamValue);
             valueToUpdate.State = Microsoft.EntityFrameworkCore.EntityState.Modified;

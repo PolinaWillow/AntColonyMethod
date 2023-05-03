@@ -1,6 +1,8 @@
 :root {
     --background-color: #ffffff;
     --text-color: #000;
+    --hr-color: #e8e6e6;
+    --card_border_color: darkgray;
 }
 html {
     font-size: 14px;
@@ -28,7 +30,7 @@ hr {
     margin-top: 4%;
     margin-bottom: 2%;
     border: none;
-    border-top: 0.05em solid #e8e6e6;
+    border-top: 0.05em solid var(--hr-color);
     box-shadow: 0 0.1em 0.1em -0.1em #bdbdbd inset;
 }
 
@@ -63,7 +65,7 @@ hr {
     margin-top: 3%;
     padding: 1% 1% 1% 1%;
     border-style: solid;
-    border-color: darkgray;
+    border-color: var(--card_border_color);
     border-radius: 30px;
     border-width: 0.1em;
 }
@@ -90,7 +92,7 @@ hr {
     margin-top: 1%;
     padding: 1% 1% 1% 1%;
     border-style: solid;
-    border-color: darkgray;
+    border-color: var(--card_border_color);
     border-radius: 20px;
     border-width: 0.1em;
 }
@@ -106,7 +108,7 @@ hr {
     margin-top: 1%;
     padding: 1% 1% 1% 1%;
     border-style: solid;
-    border-color: darkgray;
+    border-color: var(--card_border_color);
     border-radius: 20px;
     border-width: 0.1em;
 }
@@ -130,8 +132,8 @@ hr {
     padding: 1%;
     text-decoration: none;
     color: #000;
+    border-color: #dedede;
     background-color: #e8e6e6;
-    border-color: black;
     border-width: 0.1em;
     border-radius: 30px;
 }

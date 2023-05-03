@@ -9,16 +9,16 @@ namespace AntColonyClient.Service
 {
     public interface IUserTaskRepository
     {
-        IEnumerable<UserTask> GetAllTasks();
+        Task<IEnumerable<UserTask>>  GetAllTasks();
 
-        UserTask GetTaskById(int id);
+        Task<UserTask> GetTaskById(int id);
 
-        UserTask UpdateTask(UserTask updateUserTask);
+        Task<UserTask> UpdateTask(UserTask updateUserTask);
 
-        UserTask AddTask(UserTask newUserTask);
+        Task<UserTask> AddTask(UserTask newUserTask);
 
-        int DeleteTask(int id);
+        Task<int> DeleteTask(int id);
 
-        int GetTaskCount();
+        Task<int> GetTaskCount();
     }
 }

@@ -34,27 +34,27 @@ namespace AntColonyClient.Pages.ClientPages
         //Входная структура для расчетного блока
         public InputData inputData { get; set; } = new InputData();
 
-        public IActionResult OnGet(int id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
             //Получение входных данных и формирование структуры хранения параметров
             userTask = new UserTask();
-            userTask = _userTaskRepository.GetTaskById(id);
+            userTask = await _userTaskRepository.GetTaskById(id);
             if (userTask == null) { return RedirectToPage("/NotFound"); }
             else
             {
-                taskParams = _taskParamRepository.GetAllTaskParams(id);
+                taskParams = await _taskParamRepository.GetAllTaskParams(id);
                 if (taskParams != null)
                 {
                     //Заполнение списка параметров
                     foreach (var param in taskParams)
                     {
-                        paramValues = _valueParamRepository.GetAllParamValues(param.Id);
+                        paramValues = await _valueParamRepository.GetAllParamValues(param.Id);
                         if (paramValues != null)
                         {
                             Param newParam = new Param();
                             newParam.defParam.numParam = param.NumParam;
                             newParam.defParam.typeParam = param.TypeParam;
-                            newParam.defParam.valuesCount = _valueParamRepository.GetValueCount(param.Id);
+                            newParam.defParam.valuesCount = await _valueParamRepository.GetValueCount(param.Id);
                             //Заполнение значений параметра
                             foreach (var val in paramValues)
                             {
@@ -97,26 +97,26 @@ namespace AntColonyClient.Pages.ClientPages
         private CancellationTokenSource cancelTokenSource { get; set; }
         public CancellationToken cancelToken { get; set; }
 
-        public async Task<IActionResult> OnPostStartSettlement(/*CancellationToken cancelToken*/)
+        public async Task<IActionResult> OnPostAsyncStartSettlement(/*CancellationToken cancelToken*/)
         {
             //stopPageReload();
             //Получение входных данных и формирование структуры хранения параметров
-            userTask = _userTaskRepository.GetTaskById(taskIsd);
+            userTask = await _userTaskRepository.GetTaskById(taskIsd);
             if (userTask != null)
             {
-                taskParams = _taskParamRepository.GetAllTaskParams(taskIsd);
+                taskParams = await _taskParamRepository.GetAllTaskParams(taskIsd);
                 if (taskParams != null)
                 {
                     //Заполнение списка параметров
                     foreach (var param in taskParams)
                     {
-                        paramValues = _valueParamRepository.GetAllParamValues(param.Id);
+                        paramValues = await _valueParamRepository.GetAllParamValues(param.Id);
                         if (paramValues != null)
                         {
                             Param newParam = new Param();
                             newParam.defParam.numParam = param.NumParam-1;
                             newParam.defParam.typeParam = param.TypeParam;
-                            newParam.defParam.valuesCount = _valueParamRepository.GetValueCount(param.Id);
+                            newParam.defParam.valuesCount = await _valueParamRepository.GetValueCount(param.Id);
                             //Заполнение значений параметра
                             foreach (var val in paramValues)
                             {

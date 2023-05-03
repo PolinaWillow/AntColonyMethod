@@ -18,7 +18,7 @@ namespace AntColonyClient.Service
             this._context = context;
         }
 
-        public TaskParams AddTaskParam(TaskParams newTaskParam)
+        public async Task<TaskParams> AddTaskParam(TaskParams newTaskParam)
         {
             _context.Database.ExecuteSqlRaw("AddTaskParam @idTask, @numParam, @typeParam",
                                              new SqlParameter("@idTask", newTaskParam.IdTask),
@@ -27,28 +27,28 @@ namespace AntColonyClient.Service
             return newTaskParam;
         }
 
-        public int DeleteTaskParam(int id)
+        public async Task<int> DeleteTaskParam(int id)
         {
             return _context.Database.ExecuteSqlRaw("DeleteTaskParam @id", new SqlParameter("id", id));
         }
 
-        public IEnumerable<TaskParams> GetAllTaskParams(int idTask)
+        public async Task<IEnumerable<TaskParams>> GetAllTaskParams(int idTask)
         {
             return _context.TaskParams.FromSqlRaw<TaskParams>("GetAllTaskParams @idTask", new SqlParameter("idTask", idTask)).ToList();
         }
 
-        public int GetParamCount(int idTask)
+        public async Task<int> GetParamCount(int idTask)
         {
             //return _context.TaskParams.FromSqlRaw<TaskParams>("GetParamCount @idTask", new SqlParameter("idTask", idTask)).Count();
             return _context.TaskParams.Count(u => u.IdTask ==idTask);
         }
 
-        public TaskParams GetTaskParamById(int id)
+        public async Task<TaskParams> GetTaskParamById(int id)
         {
             return _context.TaskParams.Find(id);
         }
 
-        public TaskParams UpdateTaskParam(TaskParams updateTaskParam)
+        public async Task<TaskParams> UpdateTaskParam(TaskParams updateTaskParam)
         {
             var paramToUpdate = _context.TaskParams.Attach(updateTaskParam);
             paramToUpdate.State = Microsoft.EntityFrameworkCore.EntityState.Modified;

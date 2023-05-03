@@ -18,17 +18,17 @@ namespace AntColonyClient.Pages.ClientPages
         [BindProperty]
         public UserTask UserTask { get; set; }
 
-        public IActionResult OnGet()
+        public async Task<IActionResult> OnGetAsync()
         {
             UserTask = new UserTask();
             return Page();
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             if (ModelState.IsValid)
             {               
-                UserTask = _userTaskRepository.AddTask(UserTask);
+                UserTask = await _userTaskRepository.AddTask(UserTask);
                 return RedirectToPage("UserTasks");
             }
             return Page();

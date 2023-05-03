@@ -9,16 +9,16 @@ namespace AntColonyClient.Service
 {
     public interface IParamValuesRepository
     {
-        IEnumerable<ParamElems> GetAllParamValues(int idParam);
+        Task<IEnumerable<ParamElems>> GetAllParamValues(int idParam);
 
-        ParamElems GetParamValueById(int id);
+        Task<ParamElems> GetParamValueById(int id);
 
-        ParamElems UpdateParamValue(ParamElems updateParamValue);
+        Task<ParamElems> UpdateParamValue(ParamElems updateParamValue);
 
-        ParamElems AddParamValue(ParamElems newParamValue);
+        Task<ParamElems> AddParamValue(ParamElems newParamValue);
 
-        int DeleteParamValue(int id);
+        Task<int> DeleteParamValue(int id);
 
-        int GetValueCount(int idParam);
+        Task<int> GetValueCount(int idParam);
     }
 }

@@ -9,16 +9,16 @@ namespace AntColonyClient.Service
 {
     public interface ITaskParamsRepository
     {
-        IEnumerable<TaskParams> GetAllTaskParams(int idTask);
+        Task<IEnumerable<TaskParams>> GetAllTaskParams(int idTask);
 
-        TaskParams GetTaskParamById(int id);
+        Task<TaskParams> GetTaskParamById(int id);
 
-        TaskParams UpdateTaskParam(TaskParams updateTaskParam);
+        Task<TaskParams> UpdateTaskParam(TaskParams updateTaskParam);
 
-        TaskParams AddTaskParam(TaskParams newTaskParam);
+        Task<TaskParams> AddTaskParam(TaskParams newTaskParam);
 
-        int DeleteTaskParam(int id);
+        Task<int> DeleteTaskParam(int id);
 
-        int GetParamCount(int idTask);
+        Task<int> GetParamCount(int idTask);
     }
 }

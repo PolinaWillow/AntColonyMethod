@@ -45,7 +45,7 @@ namespace AntColonyClient.Service
             };
         }
 
-        public UserTask AddTask(UserTask newUserTask)
+        public async Task<UserTask> AddTask(UserTask newUserTask)
         {
             newUserTask.Id = _userTasks.Max(x=>x.Id)+1;
             DateTime dateTime = DateTime.UtcNow.Date;
@@ -54,7 +54,7 @@ namespace AntColonyClient.Service
             return newUserTask;
         }
 
-        public int DeleteTask(int id)
+        public async Task<int> DeleteTask(int id)
         {
             UserTask deleteTask = _userTasks.FirstOrDefault(x=>x.Id==id);
             if (deleteTask != null) {
@@ -63,23 +63,23 @@ namespace AntColonyClient.Service
             return 0;
         }
 
-        public IEnumerable<UserTask> GetAllTasks()
+        public async Task<IEnumerable<UserTask>> GetAllTasks()
         {
             return _userTasks;
         }
 
-        public UserTask GetTaskById(int id)
+        public async Task<UserTask> GetTaskById(int id)
         {
             //Возврат единственного пользователя, у которого id == заданному
             return _userTasks.FirstOrDefault(x => x.Id == id);
         }
 
-        public int GetTaskCount()
+        public async Task<int> GetTaskCount()
         {
             throw new NotImplementedException();
         }
 
-        public UserTask UpdateTask(UserTask updateUserTask)
+        public async Task<UserTask> UpdateTask(UserTask updateUserTask)
         {
             UserTask userTask = _userTasks.FirstOrDefault(x=>x.Id==updateUserTask.Id);
             if (userTask != null) {

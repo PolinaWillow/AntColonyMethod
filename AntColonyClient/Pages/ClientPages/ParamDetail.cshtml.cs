@@ -23,9 +23,9 @@ namespace AntColonyClient.Pages.ClientPages
         //Добавление значения
         [BindProperty]
         public ParamElems newParamValue { get; set; }
-        public IActionResult OnGet(int id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            taskParam = _taskParamRepository.GetTaskParamById(id);
+            taskParam = await _taskParamRepository.GetTaskParamById(id);
             //Переадрессация в случае ошибки
             if (taskParam == null)
             {
@@ -33,17 +33,17 @@ namespace AntColonyClient.Pages.ClientPages
             }
             else
             {
-                paramValues = _valueParamRepository.GetAllParamValues(taskParam.Id);
+                paramValues = await _valueParamRepository.GetAllParamValues(taskParam.Id);
                 return Page();
             }
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             string url = Url.Page("ParamDetail", new { id = newParamValue.IdParam });
             if (ModelState.IsValid)
             {
-                newParamValue = _valueParamRepository.AddParamValue(newParamValue);
+                newParamValue = await _valueParamRepository.AddParamValue(newParamValue);
                 //TaskParam = _taskParamRepository.AddTaskParam(TaskParam);
                 return Redirect(url ?? "NotFound");
             }

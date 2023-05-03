@@ -30,43 +30,43 @@ namespace AntColonyClient.Pages.ClientPages
         [BindProperty]
         public TaskParams TaskParam { get; set; }
 
-        public IActionResult OnGet(int id)
+        public async Task<IActionResult> OnGetAsync(int id)
         {
-            userTask = _userTaskRepository.GetTaskById(id);
+            userTask = await _userTaskRepository.GetTaskById(id);
             //Переадрессация в случае ошибки
             if (userTask == null)
             {
                 return RedirectToPage("/NotFound");
             }
             else {
-                TaskParams = _taskParamRepository.GetAllTaskParams(userTask.Id);
-                paramCount = _taskParamRepository.GetParamCount(userTask.Id);
-
+                TaskParams = await _taskParamRepository.GetAllTaskParams(userTask.Id);
+                paramCount = await _taskParamRepository.GetParamCount(userTask.Id);
+                
 
                 return Page();
             }
             
         }
 
-        public IActionResult OnPost()
+        public async Task<IActionResult> OnPostAsync()
         {
             string url = Url.Page("TaskDetails", new { id = TaskParam.IdTask });
             if (ModelState.IsValid)
             {
-                TaskParam = _taskParamRepository.AddTaskParam(TaskParam);
+                TaskParam = await _taskParamRepository.AddTaskParam(TaskParam);
                 return Redirect(url ?? "NotFound");
             }
             return Redirect(url ?? "NotFound");
         }
 
-        public IActionResult OnPostDelete(int id)
+        public async Task<IActionResult> OnPostDeleteAsync(int id)
         {
-            userTaskParams = _taskParamRepository.GetTaskParamById(id);
+            userTaskParams = await _taskParamRepository.GetTaskParamById(id);
             int IdTask=0;
             if (userTaskParams != null)
             {
                 IdTask = userTaskParams.IdTask;
-                _taskParamRepository.DeleteTaskParam(id);
+                await _taskParamRepository.DeleteTaskParam(id);
             }
             string url = Url.Page("TaskDetails", new { id = IdTask });
             return Redirect(url ?? "NotFound");
