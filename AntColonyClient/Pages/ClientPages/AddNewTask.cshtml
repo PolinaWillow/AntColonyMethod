@@ -14,10 +14,10 @@
         <form method="post" class="form-create">
             <input asp-for="UserTask.Create_Data" type="hidden" value="@(DateTime.Now.ToString())">
             <div class="row g-2 align-items-center">
-                <div class="col-auto">
+                <div class="col-lg-2 col-sm-12 col-md-2 ">
                     <label asp-for="UserTask.Name" class="col-form-label">Название:</label>
                 </div>
-                <div class="col-auto">
+                <div class="col-lg-10 col-sm-12 col-md-10">
                     <input asp-for="UserTask.Name" type="text" id="nameNewTask" class="form-control" aria-describedby="nameNewTask">
                 </div>
             </div>
@@ -26,10 +26,10 @@
             </div>
 
             <div class="row g-2 div-marg">
-                <div class="col-auto ">
+                <div class="col-lg-5 col-sm-12 col-md-12 text-start">
                     <label for="methAddParams" class="col-form-label">Способ ввода параметов:</label>
                 </div>
-                <div class="col-auto text-start">
+                <div class="col-lg-7 col-sm-12 col-md-12 text-start">
 
 
                     <select asp-for="UserTask.InputMethod" asp-items="Html.GetEnumSelectList<Enum_InputMethods>()">
@@ -41,7 +41,7 @@
                 <span asp-validation-for="UserTask.InputMethod"></span>
             </div>
             <hr />
-            <button type="submit" class="btn btn-form btn-create">Создать</button>
+            <button type="submit" class="btn-href">Создать</button>
         </form>
     </div>
 </div>

@@ -26,7 +26,7 @@
                 }
                 else
                 {
-
+                    <div class="text-start">
                     @foreach (var paramElem in Model.TaskParams)
                     {
                         <div class="Param_Card div-block-detail">
@@ -70,6 +70,7 @@
                             </form>
                         </div>
                     }
+                    </div>
                 }
 
             </div>
@@ -99,10 +100,10 @@
                                     <input type="hidden" asp-for="TaskParam.IdTask" value="@(Model.userTask.Id)">
 
                                     <div class="row g-2 align-items-center">
-                                        <div class="col-auto">
+                                        <div class="col-lg-2 col-sm-12 col-md-2">
                                             <label asp-for="TaskParam.NumParam" class="col-form-label">Номер параметра:</label>
                                         </div>
-                                        <div class="col-auto">
+                                        <div class="col-lg-10 col-sm-12 col-md-10">
                                             <input asp-for="TaskParam.NumParam" type="text" id="numNewParam" class="form-control" aria-describedby="numNewParam">
                                         </div>
                                     </div>
@@ -111,10 +112,10 @@
                                     </div>
 
                                     <div class="row g-2 div-marg">
-                                        <div class="col-auto ">
+                                        <div class="col-lg-5 col-sm-12 col-md-12 ">
                                             <label for="typeAddParams" class="col-form-label">Способ ввода параметов:</label>
                                         </div>
-                                        <div class="col-auto text-start">
+                                        <div class="col-lg-7 col-sm-12 col-md-12 text-start">
                                             <select asp-for="TaskParam.TypeParam" asp-items="Html.GetEnumSelectList<TypeNumerator>()">
                                                 <option selected="selected" value="">Выбирете тип параметра</option>
                                             </select>
@@ -126,7 +127,7 @@
                                 </div>
                                 <hr />
                                 <div class="modal-footer">
-                                    <button type="submit" class="btn btn-form btn-create btn-href">Создать</button>
+                                    <button type="submit" class="btn-form btn-create btn-href">Создать</button>
                                 </div>
                             </div>
                         </div>

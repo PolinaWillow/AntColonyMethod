@@ -1,13 +1,15 @@
 :root {
-    --bg-color: 255,255,255 /*#FBF0F0*/;
-    --text-color: #7C7575;
+    --bg-color: 248 246 245 /*#FBF0F0*/;
+    --card-bg-color-light: #ffffff;
+    --btn-bg-color: #22331D;
+    --text-color: #22331D;
+    --tekt-color-light: #ffffff;
+    --card_border_color: #F5F5F5;
     --hr-color: #B8B0B0;
-    --card_border_color: #DFD3D3;
     --br-color: #7C7575;
     --shadow_color: #bdbdbd;
-    --btn-bg-color: #DFD3D3;
     --btn-border-color: #7C7575;
-    --hover-color: #4D4545;
+    --hover-color: #F5F5F5;
 }
 html {
     font-size: 14px;
@@ -25,10 +27,16 @@ html {
 }
 
 body {
+    font-family: Montserra;
     background-color: rgba(var(--bg-color));
     color: var(--text-color);
     margin-bottom: 60px;
     margin-top: 3.5rem !important;
+}
+
+.logo {
+    font-weight: 600;
+    margin-right: 5%;
 }
 
 hr {
@@ -39,9 +47,25 @@ hr {
     box-shadow: 0 0.1rem 0.1rem -0.1rem var(--shadow_color) inset;
 }
 
+input {
+    padding: 0.5rem !important;
+    font-weight: 300 !important;
+    color: var(--text-color) !important;
+    background-color: var(--card-bg-color-light) !important;
+    /* background-clip: padding-box;*/
+    border: 0.1em solid var(--card_border_color) !important;
+    border-radius: 0rem !important;
+}
+
+select {
+    padding: 0.5rem;
+    border: 0.1em solid var(--card_border_color);
+    border-radius: 0rem;
+}
+
 .pageHeader-1 {
     font-size: calc(1.475rem + 2.7vw);
-    font-weight: 400;
+    font-weight: 300;
     line-height: 1.2;
 }
 
@@ -69,7 +93,7 @@ p {
     width: 50px;
     height: 50px;
     cursor: pointer;
-    color: var(--text-color);
+    color: var(--btn-bg-color);
     text-align: center;
     margin: 4% 2% 1% 2%;
     text-decoration: none;
@@ -87,10 +111,11 @@ p {
     display: inline-block;
     margin-top: 3%;
     padding: 1% 1% 1% 1%;
-    border-style: solid;
+    background-color: var(--card-bg-color-light);
+    /*border-style: solid;
     border-color: var(--card_border_color);
     border-radius: 30px;
-    border-width: 0.1em;
+    border-width: 0.1em;*/
 }
 
 .form-create {
@@ -102,11 +127,11 @@ p {
 }
 
 .btn-create {
-    color: var(--text-color);
+    color: var(--tekt-color-light);
     background-color: var(--btn-bg-color);
     border-color: var(--btn-border-color);
     border-width: 0.1em;
-    border-radius: 30px;
+    /*border-radius: 30px;*/
 }
 
 .div-block-detail {
@@ -114,10 +139,10 @@ p {
     width: 90%;
     margin-top: 1%;
     padding: 1% 1% 1% 1%;
-    border-style: solid;
+    background-color: var(--card-bg-color-light);
+    /*border-style: solid;
     border-color: var(--card_border_color);
-    border-radius: 20px;
-    border-width: 0.1em;
+    border-width: 0.1em;*/
 }
 
 .h-details {
@@ -127,19 +152,21 @@ p {
 
 .card-body {
     display: inline-block;
-    width: 60%;
+    width: 70%;
     margin-top: 1%;
-    padding: 1% 1% 1% 1%;
-    border-style: solid;
+    padding: 0.7% 1% 0.7% 1%;
+    background-color: var(--card-bg-color-light);
+    /*border-style: solid;
     border-color: var(--card_border_color);
     border-radius: 20px;
-    border-width: 0.1em;
+    border-width: 0.1em;*/
 }
 
 .card-link {
     margin: 0% 2% 0% 2%;
     color: var(--text-color);
-    font-size: 1.2em;
+    font-size: 1.2rem;
+    font-weight: 200;
     text-decoration: none;
 }
 
@@ -150,17 +177,19 @@ p {
 
 
 .btn-href {
-    display: inline-block;
-    width: auto;
-    padding: 1%;
-    text-decoration: none;
-    color: var(--text-color);
-    border-style:solid;
+    display: inline-block !important;
+    width: auto !important;
+    padding: 0.5% 1.5% !important;
+    text-decoration: none !important;
+    color: var(--tekt-color-light) !important;
+    background-color: var(--btn-bg-color) !important;
+    border-style: none !important;
+    /* border-style: solid;
     border-color: var(--btn-border-color);
-    background-color: var(--btn-bg-color);
+    
     border-width: 0.1em;
-    border-radius: 30px;
-    font-weight:500;
+    border-radius: 30px;*/
+    font-weight: 500 !important;
 }
 
     .btn-href:hover {
@@ -180,6 +209,7 @@ p {
     border: 0;
     border-radius: .25rem;
     opacity: .5;
+    background-color:rgba(256,256,256,0);
 }
 
 .errMass {
@@ -195,6 +225,11 @@ p {
     box-sizing: border-box;
     width: 20%;
     margin: 1%;
+
+    border-style: solid;
+    border-color: var(--card_border_color);
+    border-width: 0.1em;
+    
 }
 
 .br-color {
