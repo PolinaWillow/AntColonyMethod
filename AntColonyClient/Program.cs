@@ -1,11 +1,13 @@
+using AntColonyClient.Hubs;
+
 using AntColonyClient.Service;
 using Microsoft.EntityFrameworkCore;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
+builder.Services.AddSignalR();
 // получаем строку подключения из файла конфигурации
 string connection = builder.Configuration.GetConnectionString("UserDBConnection");
 
@@ -43,5 +45,6 @@ app.UseRouting();
 app.UseAuthorization();
 
 app.MapRazorPages();
+app.MapHub<ProgressHub>("/progressHub");
 
 app.Run();

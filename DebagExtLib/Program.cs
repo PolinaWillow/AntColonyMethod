@@ -1,11 +1,14 @@
-﻿using AntColonyExtLib;
-using AntColonyExtLib.DataModel;
+﻿using AntColonyExtLib.DataModel;
 using AntColonyExtLib.Processing;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DebagExtLib
 {
     internal class Program
     {
+        private List<string> results = new List<string>();
+
         static void Main()
         {
             //Создание объекта данных
@@ -126,7 +129,21 @@ namespace DebagExtLib
 
             CancellationTokenSource cancelTokenSource = new CancellationTokenSource();
             CancellationToken cancelToken = cancelTokenSource.Token;
-            Task<int> result = SenttlementBlock.Senttlement(inputData, cancelToken);
+
+            SenttlementBlock senttlementBlock = new SenttlementBlock();
+            //Task<int> result = senttlementBlock.Senttlement(inputData, cancelToken);
+
+            //Результаты работы программы
+            //List<string> results = new List<string>();
+
+            //Запуск выполняемых задач
+            Task.Run(() => senttlementBlock.Senttlement(inputData, cancelToken));
+            Task.Run(() =>
+            {
+                string newRes = senttlementBlock.OutputResults();
+                Console.WriteLine("User Results = "+newRes);
+            }
+            );
         }
     }
 }

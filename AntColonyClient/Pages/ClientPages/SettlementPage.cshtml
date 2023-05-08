@@ -5,7 +5,7 @@
 }
 
 <div class="text-center">
-    <h1 class="display-4">Подтвердите запуск задачи:</h1>
+    <h1 class="pageHeader-1">Подтвердите запуск задачи:</h1>
     <div class="text-start">
         <h5>Входные данные:</h5>
         <h6>Количество агентов: @(Model.inputData.antCount)</h6>
@@ -42,14 +42,18 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-header">
-                <label>Идет расчет</label>
+                <label>Расчет целефой функции по заданным параметрам</label>
             </div>
             <div class="modal-body">
-
+                <p>Подождите, идет процесс расчета</p>
+                <div class="progress">
+                    <div class="progress-bar br-color" id="progress" role="progressbar" style="width: 0%;" aria-valuenow="0" aria-valuemin="0" aria-valuemax="100">0%</div>
+                </div>
             </div>
             <div class="modal-footer">
+                
                 <form method="post">
-                    <input type="submit" name="StopSettlement_btn" value="Остановить" class="btn-href" />
+                    <input type="submit" id="StopSettlement_btn" name="StopSettlement_btn" value="Остановить" class="btn-href" />
                 </form>
                 
             </div>
@@ -64,4 +68,29 @@
     function stopPageReload(){
         window.history.pushState({},document.title, window.location.pathname);
     }
+</script>
+
+<script src="~/js/signalr/dist/browser/signalr.js"></script>
+<script>
+    "use strict";
+    //var connection = new signalR.HubConnectionBuilder().withUrl("/chatHub").build();
+
+    const connection = new signalR.HubConnectionBuilder().withUrl("/progressHub", {
+        skipNegotiation: true,
+        transport: signalR.HttpTransportType.WebSockets
+    }).build();
+
+    connection.on("Receive", (widthProgress, message) => {
+        const progress = document.getElementById("progress");
+        progress.style.width = widthProgress+"%" //innerHTML = message;
+        progress.innerHTML = message+"%";
+    });
+
+    connection.start().then(() => {
+        console.log("Соединение установлено");
+    }).catch((error) => {
+        console.error(error.toString());
+    });
+
+
 </script>

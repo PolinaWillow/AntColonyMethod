@@ -1,3 +1,4 @@
+using AntColonyClient.Hubs;
 using AntColonyClient.Models;
 using AntColonyClient.Service;
 using AntColonyExtLib.DataModel;
@@ -5,6 +6,8 @@ using AntColonyExtLib.DataModel.Numerators;
 using AntColonyExtLib.Processing;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.AspNetCore.SignalR;
+using System.Threading.Tasks;
 
 namespace AntColonyClient.Pages.ClientPages
 {
@@ -13,8 +16,9 @@ namespace AntColonyClient.Pages.ClientPages
         private readonly IUserTaskRepository _userTaskRepository;
         private readonly ITaskParamsRepository _taskParamRepository;
         private readonly IParamValuesRepository _valueParamRepository;
+        private readonly IHubContext<ProgressHub> hubContext;
 
-        public SettlementPageModel(IUserTaskRepository userTaskRepository, ITaskParamsRepository taskParamsRepository, IParamValuesRepository valueParamRepository)
+        public SettlementPageModel(IHubContext<ProgressHub> hubContext, IUserTaskRepository userTaskRepository, ITaskParamsRepository taskParamsRepository, IParamValuesRepository valueParamRepository)
         {
             //Внедрение зависимостей интерфейса
             _userTaskRepository = userTaskRepository;
@@ -24,6 +28,9 @@ namespace AntColonyClient.Pages.ClientPages
             //Управление отменой задачи
             cancelTokenSource = new CancellationTokenSource();
             cancelToken = cancelTokenSource.Token;
+
+            //Управление изменения трекера прогресса
+            this.hubContext = hubContext;
         }
 
         //Получаемые данные из БД
@@ -97,7 +104,7 @@ namespace AntColonyClient.Pages.ClientPages
         private CancellationTokenSource cancelTokenSource { get; set; }
         public CancellationToken cancelToken { get; set; }
 
-        public async Task<IActionResult> OnPostAsyncStartSettlement(/*CancellationToken cancelToken*/)
+        public async Task<IActionResult> OnPostStartSettlementAsync(CancellationToken cancelToken)
         {
             //stopPageReload();
             //Получение входных данных и формирование структуры хранения параметров
@@ -146,21 +153,39 @@ namespace AntColonyClient.Pages.ClientPages
             }
 
             //Если нажата кнопка останова
-            if (Request.Form.ContainsKey("StopSettlement_btn")) {
+            if (Request.Form.ContainsKey("StopSettlement_btn"))
+            {
                 cancelTokenSource.Cancel();
-                //return RedirectToPage("/ClientPages/TaskDetails", new { id = taskIsd });
-            }
-            try
-            {
-                await SenttlementBlock.Senttlement(inputData, cancelToken);
-            }
-            catch (OperationCanceledException)
-            {
-                Console.WriteLine("Остановка работы");
                 return RedirectToPage("/ClientPages/TaskDetails", new { id = taskIsd });
             }
+            else
+            {
+                try
+                {
+                    //await SenttlementBlock.Senttlement(inputData, cancelToken);
+                    // отправить сообщения о прогрессе выполнения
+                    //for (int i = 1; i <= 100; i++)
+                    //{
+                    //    // выполнять какую-то задачу
+                    //    await Task.Delay(100);
 
-            return RedirectToPage("/ClientPages/TaskDetails", new { id = taskIsd});
+                    //    // отправить сообщения о прогрессе выполнения
+                    //    await hubContext.Clients.All.SendAsync("Receive", i, i);
+                    //    Console.WriteLine(i);
+                    //}
+                }
+                catch (OperationCanceledException)
+                {
+                    Console.WriteLine("Остановка работы");
+                    return RedirectToPage("/ClientPages/TaskDetails", new { id = taskIsd });
+                }
+            }
+            await Task.Delay(2000);
+            return RedirectToPage ("/ClientPages/TaskDetails", new { id = taskIsd});
+        }
+
+        public void OnPostStop() {
+            cancelTokenSource.Cancel();
         }
 
     }

@@ -30,7 +30,7 @@ namespace AntColonyExtLib.Processing
         public ResultValueFunction SendWay() {
             //Формирование строки Json для отправки данных
             string jsonData = JsonSerializer.Serialize(this.sendData);
-            Console.WriteLine(jsonData);
+            //Console.WriteLine(jsonData);
 
             //Представление строки в виде байтов
             byte[] dataBytes = Encoding.Default.GetBytes(jsonData);
@@ -38,11 +38,11 @@ namespace AntColonyExtLib.Processing
             //Создание сокета
             Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
             socket.Connect(this.SendInfo.IP, this.SendInfo.PORT);
-            Console.WriteLine("connected...");
+            //Console.WriteLine("connected...");
 
             //Отправка данных
             socket.Send(dataBytes);
-            Console.WriteLine("sent...");
+            //Console.WriteLine("sent...");
 
             //Получение результата расчетов кластера
             byte[] buffer = new byte[1024 * 4];
@@ -61,15 +61,15 @@ namespace AntColonyExtLib.Processing
                     break;
                 }
             }
-            Console.WriteLine("read...");
+            //Console.WriteLine("read...");
             byte[] totalBytes = memoryStream.ToArray();
             memoryStream.Close();
 
 
             string readData = Encoding.Default.GetString(totalBytes);
-            Console.WriteLine(readData);
+            //Console.WriteLine(readData);
             this.outputClusterData = JsonSerializer.Deserialize<double>(readData);
-            Console.WriteLine(outputClusterData);
+            //Console.WriteLine(outputClusterData);
             //Console.ReadKey();
 
             socket.Close();
