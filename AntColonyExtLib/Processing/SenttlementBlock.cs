@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AntColonyExtLib.DataModel.Statistic;
 
 namespace AntColonyExtLib.Processing
 {
@@ -55,8 +56,20 @@ namespace AntColonyExtLib.Processing
             FileManager fileManager = new FileManager(); //Менеджер файлов для занесения результатов
             //Создание файла с выходными результатами
             string outputFileName = fileManager.CreateOutputFile(inputData);
-            
 
+            //Объявление сбора статистики
+            StatisticsCollection statistics = new StatisticsCollection();
+            string outputStat = fileManager.CreateStatisricFile();
+
+
+            //Сбор статистики
+            statistics.StartStatistics();
+
+            //Сброс статистики по запуску
+            statistics.ResetStatistics();
+
+            //Определение времени начала расчета
+            statistics.TimeStart=DateTime.Now;
             //Проход по всем итерациям
             for (int i = 0; i < inputData.iterationCount; i++) {
                 //Console.WriteLine(cancelToken);
@@ -69,9 +82,9 @@ namespace AntColonyExtLib.Processing
                 AgentGroup agentGroup = new AgentGroup();
                 //Прохождение K агентов
                 //Console.WriteLine ("Текущий максимум: ");
-                maxFunction.Print();
+                //maxFunction.Print();
                 for (int j = 0; j < inputData.antCount; j++) {
-                    AgentPassage(inputData, countFindWay, countAgent, agentGroup);
+                    AgentPassage(i, inputData, countFindWay, countAgent, agentGroup, statistics);
                 }
 
                 //Занесение феромонов
@@ -99,12 +112,25 @@ namespace AntColonyExtLib.Processing
 
                 //Удаление агентов
                 agentGroup.Agents.Clear();
+
+                //Сбор статистики по каждой терации
+                statistics.UniqueSolutionCount = inputData.antCount;
+                statistics.CollectingStat(i, statistics.UniqueSolutionCount);
             }
-            
+
+            //Определение времени выполнения
+            statistics.TimeEnd = DateTime.Now;
+            statistics.WorkTimeLaunch();
+            //Сбор статистики о среднем числе переборов за итерацию
+            statistics.EmunStatI(inputData.iterationCount);
+            //Запись статистики в файл
+            fileManager.WriteStatstring(outputStat, statistics, inputData);
+            statistics.LaunchesCount++;
+
             return 0;
         }
 
-        private static void AgentPassage(InputData inputData, int countFindWay,int countAgent, AgentGroup agentGroup) {
+        private static void AgentPassage(int NumIteration, InputData inputData, int countFindWay,int countAgent, AgentGroup agentGroup, StatisticsCollection statistics) {
             //Проверка просмотрены ли все решения:
             if (countFindWay == inputData.inputParams.countCombinationsV)
             {
@@ -117,7 +143,7 @@ namespace AntColonyExtLib.Processing
             Agent agent = agentGroup.FindAgent(id);
 
             //Определение пути агента
-            int[] wayAgent = agent.FindAgentWay(inputData);
+            int[] wayAgent = agent.FindAgentWay(inputData, statistics);
             agentGroup.AddWayAgent(wayAgent, id);
             countFindWay++;
 
@@ -131,6 +157,9 @@ namespace AntColonyExtLib.Processing
                 maxFunction=valFunction;
                 MAX = valFunction.valueFunction;
             }
+
+            //Получение статистики о попадании в % от ожидаемого решения
+            statistics.FindOptimalCount(valFunction.valueFunction, (NumIteration+1), agentGroup.Agents.Count());
 
             //Проверка просмотрены ли все решения:
             if (countFindWay == inputData.inputParams.countCombinationsV)

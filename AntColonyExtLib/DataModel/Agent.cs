@@ -31,7 +31,7 @@ namespace AntColonyExtLib.DataModel
         /// </summary>
         /// <param name="inputData">Структура входных данных</param>
         /// <returns></returns>
-        public int[] FindAgentWay(InputData inputData) {
+        public int[] FindAgentWay(InputData inputData, StatisticsCollection statistic) {
             int[] wayAgent; //Искомый путь агента
 
             //Определение пути и его hash
@@ -46,7 +46,7 @@ namespace AntColonyExtLib.DataModel
             else
             {
                 //Поиск нового пути
-                int[] newWayAgent = FindAlternativeWay(inputData, wayAgent, hashWay);
+                int[] newWayAgent = FindAlternativeWay(inputData, wayAgent, hashWay, statistic);
                 hashWay = hash.GetHash(newWayAgent);
                 hash.AddNewHash(hashWay, wayAgent, inputData);
                 Array.Copy(newWayAgent, 0, wayAgent, 0, inputData.inputParams.Params.Count());
@@ -56,7 +56,7 @@ namespace AntColonyExtLib.DataModel
             return wayAgent;
         }
 
-        private int[] FindAlternativeWay(InputData inputData, int[] startWay, string hashWay) {
+        private int[] FindAlternativeWay(InputData inputData, int[] startWay, string hashWay, StatisticsCollection statistic) {
             int nomParam = 0; //Номер параметра
             int[] newWay = new int[inputData.inputParams.Params.Count()]; //Новый путь
             Hash hash = new Hash();
@@ -64,6 +64,8 @@ namespace AntColonyExtLib.DataModel
 
             while (inputData.hashTable.ContainsKey(hashWay) && (nomParam < inputData.inputParams.Params.Count()))
             {
+                //Сохраняем количество переборов
+                statistic.KolEnumI++;
                 NextWay(newWay, nomParam, inputData.inputParams.Params[nomParam]);
 
                 if (newWay[nomParam] == startWay[nomParam] && nomParam < inputData.inputParams.Params.Count())

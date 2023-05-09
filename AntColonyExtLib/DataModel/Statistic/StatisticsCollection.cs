@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace AntColonyExtLib.DataModel.Statistic
 {
-    internal class StatisticsCollection
+    public class StatisticsCollection
     {
         public StatisticsCollection()
         {
