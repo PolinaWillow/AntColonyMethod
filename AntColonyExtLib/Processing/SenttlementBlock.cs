@@ -14,40 +14,29 @@ namespace AntColonyExtLib.Processing
     public class SenttlementBlock
     {
         public SenttlementBlock() {
-            results = new List<string>();
-            _monitor = new object();
+            ResultsForUser = new StreamlinedData();
+            //ResultsForUser.Notify += ResultsForUser_Notify;
             maxFunction = new ResultValueFunction();
             MAX = 0;
         }
-        public static List<string> results  { get;set;}
+
+        public StreamlinedData ResultsForUser  { get;set;}
 
         static ResultValueFunction maxFunction { get; set; }
         static double MAX { get; set; }
-
-        private object _monitor;
 
         public string OutputResults()
         {
             while (true)
             {
-                Monitor.Enter(_monitor); // ждем, пока не будет доступа к вызывающей функции
-                if (results.Count > 0)
-                {
-                    string result = results[0];
-                    results.RemoveAt(0);
-                    return result;
+                string res = ResultsForUser.GetMessage();
+                if (!string.IsNullOrWhiteSpace(res)) {
+                    //Передача данных пользователю
                 }
-                Monitor.Exit(_monitor); // освобождаем доступ к вызывающей функции
             }
         }
 
-        public void OutputResultToCaller(string result) {
-            Monitor.Enter(_monitor);
-            results.Add(result); // добавляем промежуточный результат в список
-            Monitor.Exit(_monitor);
-        }
-
-        public int Senttlement(InputData inputData, CancellationToken cancelToken)
+        public int Senttlement(string fileDataName, InputData inputData, CancellationToken cancelToken)
         {
             //Console.WriteLine("Начало расчета");
             int countFindWay=0; //Количество найденных путей
@@ -55,7 +44,7 @@ namespace AntColonyExtLib.Processing
             
             FileManager fileManager = new FileManager(); //Менеджер файлов для занесения результатов
             //Создание файла с выходными результатами
-            string outputFileName = fileManager.CreateOutputFile(inputData);
+            string outputFileName = fileManager.CreateOutputFile(inputData, fileDataName);
 
             //Объявление сбора статистики
             StatisticsCollection statistics = new StatisticsCollection();
@@ -99,7 +88,7 @@ namespace AntColonyExtLib.Processing
                 //--------------------------------------------
                 //ВЫВОД ПРОМЕЖУТОЧНЫХ РЕЗУЛЬТАТОВ ПОЛЬЗОВАТЕЛЮ
                 //results.Add(dataToOutput);
-                OutputResultToCaller(dataToOutput);
+                ResultsForUser.AddToList(dataToOutput);
 
                 //--------------------------------------------
 
@@ -151,7 +140,7 @@ namespace AntColonyExtLib.Processing
             //Получение значения целевой функции и определение текущего найденного максимума
             ClusterInteraction clusterInteractionMax = new ClusterInteraction("val", wayAgent, inputData);
             ResultValueFunction valFunction = clusterInteractionMax.SendWay();
-            valFunction.Print();
+            //valFunction.Print();
 
             if (valFunction.valueFunction >= MAX) {
                 maxFunction=valFunction;

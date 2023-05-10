@@ -13,7 +13,7 @@ namespace AntColonyExtLib.DataModel.ClusterData
 
         public ClusterInfo() {
             PORT = 2000;
-            IP = "192.168.1.73";
+            IP = "192.168.1.71";
         }
     }
 }

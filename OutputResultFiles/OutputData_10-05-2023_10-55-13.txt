@@ -1,0 +1,26 @@
+Число агентов: 5
+Количество итераций: 6999
+Число всех возможных путей: 34992
+-------------------------------------------------------------------------
+Входные параметры:
+№0 Values: 1; 2; 7; Type: Double; ValuesCount: 3
+№1 Values: 1; 4; 5; Type: Double; ValuesCount: 3
+№2 Values: 1; 10; Type: Double; ValuesCount: 2
+№3 Values: 1; 11; 20; Type: Double; ValuesCount: 3
+№4 Values: 1; 3; Type: Double; ValuesCount: 2
+№5 Values: 5,24; 5,33; 5,34; Type: Double; ValuesCount: 3
+№6 Values: 15,3; 15,5; 16,9; Type: Double; ValuesCount: 3
+№7 Values: 1; 10; Type: Double; ValuesCount: 2
+№8 Values: 0,01; 0,3; 0,5; Type: Double; ValuesCount: 3
+№9 Values: 100000; 350000; 600000; Type: Double; ValuesCount: 3
+№10 Values: Сильное; Слабое; Type: String; ValuesCount: 2
+-------------------------------------------------------------------------
+
+
+Результаты работы:
+Итерация №: 0
+max: 97,78399999999999
+Values: 7; 5; 10; 20; 3; 5,24; 15,3; 1; 0,3; 600000; Сильное;
+Итерация №: 1
+max: 97,78399999999999
+Values: 7; 5; 10; 20; 3; 5,24; 15,3; 1; 0,3; 600000; Сильное;

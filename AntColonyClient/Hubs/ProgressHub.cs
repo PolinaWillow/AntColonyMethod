@@ -5,9 +5,9 @@ namespace AntColonyClient.Hubs
 {
     public class ProgressHub : Hub
     {
-        public async Task Send(string widthProgress, string message)
+        public async Task Send(string data,string widthProgress, string BanerMessage)
         {
-            await Clients.All.SendAsync("Receive", widthProgress, message);
+            await Clients.All.SendAsync("Receive", widthProgress, BanerMessage);
         }
     }
 }

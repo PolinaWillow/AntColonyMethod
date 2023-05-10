@@ -136,14 +136,51 @@ namespace DebagExtLib
             //Результаты работы программы
             //List<string> results = new List<string>();
 
-            //Запуск выполняемых задач
-            Task.Run(() => senttlementBlock.Senttlement(inputData, cancelToken));
-            Task.Run(() =>
+            FileManager fileManager = new FileManager();
+            string fileName = fileManager.CreateFileName("OutPutFile");
+
+            //Создание задач
+            Task[] tasks = new Task[2];
+            tasks[0] = new Task(() =>
             {
-                string newRes = senttlementBlock.OutputResults();
-                Console.WriteLine("User Results = "+newRes);
+                senttlementBlock.Senttlement(fileName, inputData, cancelToken);
+                Console.WriteLine($"Task{0} finished");
+            });
+            tasks[1] = new Task(() =>
+            {
+                while (true)
+                {
+                    string res = senttlementBlock.ResultsForUser.GetMessage();
+                    if (!string.IsNullOrWhiteSpace(res))
+                    {
+                        Console.WriteLine("User Results = " + res);
+                        Console.WriteLine();
+                        
+                        //Передача данных пользователю
+                        //await hubContext.Clients.All.SendAsync("Receive", 10, 10);
+                    }
+                    if ((cancelToken.IsCancellationRequested) || ((tasks[0]).IsCompleted)) {
+                        break;
+                    }
+                    Thread.Sleep(1000);
+                }                               
+            });
+
+            foreach (var task in tasks) {
+                task.Start();
             }
-            );
+            Console.WriteLine("Завершение метода Main");
+            Task.WaitAll(tasks);
+
+            ////Запуск выполняемых задач
+            //Task.Run(() => senttlementBlock.Senttlement(inputData, cancelToken));
+            //Task.Run(() =>
+            //{
+            //    string newRes = senttlementBlock.OutputResults();
+            //    Console.WriteLine("User Results = " + newRes);
+            //}
+            //);
+
         }
     }
 }

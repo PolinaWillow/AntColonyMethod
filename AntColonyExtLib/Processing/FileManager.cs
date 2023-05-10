@@ -9,7 +9,7 @@ using AntColonyExtLib.DataModel.Statistic;
 
 namespace AntColonyExtLib.Processing
 {
-    internal class FileManager
+    public class FileManager
     {
         /// <summary>
         /// Основное название файла с выходными данными
@@ -19,7 +19,7 @@ namespace AntColonyExtLib.Processing
         /// <summary>
         /// Создание имени файла
         /// </summary>
-        private string CreateFileName(string nameFile)
+        public string CreateFileName(string nameFile)
         {
             //Получение текущей даты
             DateTime today = DateTime.Now;
@@ -30,7 +30,7 @@ namespace AntColonyExtLib.Processing
             createData = createData.Replace(":", "-");
             createData = createData.Replace(".", "-");
             //Формирование имени
-            string fileName = "../../../../OutputResultFiles/" + nameFile + "_" + createData + ".txt";
+            string fileName = /*"../../../../OutputResultFiles/"+*/  nameFile + "_" + createData + ".txt";
 
             return fileName;
         }
@@ -40,9 +40,9 @@ namespace AntColonyExtLib.Processing
         /// </summary>
         /// <param name="inputData">Структура с входными данными</param>
         /// <returns></returns>
-        public string CreateOutputFile(InputData inputData)
+        public string CreateOutputFile(InputData inputData, string outputDataFile)
         {
-            string outputDataFile = CreateFileName("OutputData"); //Получение имени выходного файла
+            //string outputDataFile = CreateFileName("OutputData"); //Получение имени выходного файла
 
             // Создание файла и запись в него
             FileInfo fileInf = new FileInfo(outputDataFile);

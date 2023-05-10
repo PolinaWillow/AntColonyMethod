@@ -106,6 +106,7 @@ namespace AntColonyClient.Pages.ClientPages
 
         public async Task<IActionResult> OnPostStartSettlementAsync(CancellationToken cancelToken)
         {
+            SenttlementBlock senttlementBlock = new SenttlementBlock();
             //stopPageReload();
             //Получение входных данных и формирование структуры хранения параметров
             userTask = await _userTaskRepository.GetTaskById(taskIsd);
@@ -153,6 +154,12 @@ namespace AntColonyClient.Pages.ClientPages
             }
 
             //Если нажата кнопка останова
+            //Создание задач
+            Task[] tasks = new Task[2];
+            //Создание имени выходного файла
+            FileManager fileManager = new FileManager();
+            string fileName = fileManager.CreateFileName("OutPutData");
+
             if (Request.Form.ContainsKey("StopSettlement_btn"))
             {
                 cancelTokenSource.Cancel();
@@ -162,30 +169,55 @@ namespace AntColonyClient.Pages.ClientPages
             {
                 try
                 {
-                    //await SenttlementBlock.Senttlement(inputData, cancelToken);
-                    // отправить сообщения о прогрессе выполнения
-                    //for (int i = 1; i <= 100; i++)
-                    //{
-                    //    // выполнять какую-то задачу
-                    //    await Task.Delay(100);
+                    int flagEndSenttlement = 1;
+                    tasks[0] = new Task(() =>
+                    {
+                        flagEndSenttlement = senttlementBlock.Senttlement(fileName, inputData, cancelToken);
+                        Console.WriteLine($"Task{0} finished");
+                    });
+                    tasks[1] = new Task(() =>
+                    {
+                        while (true)
+                        {
+                            string res = senttlementBlock.ResultsForUser.GetMessage();
+                            if (!string.IsNullOrWhiteSpace(res))
+                            {
+                                Console.WriteLine("User Results = " + res);
+                                Console.WriteLine();
 
-                    //    // отправить сообщения о прогрессе выполнения
-                    //    await hubContext.Clients.All.SendAsync("Receive", i, i);
-                    //    Console.WriteLine(i);
-                    //}
+                                //Передача данных пользователю
+                                hubContext.Clients.All.SendAsync("Receive", res, 10, 10);
+                            }
+                            if ((cancelToken.IsCancellationRequested) || (flagEndSenttlement==0))
+                            {
+                                //Запись выходного файла в базу и выход и чтения данных
+                                break;
+                            }
+                            Thread.Sleep(1000);
+                        }
+                    });
+
+                    foreach (var task in tasks)
+                    {
+                        task.Start();
+                    }
+                    Console.WriteLine("Завершение метода Main");
+                    Task.WaitAll(tasks);
                 }
                 catch (OperationCanceledException)
                 {
                     Console.WriteLine("Остановка работы");
-                    return RedirectToPage("/ClientPages/TaskDetails", new { id = taskIsd });
+                    //return RedirectToPage("/ClientPages/TaskDetails", new { id = taskIsd });
                 }
             }
             await Task.Delay(2000);
             return RedirectToPage ("/ClientPages/TaskDetails", new { id = taskIsd});
         }
 
-        public void OnPostStop() {
+        public IActionResult OnPostStop() {
             cancelTokenSource.Cancel();
+            Thread.Sleep(1000);
+            return RedirectToPage("/ClientPages/TaskDetails", new { id = taskIsd });
         }
 
     }
