@@ -2,6 +2,7 @@ using AntColonyClient.Hubs;
 using AntColonyClient.Models;
 using AntColonyClient.Service;
 using AntColonyExtLib.DataModel;
+using AntColonyExtLib.DataModel.DataForUser;
 using AntColonyExtLib.DataModel.Numerators;
 using AntColonyExtLib.Processing;
 using Microsoft.AspNetCore.Mvc;
@@ -179,14 +180,14 @@ namespace AntColonyClient.Pages.ClientPages
                     {
                         while (true)
                         {
-                            string res = senttlementBlock.ResultsForUser.GetMessage();
-                            if (!string.IsNullOrWhiteSpace(res))
+                            MessageForUser res = senttlementBlock.ResultsForUser.GetMessage();
+                            if (res!=null)
                             {
-                                Console.WriteLine("User Results = " + res);
+                                Console.WriteLine("User Results = " + res.Message);
                                 Console.WriteLine();
 
                                 //Передача данных пользователю
-                                hubContext.Clients.All.SendAsync("Receive", res, 10, 10);
+                                hubContext.Clients.All.SendAsync("Receive", res.Message, Convert.ToString(res.Percentage), Convert.ToString(res.Percentage));
                             }
                             if ((cancelToken.IsCancellationRequested) || (flagEndSenttlement==0))
                             {

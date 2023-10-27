@@ -1,4 +1,5 @@
-﻿using System;
+﻿using AntColonyExtLib.DataModel.DataForUser;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,13 +15,13 @@ namespace AntColonyExtLib.Processing
 
         public StreamlinedData()
         {
-            MessageData = new List<string>();
+            MessageData = new List<MessageForUser>();
             _monitor = new object();
         }
         /// <summary>
         /// Список сообщений с промежуточными результатами
         /// </summary>
-        public List<string> MessageData { get; set; }
+        public List<MessageForUser> MessageData { get; set; }
 
         /// <summary>
         /// Монитор для ограничения критической секции
@@ -31,10 +32,13 @@ namespace AntColonyExtLib.Processing
         /// Добавление промежуточного результата
         /// </summary>
         /// <param name="mas">Промежуточный результат</param>
-        public void AddToList(string mas)
+        public void AddToList(string mas, long percentage)
         {
             Monitor.Enter(_monitor);
-            MessageData.Add(mas); // добавляем промежуточный результат в список
+            MessageForUser newMessageForUser = new MessageForUser();
+            newMessageForUser.Message = mas;
+            newMessageForUser.Percentage = percentage;
+            MessageData.Add(newMessageForUser); // добавляем промежуточный результат в список
             
             //if (Notify != null) Notify("Произошло добавление");
             
@@ -45,13 +49,13 @@ namespace AntColonyExtLib.Processing
         /// Вывод результата пользователю
         /// </summary>
         /// <returns></returns>
-        public string GetMessage()
+        public MessageForUser GetMessage()
         {
             Monitor.Enter(_monitor);
             if (MessageData.Count > 0)
             {
 
-                string result = MessageData[0];
+                MessageForUser result = MessageData[0];
                 MessageData.RemoveAt(0);
                 Monitor.Exit(_monitor);
                 return result;

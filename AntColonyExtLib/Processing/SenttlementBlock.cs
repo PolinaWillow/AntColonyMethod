@@ -8,6 +8,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AntColonyExtLib.DataModel.Statistic;
+using AntColonyExtLib.DataModel.DataForUser;
 
 namespace AntColonyExtLib.Processing
 {
@@ -29,8 +30,8 @@ namespace AntColonyExtLib.Processing
         {
             while (true)
             {
-                string res = ResultsForUser.GetMessage();
-                if (!string.IsNullOrWhiteSpace(res)) {
+                MessageForUser res = ResultsForUser.GetMessage();
+                if (res!=null) {
                     //Передача данных пользователю
                 }
             }
@@ -87,8 +88,9 @@ namespace AntColonyExtLib.Processing
 
                 //--------------------------------------------
                 //ВЫВОД ПРОМЕЖУТОЧНЫХ РЕЗУЛЬТАТОВ ПОЛЬЗОВАТЕЛЮ
-                //results.Add(dataToOutput);
-                ResultsForUser.AddToList(dataToOutput);
+                //Определение процента расчетов
+                long percentage =Convert.ToInt64(Convert.ToDouble(100)/ Convert.ToDouble(inputData.iterationCount) * Convert.ToDouble(i));
+                ResultsForUser.AddToList(dataToOutput, percentage);
 
                 //--------------------------------------------
 

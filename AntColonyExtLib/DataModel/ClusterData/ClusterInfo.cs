@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -13,7 +14,15 @@ namespace AntColonyExtLib.DataModel.ClusterData
 
         public ClusterInfo() {
             PORT = 2000;
-            IP = "192.168.1.71";
+
+            //Получение IP:
+            string host = Dns.GetHostName(); //Получение имени компьютера
+            //Зщдучение адреса
+            IPAddress address = Dns.GetHostAddresses(host).First<IPAddress>(f => f.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork);
+            if (address != null)
+            {
+                IP = address.ToString();
+            }
         }
     }
 }
