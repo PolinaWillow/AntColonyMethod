@@ -26,20 +26,19 @@ namespace AntColonyExtLib.Processing
         static ResultValueFunction maxFunction { get; set; }
         static double MAX { get; set; }
 
-        public string OutputResults()
-        {
-            while (true)
-            {
-                MessageForUser res = ResultsForUser.GetMessage();
-                if (res!=null) {
-                    //Передача данных пользователю
-                }
-            }
-        }
+        //public string OutputResults()
+        //{
+        //    while (true)
+        //    {
+        //        MessageForUser res = ResultsForUser.GetMessage();
+        //        if (res!=null) {
+        //            //Передача данных пользователю
+        //        }
+        //    }
+        //}
 
         public int Senttlement(string fileDataName, InputData inputData, CancellationToken cancelToken)
         {
-            //Console.WriteLine("Начало расчета");
             int countFindWay=0; //Количество найденных путей
             int countAgent = 0; //Количество пройденных агентов
             
@@ -60,6 +59,10 @@ namespace AntColonyExtLib.Processing
 
             //Определение времени начала расчета
             statistics.TimeStart=DateTime.Now;
+
+            //Отправление запроса ксластеру на начало работы
+
+
             //Проход по всем итерациям
             for (int i = 0; i < inputData.iterationCount; i++) {
                 //Console.WriteLine(cancelToken);
@@ -71,8 +74,6 @@ namespace AntColonyExtLib.Processing
                 //Создание группы агентов
                 AgentGroup agentGroup = new AgentGroup();
                 //Прохождение K агентов
-                //Console.WriteLine ("Текущий максимум: ");
-                //maxFunction.Print();
                 for (int j = 0; j < inputData.antCount; j++) {
                     AgentPassage(i, inputData, countFindWay, countAgent, agentGroup, statistics);
                 }
@@ -140,8 +141,9 @@ namespace AntColonyExtLib.Processing
 
 
             //Получение значения целевой функции и определение текущего найденного максимума
-            ClusterInteraction clusterInteractionMax = new ClusterInteraction("val", wayAgent, inputData);
+            ClusterInteraction clusterInteractionMax = new ClusterInteraction("findValue", wayAgent, inputData);
             ResultValueFunction valFunction = clusterInteractionMax.SendWay();
+            agent.funcValue = valFunction.valueFunction;
             //valFunction.Print();
 
             if (valFunction.valueFunction >= MAX) {

@@ -24,7 +24,18 @@ namespace AntColonyExtLib.DataModel
         /// <summary>
         /// Путь Агента
         /// </summary>
-        public List<int> wayAgent = new List<int>();
+        public List<int> wayAgent { get; set; }
+
+        /// <summary>
+        /// Значение функции агента
+        /// </summary>
+        public double funcValue { get; set; }
+
+
+        public Agent() {
+            wayAgent = new List<int>();
+            funcValue = 0;
+        }
 
         /// <summary>
         /// Определение пути агента

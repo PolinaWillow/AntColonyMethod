@@ -10,23 +10,33 @@ using System.Threading.Tasks;
 
 namespace AntColonyExtLib.Processing
 {
+    /// <summary>
+    /// Класс для взаимодействия с вычислительным кластером
+    /// </summary>
     public class ClusterInteraction
     {
+        /// <summary>
+        /// Логи подключения
+        /// </summary>
         private ClusterInfo SendInfo { get; set; }
 
+        //Отправляемые данные
         private SendData sendData { get; set; }
 
+        //Полученное значение с вычислительного класстера
         private double outputClusterData { get; set; } 
 
-        public ClusterInteraction(string typeFunction, int[] way, InputData inputData, double carentExtr = default(double)) {
+        public ClusterInteraction(string typeFunction, int[] way, InputData inputData) {
             outputClusterData = 0;
             SendInfo = new ClusterInfo();
-            sendData = new SendData(typeFunction, way, inputData, carentExtr);
+            sendData = new SendData(typeFunction, way, inputData);
             //JsonFile = new FileStream("way.json", FileMode.OpenOrCreate);
-
-
         }
 
+        /// <summary>
+        /// Функция отправления данных
+        /// </summary>
+        /// <returns></returns>
         public ResultValueFunction SendWay() {
             //Формирование строки Json для отправки данных
             string jsonData = JsonSerializer.Serialize(this.sendData);

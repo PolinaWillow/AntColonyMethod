@@ -96,9 +96,7 @@ namespace AntColonyExtLib.DataModel
                 for (int i=0;i< agent.wayAgent.Count();i++) {
                     way[i] = agent.wayAgent[i];
                 }
-                ClusterInteraction clusterInteraction = new ClusterInteraction("val", way, inputData);
-                double valueFunction = clusterInteraction.SendWay().valueFunction;
-                agent.delta = this.AddDelta(valueFunction, inputData, agent.wayAgent);
+                agent.delta = this.AddDelta(agent.funcValue, inputData, agent.wayAgent);
             }
             return 0;
         }

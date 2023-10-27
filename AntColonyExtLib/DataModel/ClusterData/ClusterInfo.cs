@@ -1,15 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Net;
 
 namespace AntColonyExtLib.DataModel.ClusterData
 {
+    /// <summary>
+    /// Класс описания логов подключения к класстеру
+    /// </summary>
     public class ClusterInfo
     {
+        /// <summary>
+        /// Порт подключенич
+        /// </summary>
         public int PORT { get; set; }
+        /// <summary>
+        /// IP адресс класстера
+        /// </summary>
         public string IP { get; set; }
 
         public ClusterInfo() {

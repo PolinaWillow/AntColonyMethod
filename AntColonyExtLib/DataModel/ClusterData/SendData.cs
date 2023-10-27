@@ -8,14 +8,20 @@ namespace AntColonyExtLib.DataModel.ClusterData
 {
     public class SendData
     {
+        //Отправляемые данные (путь агента)
         public WayForSend[] Way_For_Send { get; set; }
 
-        public string TypeFunctionValue { get; set; }
+        //Тип получаемого значения
+        public string TypeSendData { get; set; }
 
-        public double CurentMaxMin { get; set; }
-
-        public SendData(string typeFunction, int[] way, InputData inputData, double carentExtr = default(double)) {
-            TypeFunctionValue = typeFunction;
+        /// <summary>
+        /// Конструктор отправляемых данных
+        /// </summary>
+        /// <param name="typeSendData">Тип отправляемых значений</param>
+        /// <param name="way">Путь агента</param>
+        /// <param name="inputData">Граф</param>
+        public SendData(string typeSendData, int[] way, InputData inputData) {
+            TypeSendData = typeSendData;
 
             int length = way.Length;
             Way_For_Send = new WayForSend[length];
@@ -36,8 +42,6 @@ namespace AntColonyExtLib.DataModel.ClusterData
                 }
                 //Console.WriteLine(Way_For_Send[i].ValueType + " - " + Way_For_Send[i].SendValue + "; ");
             }
-
-            CurentMaxMin = carentExtr;
         }
     }
 }
