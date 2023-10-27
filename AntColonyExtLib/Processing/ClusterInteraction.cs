@@ -26,11 +26,48 @@ namespace AntColonyExtLib.Processing
         //Полученное значение с вычислительного класстера
         private double outputClusterData { get; set; } 
 
-        public ClusterInteraction(string typeFunction, int[] way, InputData inputData) {
-            outputClusterData = 0;
+        public ClusterInteraction(string typeFunction="", int[] way =null, InputData inputData=null) {
+            if (typeFunction != "")
+            {
+                outputClusterData = 0;
+                sendData = new SendData(typeFunction, way, inputData);
+            }
             SendInfo = new ClusterInfo();
-            sendData = new SendData(typeFunction, way, inputData);
             //JsonFile = new FileStream("way.json", FileMode.OpenOrCreate);
+        }
+
+        /// <summary>
+        /// Функция начала и конца связи с кластером
+        /// </summary>
+        /// <param name="comand">start || end</param>
+        /// <returns></returns>
+        public bool InitCommunication(string comand = "start")
+        {
+            string jsonData = JsonSerializer.Serialize(comand);
+            byte[] dataBytes = Encoding.Default.GetBytes(jsonData);
+            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            socket.Connect(this.SendInfo.IP, this.SendInfo.PORT);
+            socket.Send(dataBytes);
+            byte[] buffer = new byte[1024 * 4];
+            int readBytes = socket.Receive(buffer);
+            MemoryStream memoryStream = new MemoryStream();
+
+            while (readBytes > 0)
+            {
+                memoryStream.Write(buffer, 0, readBytes);
+                if (socket.Available > 0)
+                {
+                    readBytes = socket.Receive(buffer);
+                }
+                else
+                {
+                    break;
+                }
+            }
+            byte[] totalBytes = memoryStream.ToArray();
+            memoryStream.Close();
+            string readData = Encoding.Default.GetString(totalBytes);
+            return JsonSerializer.Deserialize<bool>(readData);
         }
 
         /// <summary>

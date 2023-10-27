@@ -60,7 +60,9 @@ namespace AntColonyExtLib.Processing
             //Определение времени начала расчета
             statistics.TimeStart=DateTime.Now;
 
-            //Отправление запроса ксластеру на начало работы
+            //Отправление кластеру запрос на подтверждение
+            ClusterInteraction startWork = new ClusterInteraction();
+            startWork.InitCommunication();
 
 
             //Проход по всем итерациям
@@ -99,6 +101,7 @@ namespace AntColonyExtLib.Processing
                 //Проверка токена
                 if (cancelToken.IsCancellationRequested) {
                     //Console.WriteLine("Отмена выполнения по сигналу от пользователя");
+                    startWork.InitCommunication("end");
                     return 0;
                 }
 
@@ -109,6 +112,10 @@ namespace AntColonyExtLib.Processing
                 statistics.UniqueSolutionCount = inputData.antCount;
                 statistics.CollectingStat(i, statistics.UniqueSolutionCount);
             }
+
+            
+            startWork.InitCommunication("end");
+
 
             //Определение времени выполнения
             statistics.TimeEnd = DateTime.Now;
