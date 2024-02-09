@@ -93,6 +93,16 @@ namespace AntColonyExtLib.DataModel
             return 0;
         }
 
-        
+
+        /// <summary>
+        /// Выбор следцющей вершины
+        /// </summary>
+        /// <returns></returns>
+        private int ChoiceNextVertex_v2()
+        {
+            return 0;
+        }
+
+
     }
 }

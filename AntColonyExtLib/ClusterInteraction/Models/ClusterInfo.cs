@@ -1,11 +1,8 @@
 ﻿using System.Net;
 
-namespace AntColonyExtLib.DataModel.ClusterData
+namespace AntColonyExtLib.ClusterInteraction.Models
 {
-    /// <summary>
-    /// Класс описания логов подключения к класстеру
-    /// </summary>
-    public class ClusterInfo
+    internal class ClusterInfo
     {
         /// <summary>
         /// Порт подключенич
@@ -16,7 +13,8 @@ namespace AntColonyExtLib.DataModel.ClusterData
         /// </summary>
         public string IP { get; set; }
 
-        public ClusterInfo() {
+        public ClusterInfo()
+        {
             PORT = 2000;
 
             //Получение IP:
@@ -27,6 +25,11 @@ namespace AntColonyExtLib.DataModel.ClusterData
             {
                 IP = address.ToString();
             }
+        }
+
+        public string TypeOf()
+        {
+            return "ClusterInfo";
         }
     }
 }

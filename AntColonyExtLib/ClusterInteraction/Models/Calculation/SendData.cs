@@ -1,18 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using AntColonyExtLib.DataModel;
 
-namespace AntColonyExtLib.DataModel.ClusterData
+namespace AntColonyExtLib.ClusterInteraction.Models.Calculation
 {
     public class SendData
     {
         //Отправляемые данные (путь агента)
         public WayForSend[] Way_For_Send { get; set; }
-
-        //Тип получаемого значения
-        public string TypeSendData { get; set; }
 
         /// <summary>
         /// Конструктор отправляемых данных
@@ -20,8 +13,8 @@ namespace AntColonyExtLib.DataModel.ClusterData
         /// <param name="typeSendData">Тип отправляемых значений</param>
         /// <param name="way">Путь агента</param>
         /// <param name="inputData">Граф</param>
-        public SendData(string typeSendData, int[] way, InputData inputData) {
-            TypeSendData = typeSendData;
+        public SendData(int[] way, InputData inputData)
+        {
 
             int length = way.Length;
             Way_For_Send = new WayForSend[length];

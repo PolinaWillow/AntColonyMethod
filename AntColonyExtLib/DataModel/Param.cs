@@ -23,6 +23,19 @@ namespace AntColonyExtLib.DataModel
             valuesParam = new List<ParamValue>();
         }
 
+        public int UpdateSaturation(int valueId, int deltaSaturation)
+        {
+            foreach (ParamValue v in valuesParam) {
+                if (v.CheckId(valueId) == 0)
+                {
+                    v.saturation = v.saturation + deltaSaturation;
+                    return 0;
+                }
+            }
+
+            return -1;
+        }
+
         public void Print() {
             Console.WriteLine("\n");
             this.defParam.Print();

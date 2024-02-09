@@ -28,15 +28,29 @@ namespace AntColonyExtLib.DataModel
         /// </summary>
         public double pheromones { get; set; }
 
-        public ParamValue() {
+        /// <summary>
+        /// Насыщение вершины (сколько раз использовалась в путях агентов)
+        /// </summary>
+        public int saturation { get; set; }
+
+        public ParamValue()
+        {
             idValue = 0;
             numValue = 0;
-            valueParam= "";
-            pheromones= 0;
+            valueParam = "";
+            pheromones = 0;
+            saturation = 0;
         }
 
-        public void Print() {
-            Console.WriteLine("id - " + this.idValue + "; num - "+ this.numValue+"; value - "+this.valueParam+"; pheromones - "+this.pheromones) ;
+        public int CheckId(int id)
+        {
+            if (idValue != id) { return -1; }
+            return 0;
+        }
+
+        public void Print()
+        {
+            Console.WriteLine("id - " + this.idValue + "; num - " + this.numValue + "; value - " + this.valueParam + "; pheromones - " + this.pheromones + "; saturation - " + this.saturation);
         }
 
     }

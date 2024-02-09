@@ -64,6 +64,28 @@ namespace AntColonyExtLib.DataModel
 
             }
             //Console.WriteLine("Way: "+ wayAgent);
+
+            //Console.WriteLine("Way: ");
+            //foreach(var elem in wayAgent)
+            //{
+            //    Console.Write(elem+"; ");
+            //}
+            //Console.WriteLine("inputData.inputParams.Params.Count()"+inputData.inputParams.Params.Count());
+            //Насыщение значения параметра
+            for (int i=0;i< inputData.inputParams.Params.Count(); i++)
+            {
+                //Console.WriteLine("i" +i);
+                //Console.WriteLine("wayAgent[i]"+wayAgent[i]);
+
+                inputData.inputParams.Params[i].UpdateSaturation(wayAgent[i], 1);
+
+                //inputData.inputParams.Params[i].valuesParam[wayAgent[i]].saturation++;
+            }
+
+            //Печать
+            //inputData.inputParams.Print();
+            
+
             return wayAgent;
         }
 
