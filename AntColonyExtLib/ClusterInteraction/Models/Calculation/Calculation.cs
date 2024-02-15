@@ -3,7 +3,7 @@ using System.Text.Json;
 
 namespace AntColonyExtLib.ClusterInteraction.Models.Calculation
 {
-    internal class Calculation
+    public class Calculation
     {
         //Отправляемые данные
         public SendData sendData { get; set; }

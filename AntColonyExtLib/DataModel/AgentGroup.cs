@@ -61,7 +61,7 @@ namespace AntColonyExtLib.DataModel
             return null;
         }
 
-        internal void AddWayAgent(int[] wayAgent, string id)
+        public void AddWayAgent(int[] wayAgent, string id)
         {
             Monitor.Enter(_monitor);
 

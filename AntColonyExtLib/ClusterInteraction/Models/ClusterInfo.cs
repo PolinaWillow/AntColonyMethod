@@ -2,7 +2,7 @@
 
 namespace AntColonyExtLib.ClusterInteraction.Models
 {
-    internal class ClusterInfo
+    public class ClusterInfo
     {
         /// <summary>
         /// Порт подключенич

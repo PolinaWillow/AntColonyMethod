@@ -11,7 +11,7 @@ namespace AntColonyExtLib.ClusterInteraction.Models
     /// <summary>
     /// Универсальный отправитель данных на кластер
     /// </summary>
-    internal class Sender
+    public class Sender
     {
         /// <summary>
         /// Заголовок запроса

@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace AntColonyExtLib.ClusterInteraction.Processing
 {
-    internal class Request
+    public class Request
     {
         public Sender request { get; set; }
         private Sender response { get; set; }
