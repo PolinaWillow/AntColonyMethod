@@ -95,20 +95,20 @@ namespace DebagExtLib
 
 
 
-                    Console.Write(i + ": ");
-                    foreach (int elem in wayAgent)
-                    {
-                        Console.Write(elem + " ");
-                    }
-                    Console.WriteLine();
+                    //Console.Write(i + ": ");
+                    //foreach (int elem in wayAgent)
+                    //{
+                    //    Console.Write(elem + " ");
+                    //}
+                    //Console.WriteLine();
                 }
 
             });
 
             Thread1.Start();
 
-            Console.Read();
-            queueOnCluster.Print();
+            //Console.Read();
+            //queueOnCluster.Print();
 
 
             return 0;
