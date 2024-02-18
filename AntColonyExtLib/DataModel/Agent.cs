@@ -45,8 +45,14 @@ namespace AntColonyExtLib.DataModel
         public int[] FindAgentWay(InputData inputData, StatisticsCollection statistic) {
             int[] wayAgent; //Искомый путь агента
 
-            //Определение пути и его hash
-            wayAgent = inputData.inputParams.FindWay();
+            if (inputData.changeFlag) {
+                //Определяем путь агента при изменении в клоне
+                wayAgent = inputData.cloneInputParams.FindWay();
+            }
+            else { wayAgent = inputData.inputParams.FindWay(); }
+
+           
+            //Определяем хэш агента
             Hash hash = new Hash();
             string hashWay = hash.GetHash(wayAgent);
 
@@ -61,29 +67,18 @@ namespace AntColonyExtLib.DataModel
                 hashWay = hash.GetHash(newWayAgent);
                 hash.AddNewHash(hashWay, wayAgent, inputData);
                 Array.Copy(newWayAgent, 0, wayAgent, 0, inputData.inputParams.Params.Count());
-
             }
-            //Console.WriteLine("Way: "+ wayAgent);
-
-            //Console.WriteLine("Way: ");
-            //foreach(var elem in wayAgent)
-            //{
-            //    Console.Write(elem+"; ");
-            //}
-            //Console.WriteLine("inputData.inputParams.Params.Count()"+inputData.inputParams.Params.Count());
-            //Насыщение значения параметра
+            
+            //Обновление насыщения вершины
             for (int i=0;i< inputData.inputParams.Params.Count(); i++)
             {
-                //Console.WriteLine("i" +i);
-                //Console.WriteLine("wayAgent[i]"+wayAgent[i]);
-
-                inputData.inputParams.Params[i].UpdateSaturation(wayAgent[i], 1);
-
-                //inputData.inputParams.Params[i].valuesParam[wayAgent[i]].saturation++;
+                if (inputData.changeFlag)
+                {
+                    inputData.cloneInputParams.Params[i].UpdateSaturation(wayAgent[i], 1);
+                }
+                else { inputData.inputParams.Params[i].UpdateSaturation(wayAgent[i], 1); }
+                
             }
-
-            //Печать
-            //inputData.inputParams.Print();
             
 
             return wayAgent;

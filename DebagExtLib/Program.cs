@@ -74,11 +74,17 @@ namespace DebagExtLib
             Thread Thread1 = new Thread(() =>
             {
                 AgentGroup agentGroup = new AgentGroup();
-                while (countFindWay != inputData.inputParams.countCombinationsV)
+                while (countFindWay < inputData.inputParams.countCombinationsV)
                 {
                     //Создаем агента
                     string id = agentGroup.AddNewAgent();
                     Agent agent = agentGroup.FindAgent(id);
+
+                    //Определение пути агента
+                    int[] wayAgent = agent.FindAgentWay(inputData, statistics);
+                    agentGroup.AddWayAgent(wayAgent, id);
+                    countFindWay++;
+
                 }
 
             });
