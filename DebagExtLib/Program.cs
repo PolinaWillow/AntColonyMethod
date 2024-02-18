@@ -37,7 +37,7 @@ namespace DebagExtLib
             string fileName = fileManager.CreateFileName("OutPutData");
 
             //Запуск расчетного блока
-            SyncSenttlement(fileName, inputData.testInputData);
+            AsyncSenttlement(fileName, inputData.testInputData);
         }
 
         public static int AsyncSenttlement(string fileDataName, InputData inputData)
@@ -71,11 +71,16 @@ namespace DebagExtLib
                 Console.WriteLine(e + "Ошибка связи с кластером при отправлении statusCommunication = start");
             }
 
+            QueueOnCluster queueOnCluster = new QueueOnCluster();
+
             Thread Thread1 = new Thread(() =>
             {
+                int i = 0;
+
                 AgentGroup agentGroup = new AgentGroup();
                 while (countFindWay < inputData.inputParams.countCombinationsV)
                 {
+                    i++;
                     //Создаем агента
                     string id = agentGroup.AddNewAgent();
                     Agent agent = agentGroup.FindAgent(id);
@@ -85,9 +90,26 @@ namespace DebagExtLib
                     agentGroup.AddWayAgent(wayAgent, id);
                     countFindWay++;
 
+                    //Отправление пути в очередь на кластер
+                    queueOnCluster.AddToQueue(wayAgent, inputData, id);
+
+
+
+                    Console.Write(i + ": ");
+                    foreach (int elem in wayAgent)
+                    {
+                        Console.Write(elem + " ");
+                    }
+                    Console.WriteLine();
                 }
 
             });
+
+            Thread1.Start();
+
+            Console.Read();
+            queueOnCluster.Print();
+
 
             return 0;
         }

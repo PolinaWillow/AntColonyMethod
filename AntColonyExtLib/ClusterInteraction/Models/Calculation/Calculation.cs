@@ -12,9 +12,9 @@ namespace AntColonyExtLib.ClusterInteraction.Models.Calculation
 
         public double result { get; set; }
 
-        public Calculation(int[] way = null, InputData inputData = null)
+        public Calculation(int[] way = null, InputData inputData = null, string idAgent = null)
         {
-            sendData = new SendData(way, inputData);
+            sendData = new SendData(way, inputData, idAgent);
             JSON_Data = JsonSerializer.Serialize(sendData);
             result = 0;
         }
