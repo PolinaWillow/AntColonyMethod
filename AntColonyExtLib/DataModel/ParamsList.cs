@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace AntColonyExtLib.DataModel
 {
@@ -25,7 +26,19 @@ namespace AntColonyExtLib.DataModel
             countCombinationsV = 0;
         }
 
-        internal void Print()
+        public object Clone()
+        {
+            ParamsList objClone = new ParamsList();
+            objClone.countCombinationsV = this.countCombinationsV;
+            objClone.Params = new List<Param>();
+            foreach (Param param in this.Params)
+            {
+                objClone.Params.Add((Param)param.Clone());
+            }
+            return objClone;
+        }
+
+        public void Print()
         {
             Console.WriteLine("Count of values conbinations - " + this.countCombinationsV);
             foreach (var elem in this.Params)
@@ -44,6 +57,7 @@ namespace AntColonyExtLib.DataModel
             {
                 //Выбор значения параметра
                 ChoiceNextVertex_v2(this.Params[i].defParam.numParam, this.Params[i].valuesParam, way);
+                //ChoiceNextVertex(this.Params[i].defParam.numParam, this.Params[i].valuesParam, way);
             }
 
             return way;

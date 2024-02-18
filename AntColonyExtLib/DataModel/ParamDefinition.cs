@@ -30,6 +30,15 @@ namespace AntColonyExtLib.DataModel
             valuesCount= 0;
         }
 
+        public object Clone()
+        {
+            ParamDefinition objClone = new ParamDefinition();
+            objClone.numParam = this.numParam;
+            objClone.typeParam = this.typeParam;
+            objClone.valuesCount = this.valuesCount;
+            return objClone;
+        }
+
         public void Print() {
             Console.WriteLine("Number - " + this.numParam);
             Console.WriteLine("Type of param - "+ this.typeParam);

@@ -42,6 +42,23 @@ namespace AntColonyExtLib.DataModel
 
         }
 
+        public int DeleteAgent(string id)
+        {
+            Monitor.Enter(_monitor);
+
+            Agent deleteAgent = this.FindAgent(id);
+            if (deleteAgent != null)
+            {
+                this.Agents.Remove(deleteAgent);
+                Monitor.Exit(_monitor);
+                return 0;
+            }
+
+            Monitor.Exit(_monitor);
+
+            return -1;
+        }
+
         /// <summary>
         /// Поиск агента по Id
         /// </summary>

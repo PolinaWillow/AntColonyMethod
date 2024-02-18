@@ -22,6 +22,14 @@ namespace DebagExtLib
         {
             //Создание тестового объекта данных
             InputDataModel inputData = new InputDataModel();
+
+            //Клонируем исходный шраф
+            inputData.testInputData.cloneInputParams = (ParamsList)inputData.testInputData.inputParams.Clone();
+
+            Console.WriteLine("---------cloneInputParams----------");
+            inputData.testInputData.cloneInputParams.Print();
+            Console.WriteLine("---------cloneInputParams----------");
+
             inputData.Print();
 
             //Создание имени выходного файла
@@ -29,10 +37,56 @@ namespace DebagExtLib
             string fileName = fileManager.CreateFileName("OutPutData");
 
             //Запуск расчетного блока
-            AsyncSenttlement(fileName, inputData.testInputData);
+            SyncSenttlement(fileName, inputData.testInputData);
         }
 
         public static int AsyncSenttlement(string fileDataName, InputData inputData)
+        {
+            int countFindWay = 0; //Количество найденных путей
+            int countAgent = 0; //Количество пройденных агентов
+
+            FileManager fileManager = new FileManager(); //Менеджер файлов для занесения результатов
+            string outputFileName = fileManager.CreateOutputFile(inputData, fileDataName); //Создание файла с выходными результатами
+
+            //Объявление сбора статистики
+            StatisticsCollection statistics = new StatisticsCollection();
+            string outputStat = fileManager.CreateStatisricFile();
+
+            statistics.StartStatistics(); //Сбор статистики
+            statistics.ResetStatistics();  //Сброс статистики по запуску    
+            statistics.TimeStart = DateTime.Now;  //Определение времени начала расчета
+
+
+            //Отправление кластеру запрос на подтверждение
+            Request reqCommunication = new Request();
+            StatusCommunication statusCommunication = new StatusCommunication("start");
+            try
+            {
+                Console.WriteLine("Отправлен запрос на начало сессии");
+                reqCommunication.request.AddData(statusCommunication.TypeOf(), JsonSerializer.Serialize(statusCommunication.Status));
+                reqCommunication.Post();
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e + "Ошибка связи с кластером при отправлении statusCommunication = start");
+            }
+
+            Thread Thread1 = new Thread(() =>
+            {
+                AgentGroup agentGroup = new AgentGroup();
+                while (countFindWay != inputData.inputParams.countCombinationsV)
+                {
+                    //Создаем агента
+                    string id = agentGroup.AddNewAgent();
+                    Agent agent = agentGroup.FindAgent(id);
+                }
+
+            });
+
+            return 0;
+        }
+
+        public static int SyncSenttlement(string fileDataName, InputData inputData)
         {
             int countFindWay = 0; //Количество найденных путей
             int countAgent = 0; //Количество пройденных агентов
@@ -70,7 +124,7 @@ namespace DebagExtLib
 
 
             //Проход по всем итерациям
-            for (int i = 0; i < inputData.iterationCount; i++)
+            for (int i = 0; i < inputData.iterationCount - 2; i++)
             {
                 //Console.WriteLine(cancelToken);
                 if (countFindWay == inputData.inputParams.countCombinationsV)

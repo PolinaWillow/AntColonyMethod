@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection.Metadata.Ecma335;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,17 @@ namespace AntColonyExtLib.DataModel
         public Param() {
             defParam = new ParamDefinition();
             valuesParam = new List<ParamValue>();
+        }
+
+        public object Clone()
+        {
+            Param objClone = new Param();
+            objClone.defParam = (ParamDefinition)this.defParam.Clone();
+            foreach (ParamValue v in this.valuesParam)
+            {
+                objClone.valuesParam.Add((ParamValue)v.Clone());
+            }
+            return objClone;
         }
 
         public int UpdateSaturation(int valueId, int deltaSaturation)

@@ -42,6 +42,18 @@ namespace AntColonyExtLib.DataModel
             saturation = 0;
         }
 
+        public object Clone()
+        {
+            ParamValue objClone = new ParamValue();
+            objClone.idValue = this.idValue;
+            objClone.numValue = this.numValue;
+            objClone.valueParam = this.valueParam;
+            objClone.pheromones = this.pheromones;
+            objClone.saturation = this.saturation;
+
+            return objClone;
+        }
+
         public int CheckId(int id)
         {
             if (idValue != id) { return -1; }
