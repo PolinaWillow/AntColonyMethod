@@ -18,7 +18,7 @@ namespace DebagExtLib
         static ResultValueFunction maxFunction = new ResultValueFunction();
         static double MAX = 0;
 
-        static void Main()
+        static async Task Main()
         {
             //Создание тестового объекта данных
             InputDataModel inputData = new InputDataModel();
@@ -37,10 +37,11 @@ namespace DebagExtLib
             string fileName = fileManager.CreateFileName("OutPutData");
 
             //Запуск расчетного блока
-            AsyncSenttlement(fileName, inputData.testInputData);
+            await AsyncSenttlement(fileName, inputData.testInputData);
+            //SyncSenttlement(fileName, inputData.testInputData);
         }
 
-        public static int AsyncSenttlement(string fileDataName, InputData inputData)
+        public static async Task AsyncSenttlement(string fileDataName, InputData inputData)
         {
             int countFindWay = 0; //Количество найденных путей
             int countAgent = 0; //Количество пройденных агентов
@@ -58,7 +59,7 @@ namespace DebagExtLib
 
 
             //Отправление кластеру запрос на подтверждение
-            Request reqCommunication = new Request();
+            Request_v2 reqCommunication = new Request_v2();
             StatusCommunication statusCommunication = new StatusCommunication("start");
             try
             {
@@ -72,12 +73,14 @@ namespace DebagExtLib
             }
 
             QueueOnCluster queueOnCluster = new QueueOnCluster();
+            AgentGroup agentGroup = new AgentGroup();
 
-            Thread Thread1 = new Thread(() =>
+            //Определение путей агентов
+            Task FindWayTask = Task.Run(() =>
             {
+                int countFindWay = 0; //Количество найденных путей
                 int i = 0;
 
-                AgentGroup agentGroup = new AgentGroup();
                 while (countFindWay < inputData.inputParams.countCombinationsV)
                 {
                     i++;
@@ -93,25 +96,97 @@ namespace DebagExtLib
                     //Отправление пути в очередь на кластер
                     queueOnCluster.AddToQueue(wayAgent, inputData, id);
 
-
-
-                    //Console.Write(i + ": ");
-                    //foreach (int elem in wayAgent)
-                    //{
-                    //    Console.Write(elem + " ");
-                    //}
-                    //Console.WriteLine();
                 }
-
+                Console.WriteLine("Задача FindWayTask завершила работу");
             });
 
-            Thread1.Start();
+            Task SenderTask = Task.Run(() =>
+            {
+                int countFindWay = 0; //Количество найденных путей
+                int i = 0;
+                Console.WriteLine(i);
+                while (countFindWay < inputData.inputParams.countCombinationsV)
+                {
+                    //Создаем сокет
+                    Request_v2 reqCalculate = new Request_v2();
+                    //Получение пути из очереди (из очереди удалили)
+                    Calculation calculation = queueOnCluster.GetFromQueue();
 
-            //Console.Read();
-            //queueOnCluster.Print();
+                    //Пока нет данных для отправки (очередь пуста)                         //Ожидание освобождения сокета для подключения
+                    if (calculation != null)
+                    {
+                        try
+                        {
+                            //Отправление данных на кластер
+                            reqCalculate.request.AddData(calculation.TypeOf(), calculation.JSON_Data);
+                            Sender data = reqCalculate.Post();
+
+                            //Передача результатов расчета агенту
+                            double funcValue = Convert.ToDouble(data.Body);
+                            Agent agent = agentGroup.FindAgent(calculation.idAgent);
+                            if (agent != null) agent.funcValue = funcValue;
 
 
-            return 0;
+                            int length = calculation.sendData.Way_For_Send.Length;//this.sendData.Way_For_Send.Length;
+                            string[] valuesParam = new string[length];
+                            for (int j = 0; j < length; j++)
+                            {
+                                valuesParam[j] = calculation.sendData.Way_For_Send[j].SendValue;
+                            }
+
+                            ResultValueFunction valFunction = new ResultValueFunction();
+                            valFunction.Set(Convert.ToDouble(data.Body), valuesParam);
+
+                            if (valFunction.valueFunction >= MAX)
+                            {
+                                maxFunction = valFunction;
+                                MAX = valFunction.valueFunction;
+                            }
+
+                            //Получение статистики о попадании в % от ожидаемого решения
+                            statistics.FindOptimalCount(valFunction.valueFunction, (i + 1), agentGroup.Agents.Count());
+
+                            //Console.WriteLine(i + ": " +agent.funcValue);
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e + "Ошибка связи с кластером при отправлении Calculation");
+                        }
+                        i++;
+                        countFindWay++;
+                    }else
+                    {
+                        Console.WriteLine("Очередь пустая");
+                        Task.Delay(1000);
+                    }
+                }
+                Console.WriteLine("Задача SenderTask заверши ла работу");
+            });
+
+
+            //Ожидаем выполнение всех задач
+            await Task.WhenAll(FindWayTask, SenderTask);
+            Console.WriteLine("Задачи выполнены");
+
+
+
+            //Отправлка сигнала конца на кластер
+            Request_v2 reqCommunication2 = new Request_v2();
+            statusCommunication.Set("end");
+            try
+            {
+                reqCommunication2.request.AddData(statusCommunication.TypeOf(), JsonSerializer.Serialize(statusCommunication.Status));
+                reqCommunication2.Post();
+            }
+            catch (Exception e) { Console.WriteLine(e + "Ошибка связи с кластером при отправлении statusCommunication = end"); }
+
+            Console.WriteLine("End senttlement");
+            statistics.TimeEnd = DateTime.Now; //Определение времени выполнения
+            statistics.WorkTimeLaunch();
+            statistics.EmunStatI(inputData.iterationCount); //Сбор статистики о среднем числе переборов за итерацию
+            //Запись статистики в файл
+            fileManager.WriteStatstring(outputStat, statistics, inputData);
+            statistics.LaunchesCount++;
         }
 
         public static int SyncSenttlement(string fileDataName, InputData inputData)
@@ -182,7 +257,7 @@ namespace DebagExtLib
                 //Удаление агентов
                 agentGroup.Agents.Clear();
 
-                //Сбор статистики по каждой терации
+                //Сбор статистики по каждой итерации
                 statistics.UniqueSolutionCount = inputData.antCount;
                 statistics.CollectingStat(i, statistics.UniqueSolutionCount);
             }

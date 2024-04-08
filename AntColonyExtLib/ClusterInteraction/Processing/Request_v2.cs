@@ -6,43 +6,68 @@ using System.Linq;
 using System.Net.Sockets;
 using System.Text;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace AntColonyExtLib.ClusterInteraction.Processing
 {
-    public class Request
+    public class Request_v2
     {
         public Sender request { get; set; }
         private Sender response { get; set; }
 
-        //public Socket socket { get; set; }
+        private Socket socket { get; set; }
 
         public ClusterInfo clusterInfo { get; set; }
-        public Request() {
+        public Request_v2()
+        {
             clusterInfo = new ClusterInfo();
             request = new Sender();
             response = new Sender();
-            
-            //socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+
+            //Создание сокета и открытие соединения
+            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+            //Console.WriteLine("connected...");
+
         }
+
+        /// <summary>
+        /// Определение заблокирован ли сокет
+        /// </summary>
+        /// <returns></returns>
+        public bool getSocketStatus()
+        {
+            if (this.socket.Blocking) return true; //Сокет заблокирован
+            else return false; //Сокет сфободен
+        }
+
+        /// <summary>
+        /// Закрытие соединения
+        /// </summary>
+        /// <returns></returns>
+        public bool CloseConnect()
+        {
+            try
+            {
+                this.socket.Close();
+                return true;
+            }
+            catch { return false; }
+        }
+
 
         public Sender Post()
         {
+            this.socket.Connect(this.clusterInfo.IP, this.clusterInfo.PORT);
+
             //Формирование строки Json для отправки данных
             string jsonData = JsonSerializer.Serialize(this.request);
-            //onsole.WriteLine(this.request.Body);
-            //Console.WriteLine(jsonData);
 
             //Представление строки в виде байтов
             byte[] dataBytes = Encoding.Default.GetBytes(jsonData);
 
-            //Создание сокета
-            Socket socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            socket.Connect(this.clusterInfo.IP, this.clusterInfo.PORT);
-            //Console.WriteLine("connected...");
-
             //Отправка данных
-            socket.Send(dataBytes);
+            this.socket.Send(dataBytes);
             //Console.WriteLine("sent...");
 
             //Получение результата расчетов кластера
@@ -73,7 +98,6 @@ namespace AntColonyExtLib.ClusterInteraction.Processing
             //Console.WriteLine(outputClusterData);
             //Console.ReadKey();
 
-            socket.Close();
             return this.response;
         }
     }

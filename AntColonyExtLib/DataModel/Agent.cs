@@ -45,6 +45,7 @@ namespace AntColonyExtLib.DataModel
         public int[] FindAgentWay(InputData inputData, StatisticsCollection statistic) {
             int[] wayAgent; //Искомый путь агента
 
+            ///////Перенести выбор графа в Инпут дата
             if (inputData.changeFlag) {
                 //Определяем путь агента при изменении в клоне
                 wayAgent = inputData.cloneInputParams.FindWay();

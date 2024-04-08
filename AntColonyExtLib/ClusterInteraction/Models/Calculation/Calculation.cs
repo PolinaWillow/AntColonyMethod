@@ -8,13 +8,16 @@ namespace AntColonyExtLib.ClusterInteraction.Models.Calculation
         //Отправляемые данные
         public SendData sendData { get; set; }
 
+        public string idAgent { get; set; }
+
         public string JSON_Data { get; set; }
 
         public double result { get; set; }
 
-        public Calculation(int[] way = null, InputData inputData = null, string idAgent = null)
+        public Calculation(int[] way = null, InputData inputData = null, string id = null)
         {
-            sendData = new SendData(way, inputData, idAgent);
+            sendData = new SendData(way, inputData);
+            idAgent = id;
             JSON_Data = JsonSerializer.Serialize(sendData);
             result = 0;
         }

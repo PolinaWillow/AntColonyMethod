@@ -7,15 +7,13 @@ namespace AntColonyExtLib.ClusterInteraction.Models.Calculation
         //Отправляемые данные (путь агента)
         public WayForSend[] Way_For_Send { get; set; }
 
-        public string idAgent { get; set;}
-
         /// <summary>
         /// Конструктор отправляемых данных
         /// </summary>
         /// <param name="typeSendData">Тип отправляемых значений</param>
         /// <param name="way">Путь агента</param>
         /// <param name="inputData">Граф</param>
-        public SendData(int[] way, InputData inputData, string idAgent=null)
+        public SendData(int[] way, InputData inputData)
         {
 
             int length = way.Length;
@@ -37,8 +35,6 @@ namespace AntColonyExtLib.ClusterInteraction.Models.Calculation
                 }
                 //Console.WriteLine(Way_For_Send[i].ValueType + " - " + Way_For_Send[i].SendValue + "; ");
             }
-
-            this.idAgent = idAgent;
         }
     }
 }

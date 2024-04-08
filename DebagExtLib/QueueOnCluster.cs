@@ -36,12 +36,36 @@ namespace DebagExtLib
             Monitor.Exit(_monitor);
         }
 
+        /// <summary>
+        /// Получение элемента очереди по принципу FIFO
+        /// </summary>
+        /// <returns></returns>
+        public Calculation GetFromQueue()
+        {
+            Monitor.Enter(_monitor);
+
+            if (this.Queue.Count == 0)
+            {
+                Monitor.Exit(_monitor);
+                return null;
+            }
+            else
+            {
+                Calculation calculation = this.Queue[0];
+                this.Queue.RemoveAt(0);
+                Monitor.Exit(_monitor);
+                return calculation;
+            }
+            
+            
+        }
+
         public void Print()
         {
             Console.WriteLine("\n\nОчередь");
             for (int i=0; i < Queue.Count; i++)
             {
-                Console.WriteLine(i+":\tid: " + Queue[i].sendData.idAgent+"\tway: " + Queue[i].sendData.Way_For_Send.ToString());
+                Console.WriteLine(i+":\tid: " + Queue[i].idAgent+"\tway: " + Queue[i].sendData.Way_For_Send.ToString());
             }
         }
     }
