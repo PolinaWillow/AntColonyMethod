@@ -20,6 +20,9 @@ namespace AntColonyExtLib.DataModel
         /// </summary>
         public ParamsList cloneInputParams { get; set; }
 
+        /// <summary>
+        /// Флаг внесения изменений в граф (true - отправляем на cloneInputParams false - на inputParams)
+        /// </summary>
         public bool changeFlag { get; set; }
 
         /// <summary>
@@ -54,6 +57,13 @@ namespace AntColonyExtLib.DataModel
             Console.WriteLine("Iteraton count - " + this.iterationCount);
             Console.WriteLine("Params:");
             inputParams.Print();
+        }
+
+        public int UpdateParams()
+        {
+            this.inputParams = (ParamsList)this.cloneInputParams.Clone();
+            this.changeFlag = false;
+            return 0;
         }
     }
 }

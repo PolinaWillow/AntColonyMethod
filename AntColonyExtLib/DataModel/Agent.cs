@@ -32,7 +32,8 @@ namespace AntColonyExtLib.DataModel
         public double funcValue { get; set; }
 
 
-        public Agent() {
+        public Agent()
+        {
             wayAgent = new List<int>();
             funcValue = 0;
         }
@@ -42,17 +43,19 @@ namespace AntColonyExtLib.DataModel
         /// </summary>
         /// <param name="inputData">Структура входных данных</param>
         /// <returns></returns>
-        public int[] FindAgentWay(InputData inputData, StatisticsCollection statistic) {
+        public int[] FindAgentWay(InputData inputData, StatisticsCollection statistic)
+        {
             int[] wayAgent; //Искомый путь агента
 
             ///////Перенести выбор графа в Инпут дата
-            if (inputData.changeFlag) {
+            if (inputData.changeFlag)
+            {
                 //Определяем путь агента при изменении в клоне
                 wayAgent = inputData.cloneInputParams.FindWay();
             }
             else { wayAgent = inputData.inputParams.FindWay(); }
 
-           
+
             //Определяем хэш агента
             Hash hash = new Hash();
             string hashWay = hash.GetHash(wayAgent);
@@ -69,23 +72,24 @@ namespace AntColonyExtLib.DataModel
                 hash.AddNewHash(hashWay, wayAgent, inputData);
                 Array.Copy(newWayAgent, 0, wayAgent, 0, inputData.inputParams.Params.Count());
             }
-            
+
             //Обновление насыщения вершины
-            for (int i=0;i< inputData.inputParams.Params.Count(); i++)
+            for (int i = 0; i < inputData.inputParams.Params.Count(); i++)
             {
                 if (inputData.changeFlag)
                 {
                     inputData.cloneInputParams.Params[i].UpdateSaturation(wayAgent[i], 1);
                 }
                 else { inputData.inputParams.Params[i].UpdateSaturation(wayAgent[i], 1); }
-                
+
             }
-            
+
 
             return wayAgent;
         }
 
-        private int[] FindAlternativeWay(InputData inputData, int[] startWay, string hashWay, StatisticsCollection statistic) {
+        private int[] FindAlternativeWay(InputData inputData, int[] startWay, string hashWay, StatisticsCollection statistic)
+        {
             int nomParam = 0; //Номер параметра
             int[] newWay = new int[inputData.inputParams.Params.Count()]; //Новый путь
             Hash hash = new Hash();
@@ -123,16 +127,77 @@ namespace AntColonyExtLib.DataModel
         {
             //Увелечение значения параметра на 1
             way[nomParam] += 1;
-            if (way[nomParam] > Param.valuesParam[Param.defParam.valuesCount-1].idValue) { way[nomParam] = Param.valuesParam[0].idValue; }
+            if (way[nomParam] > Param.valuesParam[Param.defParam.valuesCount - 1].idValue) { way[nomParam] = Param.valuesParam[0].idValue; }
 
             return 0;
+        }
+
+        /// <summary>
+        /// Изменение феромона агентом (Добавление и испаврение)
+        /// </summary>
+        /// <param name="inputData">Граф путей</param>
+        /// <returns></returns>
+        public int ChangePheromones(InputData inputData)
+        {
+            //Добавление ферамонов
+            int[] way = new int[this.wayAgent.Count()];
+            for (int i = 0; i < this.wayAgent.Count(); i++)
+            {
+                way[i] = this.wayAgent[i];
+            }
+            this.delta = this.AddDelta(inputData);
+
+            //Испаврение ферамонов на графе
+            //Умножаем для максимума, делаим для минимума
+            foreach (var elem in inputData.cloneInputParams.Params)
+            {
+                foreach (var val in elem.valuesParam)
+                {
+                    double Evaporation = 0.9 * Convert.ToDouble(val.pheromones);
+
+                    foreach (var node in this.wayAgent)
+                    {
+                        if (node == val.idValue)
+                        {
+                            Evaporation += (1 - 0.9) * this.delta;
+                        }
+                    }
+
+                    val.pheromones = Evaporation;
+                }
+            }
+
+            //Смена флага изменений
+            inputData.changeFlag = true;
+
+            return 0;
+        }
+
+        private double AddDelta(InputData inputData)
+        {
+            double eps = 0.0000000000000001;
+            double delta = 100 / (this.funcValue + eps);
+
+            for (int i = 0; i < inputData.cloneInputParams.Params.Count(); i++)
+            {
+                foreach (var val in inputData.cloneInputParams.Params[i].valuesParam)
+                {
+                    if (val.idValue == this.wayAgent[i])
+                    {
+                        val.pheromones += delta;
+                    }
+                }
+            }
+
+            return delta;
         }
 
         internal void Print()
         {
             Console.Write("id-" + this.idAgent + "Way: ");
-            foreach (var elem in this.wayAgent) {
-                Console.Write(elem+" ");
+            foreach (var elem in this.wayAgent)
+            {
+                Console.Write(elem + " ");
             }
             Console.WriteLine();
         }

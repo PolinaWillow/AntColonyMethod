@@ -146,7 +146,20 @@ namespace DebagExtLib
                             //Получение статистики о попадании в % от ожидаемого решения
                             statistics.FindOptimalCount(valFunction.valueFunction, (i + 1), agentGroup.Agents.Count());
 
-                            //Console.WriteLine(i + ": " +agent.funcValue);
+                            //Изменение феромонов
+                            agent.ChangePheromones(inputData);
+
+                            //Занесение результатов прохода агентов в выходной файл
+                            string dataToOutput = fileManager.CreateWriteString(i, "max", maxFunction);
+                            fileManager.Write(outputFileName, dataToOutput);
+
+                            Console.WriteLine(dataToOutput);
+
+                            //Удаление агента
+                            agentGroup.DeleteAgent(agent.idAgent);
+
+                            //Обновление графа
+                            inputData.UpdateParams();
                         }
                         catch (Exception e)
                         {
@@ -154,7 +167,9 @@ namespace DebagExtLib
                         }
                         i++;
                         countFindWay++;
-                    }else
+
+                    }
+                    else
                     {
                         Console.WriteLine("Очередь пустая");
                         Task.Delay(1000);
