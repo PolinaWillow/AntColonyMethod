@@ -57,6 +57,9 @@ namespace DebagExtLib
             statistics.ResetStatistics();  //Сброс статистики по запуску    
             statistics.TimeStart = DateTime.Now;  //Определение времени начала расчета
 
+            TimeStatistic timer = new TimeStatistic("TimeStatistic");
+            timer.TimeStatistic_Start("all");
+
 
             //Отправление кластеру запрос на подтверждение
             Request_v2 reqCommunication = new Request_v2();
@@ -78,6 +81,7 @@ namespace DebagExtLib
             //Определение путей агентов
             Task FindWayTask = Task.Run(() =>
             {
+                timer.TimeStatistic_Start("findWayTask");
                 int countFindWay = 0; //Количество найденных путей
                 int i = 0;
 
@@ -98,10 +102,12 @@ namespace DebagExtLib
 
                 }
                 Console.WriteLine("Задача FindWayTask завершила работу");
+                timer.TimeStatistic_End("findWayTask");
             });
 
             Task SenderTask = Task.Run(() =>
             {
+               
                 int countFindWay = 0; //Количество найденных путей
                 int i = 0;
                 Console.WriteLine(i);
@@ -115,6 +121,8 @@ namespace DebagExtLib
                     //Пока нет данных для отправки (очередь пуста)                         //Ожидание освобождения сокета для подключения
                     if (calculation != null)
                     {
+                        timer.TimeStatistic_Start("senderTask");
+
                         try
                         {
                             //Отправление данных на кластер
@@ -168,6 +176,7 @@ namespace DebagExtLib
                         i++;
                         countFindWay++;
 
+                        timer.TimeStatistic_End("senderTask");
                     }
                     else
                     {
@@ -176,6 +185,7 @@ namespace DebagExtLib
                     }
                 }
                 Console.WriteLine("Задача SenderTask заверши ла работу");
+                
             });
 
 
@@ -202,6 +212,13 @@ namespace DebagExtLib
             //Запись статистики в файл
             fileManager.WriteStatstring(outputStat, statistics, inputData);
             statistics.LaunchesCount++;
+
+            Console.WriteLine("\n\n\n\nОбщее время работы программы");
+            Console.WriteLine(statistics.TimeEnd-statistics.TimeStart);
+
+            timer.TimeStatistic_End("all");
+
+            timer.Write();
         }
 
         public static int SyncSenttlement(string fileDataName, InputData inputData)

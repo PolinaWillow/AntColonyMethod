@@ -90,6 +90,25 @@ namespace AntColonyExtLib.Processing
             return outputDataFile;
         }
 
+        public string CreateTimerFile(string name, string comment = null) {
+            string outputDataFile = CreateFileName(name);
+
+            // Создание файла и запись в него
+            FileInfo fileInf = new FileInfo(outputDataFile);
+            using (StreamWriter sw = File.CreateText(outputDataFile)/*fileInf.CreateText()*/)
+            {
+                sw.WriteLine("Результаты сбора статистики по времени работы основных модулей:");
+                if (comment != null)
+                {
+                    sw.WriteLine("Комментарии:");
+                    sw.WriteLine(comment);
+                    sw.WriteLine("-------------------------------------------------------------\n");
+                }
+                sw.Close();
+            }
+            return outputDataFile;
+        }
+
         /// <summary>
         /// Запись строки в файл
         /// </summary>
