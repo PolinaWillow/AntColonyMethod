@@ -75,35 +75,90 @@ namespace DebagExtLib
                 Console.WriteLine(e + "Ошибка связи с кластером при отправлении statusCommunication = start");
             }
 
+            ///Создаем очередь и группу агентов
             QueueOnCluster queueOnCluster = new QueueOnCluster();
             AgentGroup agentGroup = new AgentGroup();
-
-            //Определение путей агентов
+            
+            //Определение путей агентов (Параллельный поиск)
             Task FindWayTask = Task.Run(() =>
             {
                 timer.TimeStatistic_Start("findWayTask");
+
                 int countFindWay = 0; //Количество найденных путей
                 int i = 0;
 
                 while (countFindWay < inputData.inputParams.countCombinationsV)
                 {
                     i++;
-                    //Создаем агента
-                    string id = agentGroup.AddNewAgent();
-                    Agent agent = agentGroup.FindAgent(id);
 
-                    //Определение пути агента
-                    int[] wayAgent = agent.FindAgentWay(inputData, statistics);
-                    agentGroup.AddWayAgent(wayAgent, id);
-                    countFindWay++;
+                    List<string> newAgentsList = new List<string>();
+                    //Создаем группу агентов
+                    for (int j = 0; j < 2; j++)
+                    {
+                        string id = agentGroup.AddNewAgent();
+                        newAgentsList.Add(id);
+                    }
 
-                    //Отправление пути в очередь на кластер
-                    queueOnCluster.AddToQueue(wayAgent, inputData, id);
+                    List<Task> tasks = new List<Task>();
+                    foreach (string agentID in newAgentsList)
+                    {
+                        tasks.Add(Task.Factory.StartNew(() => {
+                            //Если просмотрены все пути, то выход из задачи
+                            if (countFindWay < inputData.inputParams.countCombinationsV)
+                            {
+                                Agent agent = agentGroup.FindAgent(agentID);
+                                if (agent != null)
+                                {
+                                    //Определение пути агента
+                                    int[] wayAgent = agent.FindAgentWay(inputData, statistics);
+                                    agentGroup.AddWayAgent(wayAgent, agent.idAgent);
+
+                                    //Отправление пути в очередь на кластер
+                                    queueOnCluster.AddToQueue(wayAgent, inputData, agent.idAgent);
+
+                                    countFindWay++;
+                                }
+                            }
+
+                        }));
+                    }
+
+                    // Ожидаем завершения всех задач
+                    Task.WaitAll(tasks.ToArray());
+                    newAgentsList.Clear();
 
                 }
                 Console.WriteLine("Задача FindWayTask завершила работу");
                 timer.TimeStatistic_End("findWayTask");
             });
+
+            //Определение путей агентов (Последовательный поиск)
+            //Task FindWayTask = Task.Run(() =>
+            //{
+            //    timer.TimeStatistic_Start("findWayTask");
+
+            //    int countFindWay = 0; //Количество найденных путей
+            //    int i = 0;
+
+            //    while (countFindWay < inputData.inputParams.countCombinationsV)
+            //    {
+            //        i++;
+            //        //Создаем агента
+            //        string id = agentGroup.AddNewAgent();
+            //        Agent agent = agentGroup.FindAgent(id);
+
+            //        //Определение пути агента
+            //        int[] wayAgent = agent.FindAgentWay(inputData, statistics);
+            //        agentGroup.AddWayAgent(wayAgent, id);
+            //        countFindWay++;
+
+            //        //Отправление пути в очередь на кластер
+            //        queueOnCluster.AddToQueue(wayAgent, inputData, id);
+
+            //    }
+            //    Console.WriteLine("Задача FindWayTask завершила работу");
+            //    timer.TimeStatistic_End("findWayTask");
+            //});
 
             Task SenderTask = Task.Run(() =>
             {

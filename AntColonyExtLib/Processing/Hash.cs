@@ -20,11 +20,18 @@ namespace AntColonyExtLib.Processing
             _monitor = new object();
         }
 
-        public void AddNewHash(string hashWay, int[] wayAgent, InputData inputData)
+        public int AddNewHash(string hashWay, int[] wayAgent, InputData inputData)
         {
             Monitor.Enter(_monitor);
-            inputData.hashTable.Add(hashWay, wayAgent);
-            Monitor.Exit(_monitor);
+            if (!inputData.hashTable.ContainsKey(hashWay)){
+                inputData.hashTable.Add(hashWay, wayAgent);
+                
+                return 0;
+
+            }else{
+                Monitor.Exit(_monitor);
+                return -1;
+            }
         }
 
         /// <summary>

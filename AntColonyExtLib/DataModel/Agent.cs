@@ -60,18 +60,29 @@ namespace AntColonyExtLib.DataModel
             Hash hash = new Hash();
             string hashWay = hash.GetHash(wayAgent);
 
-            if (!inputData.hashTable.ContainsKey(hashWay))
-            {
-                hash.AddNewHash(hashWay, wayAgent, inputData); //Добавление нового ключа в таблицй                            
-            }
-            else
+
+            while (hash.AddNewHash(hashWay, wayAgent, inputData) < 0) //Добавление нового ключа в таблицй  
             {
                 //Поиск нового пути
                 int[] newWayAgent = FindAlternativeWay(inputData, wayAgent, hashWay, statistic);
                 hashWay = hash.GetHash(newWayAgent);
-                hash.AddNewHash(hashWay, wayAgent, inputData);
+                //hash.AddNewHash(hashWay, wayAgent, inputData);
                 Array.Copy(newWayAgent, 0, wayAgent, 0, inputData.inputParams.Params.Count());
             }
+
+            //if (!inputData.hashTable.ContainsKey(hashWay))
+            //{
+                
+            //    hash.AddNewHash(hashWay, wayAgent, inputData); //Добавление нового ключа в таблицй                            
+            //}
+            //else
+            //{
+            //    //Поиск нового пути
+            //    int[] newWayAgent = FindAlternativeWay(inputData, wayAgent, hashWay, statistic);
+            //    hashWay = hash.GetHash(newWayAgent);
+            //    hash.AddNewHash(hashWay, wayAgent, inputData);
+            //    Array.Copy(newWayAgent, 0, wayAgent, 0, inputData.inputParams.Params.Count());
+            //}
 
             //Обновление насыщения вершины
             for (int i = 0; i < inputData.inputParams.Params.Count(); i++)
