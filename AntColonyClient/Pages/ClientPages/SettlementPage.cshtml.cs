@@ -159,7 +159,7 @@ namespace AntColonyClient.Pages.ClientPages
             Task[] tasks = new Task[2];
             //Создание имени выходного файла
             FileManager fileManager = new FileManager();
-            string fileName = fileManager.CreateFileName("OutPutData");
+            string fileName = fileManager.CreateFileName("OutPutData", "Data");
 
             if (Request.Form.ContainsKey("StopSettlement_btn"))
             {

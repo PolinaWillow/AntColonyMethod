@@ -25,7 +25,7 @@ namespace AntColonyExtLib.Processing
             Monitor.Enter(_monitor);
             if (!inputData.hashTable.ContainsKey(hashWay)){
                 inputData.hashTable.Add(hashWay, wayAgent);
-                
+                Monitor.Exit(_monitor);
                 return 0;
 
             }else{

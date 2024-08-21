@@ -4,6 +4,7 @@ using AntColonyExtLib.ClusterInteraction.Processing;
 using AntColonyExtLib.DataModel;
 using AntColonyExtLib.DataModel.Statistic;
 using AntColonyExtLib.Processing;
+using DebagExtLib.DataFunctions;
 using System.Reflection;
 using System.Text.Json;
 using System.Threading;
@@ -16,32 +17,41 @@ namespace DebagExtLib
         public StreamlinedData ResultsForUser = new StreamlinedData();
 
         static ResultValueFunction maxFunction = new ResultValueFunction();
-        static double MAX = 0;
+        static double MAX = double.MinValue;
 
+        
         static async Task Main()
         {
-            //Создание тестового объекта данных
-            InputDataModel inputData = new InputDataModel();
+            //Основные параметры для настройки
+            int startCount_MAX = 10; //Количество запусков
+            int threadAgentCount = 5; //Количество потоков агентов
 
-            //Клонируем исходный шраф
-            inputData.testInputData.cloneInputParams = (ParamsList)inputData.testInputData.inputParams.Clone();
 
-            Console.WriteLine("---------cloneInputParams----------");
-            inputData.testInputData.cloneInputParams.Print();
-            Console.WriteLine("---------cloneInputParams----------");
+            int startCount = 0;
+            while (startCount < startCount_MAX)
+            {
+                //Создание тестового объекта данных
+                MultiFunctionData inputData = new MultiFunctionData();
 
-            inputData.Print();
+                //Клонируем исходный шраф
+                inputData.testInputData.cloneInputParams = (ParamsList)inputData.testInputData.inputParams.Clone();
 
-            //Создание имени выходного файла
-            FileManager fileManager = new FileManager();
-            string fileName = fileManager.CreateFileName("OutPutData");
+                //Создание имени выходного файла
+                FileManager fileManager = new FileManager();
+                string fileName = fileManager.CreateFileName("OutPutData", "Data");
 
-            //Запуск расчетного блока
-            await AsyncSenttlement(fileName, inputData.testInputData);
-            //SyncSenttlement(fileName, inputData.testInputData);
+                //Запуск расчетного блока
+                await AsyncSenttlement(fileName, inputData.testInputData, threadAgentCount);
+                //SyncSenttlement(fileName, inputData.testInputData);
+
+                //Очистка пямяти
+                inputData.testInputData.hashTable.Clear(); //Очистка Hash
+                
+                startCount++;
+            }
         }
 
-        public static async Task AsyncSenttlement(string fileDataName, InputData inputData)
+        public static async Task AsyncSenttlement(string fileDataName, InputData inputData, int threadAgentCount)
         {
             int countFindWay = 0; //Количество найденных путей
             int countAgent = 0; //Количество пройденных агентов
@@ -90,21 +100,27 @@ namespace DebagExtLib
                 while (countFindWay < inputData.inputParams.countCombinationsV)
                 {
                     i++;
+                    //Console.WriteLine("task1: countFindWay = " + countFindWay);
 
                     List<string> newAgentsList = new List<string>();
                     //Создаем группу агентов
-                    for (int j = 0; j < 2; j++)
+                    for (int j = 0; j < threadAgentCount; j++)
                     {
                         string id = agentGroup.AddNewAgent();
                         newAgentsList.Add(id);
                     }
 
+                    //Console.WriteLine("i = "+i);
                     List<Task> tasks = new List<Task>();
                     foreach (string agentID in newAgentsList)
                     {
+                        //Console.WriteLine("agentID = " + agentID);
                         tasks.Add(Task.Factory.StartNew(() => {
                             //Если просмотрены все пути, то выход из задачи
-                            if (countFindWay < inputData.inputParams.countCombinationsV)
+                            Interlocked.Increment(ref countFindWay);//++;
+
+                            //Console.WriteLine("agentID = " + agentID+ "\t countFindWay = "+ countFindWay);
+                            if (countFindWay <= inputData.inputParams.countCombinationsV)
                             {
                                 Agent agent = agentGroup.FindAgent(agentID);
                                 if (agent != null)
@@ -116,7 +132,7 @@ namespace DebagExtLib
                                     //Отправление пути в очередь на кластер
                                     queueOnCluster.AddToQueue(wayAgent, inputData, agent.idAgent);
 
-                                    countFindWay++;
+                                    //countFindWay++;
                                 }
                             }
 
@@ -125,49 +141,24 @@ namespace DebagExtLib
 
                     // Ожидаем завершения всех задач
                     Task.WaitAll(tasks.ToArray());
+                    //Console.WriteLine("-- " + countFindWay);
                     newAgentsList.Clear();
 
                 }
+                Console.WriteLine("countFindWay" + countFindWay);
+                Console.WriteLine("hashTable.Count" + inputData.hashTable.Count);
                 Console.WriteLine("Задача FindWayTask завершила работу");
                 timer.TimeStatistic_End("findWayTask");
             });
 
-            //Определение путей агентов (Последовательный поиск)
-            //Task FindWayTask = Task.Run(() =>
-            //{
-            //    timer.TimeStatistic_Start("findWayTask");
-
-            //    int countFindWay = 0; //Количество найденных путей
-            //    int i = 0;
-
-            //    while (countFindWay < inputData.inputParams.countCombinationsV)
-            //    {
-            //        i++;
-            //        //Создаем агента
-            //        string id = agentGroup.AddNewAgent();
-            //        Agent agent = agentGroup.FindAgent(id);
-
-            //        //Определение пути агента
-            //        int[] wayAgent = agent.FindAgentWay(inputData, statistics);
-            //        agentGroup.AddWayAgent(wayAgent, id);
-            //        countFindWay++;
-
-            //        //Отправление пути в очередь на кластер
-            //        queueOnCluster.AddToQueue(wayAgent, inputData, id);
-
-            //    }
-            //    Console.WriteLine("Задача FindWayTask завершила работу");
-            //    timer.TimeStatistic_End("findWayTask");
-            //});
-
             Task SenderTask = Task.Run(() =>
             {
                
-                int countFindWay = 0; //Количество найденных путей
+                int countSendWay = 0; //Количество найденных путей
                 int i = 0;
-                Console.WriteLine(i);
-                while (countFindWay < inputData.inputParams.countCombinationsV)
+                while (countSendWay < inputData.inputParams.countCombinationsV)
                 {
+                    //Console.WriteLine("task2: countSendWay = " + countSendWay);
                     //Создаем сокет
                     Request_v2 reqCalculate = new Request_v2();
                     //Получение пути из очереди (из очереди удалили)
@@ -184,13 +175,15 @@ namespace DebagExtLib
                             reqCalculate.request.AddData(calculation.TypeOf(), calculation.JSON_Data);
                             Sender data = reqCalculate.Post();
 
+                            //data.Print();
+
                             //Передача результатов расчета агенту
                             double funcValue = Convert.ToDouble(data.Body);
                             Agent agent = agentGroup.FindAgent(calculation.idAgent);
                             if (agent != null) agent.funcValue = funcValue;
 
 
-                            int length = calculation.sendData.Way_For_Send.Length;//this.sendData.Way_For_Send.Length;
+                            int length = calculation.sendData.Way_For_Send.Length;
                             string[] valuesParam = new string[length];
                             for (int j = 0; j < length; j++)
                             {
@@ -216,7 +209,7 @@ namespace DebagExtLib
                             string dataToOutput = fileManager.CreateWriteString(i, "max", maxFunction);
                             fileManager.Write(outputFileName, dataToOutput);
 
-                            Console.WriteLine(dataToOutput);
+                            //Console.WriteLine(dataToOutput);
 
                             //Удаление агента
                             agentGroup.DeleteAgent(agent.idAgent);
@@ -229,17 +222,19 @@ namespace DebagExtLib
                             Console.WriteLine(e + "Ошибка связи с кластером при отправлении Calculation");
                         }
                         i++;
-                        countFindWay++;
+                        countSendWay++;
 
                         timer.TimeStatistic_End("senderTask");
                     }
                     else
                     {
-                        Console.WriteLine("Очередь пустая");
+                        //Console.WriteLine("Очередь пустая");
                         Task.Delay(1000);
                     }
                 }
-                Console.WriteLine("Задача SenderTask заверши ла работу");
+
+                Console.WriteLine("countSendWay" + countSendWay);
+                Console.WriteLine("Задача SenderTask завершила работу");
                 
             });
 
@@ -369,7 +364,6 @@ namespace DebagExtLib
 
             return 0;
         }
-
 
         private static void AgentPassage(int NumIteration, InputData inputData, int countFindWay, int countAgent, AgentGroup agentGroup, StatisticsCollection statistics)
         {

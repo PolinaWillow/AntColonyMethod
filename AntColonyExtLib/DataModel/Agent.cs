@@ -61,7 +61,7 @@ namespace AntColonyExtLib.DataModel
             string hashWay = hash.GetHash(wayAgent);
 
 
-            while (hash.AddNewHash(hashWay, wayAgent, inputData) < 0) //Добавление нового ключа в таблицй  
+            while (inputData.AddNewHash(hashWay, wayAgent) < 0) //Добавление нового ключа в таблицй  
             {
                 //Поиск нового пути
                 int[] newWayAgent = FindAlternativeWay(inputData, wayAgent, hashWay, statistic);

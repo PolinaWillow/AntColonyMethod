@@ -1,6 +1,7 @@
 ﻿using AntColonyExtLib.Processing;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -37,11 +38,13 @@ namespace AntColonyExtLib.DataModel.Statistic
             if (fileName == null) this._writeFlag = false;
             else
             {
-                this._writeFlag = true;
-                this._fileName = fileName;
-
                 this._fileManager = new FileManager();
-                _fileManager.CreateTimerFile(this._fileName);
+                this._fileName = this._fileManager.CreateFileName(fileName);
+                this._writeFlag = true;
+                if (!File.Exists(this._fileName))
+                {
+                    _fileManager.CreateTimerFile(this._fileName);
+                }
             }
         }
 
@@ -91,7 +94,7 @@ namespace AntColonyExtLib.DataModel.Statistic
         {
             if (this._writeFlag)
             {
-                string writeString = "all_time:\t" + this.all_time.Get() + "\nfindWayTask_time:\t" + this.findWayTask_time.Get() + "\nsenderTask_time:\t" + this.senderTask_time.Get();
+                string writeString = this.all_time.Get() + "\t" + this.findWayTask_time.Get() + "\t" + this.senderTask_time.Get();
                 _fileManager.Write(this._fileName, writeString);
             }
         }

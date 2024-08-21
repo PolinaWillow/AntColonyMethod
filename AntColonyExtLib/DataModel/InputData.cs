@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace AntColonyExtLib.DataModel
@@ -40,8 +41,16 @@ namespace AntColonyExtLib.DataModel
         /// </summary>
         public int antCount { get; set; }
 
+        /// <summary>
+        /// Монитор
+        /// </summary>
+        private object _monitor;
+
+
         public InputData()
         {
+            _monitor = new object();
+
             inputParams = new ParamsList();
             cloneInputParams = new ParamsList();
 
@@ -64,6 +73,23 @@ namespace AntColonyExtLib.DataModel
             this.inputParams = (ParamsList)this.cloneInputParams.Clone();
             this.changeFlag = false;
             return 0;
+        }
+
+        public int AddNewHash(string hashWay, int[] wayAgent)
+        {
+            Monitor.Enter(_monitor);
+            if (!this.hashTable.ContainsKey(hashWay))
+            {
+                this.hashTable.Add(hashWay, wayAgent);
+                Monitor.Exit(_monitor);
+                return 0;
+
+            }
+            else
+            {
+                Monitor.Exit(_monitor);
+                return -1;
+            }
         }
     }
 }

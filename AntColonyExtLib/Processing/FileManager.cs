@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using AntColonyExtLib.DataModel.Statistic;
+using System.Net.Mime;
 
 namespace AntColonyExtLib.Processing
 {
@@ -19,20 +20,30 @@ namespace AntColonyExtLib.Processing
         /// <summary>
         /// Создание имени файла
         /// </summary>
-        public string CreateFileName(string nameFile)
+        public string CreateFileName(string nameFile, string typeName = null)
         {
-            //Получение текущей даты
-            DateTime today = DateTime.Now;
+            if (typeName == "Data")
+            {
+                //Получение текущей даты
+                DateTime today = DateTime.Now;
 
-            //Форматирование даты
-            string createData = Convert.ToString(today);
-            createData = createData.Replace(" ", "_");
-            createData = createData.Replace(":", "-");
-            createData = createData.Replace(".", "-");
-            //Формирование имени
-            string fileName = /*"../../../../OutputResultFiles/"+*/  nameFile + "_" + createData + ".txt";
+                //Форматирование даты
+                string createData = Convert.ToString(today);
+                createData = createData.Replace(" ", "_");
+                createData = createData.Replace(":", "-");
+                createData = createData.Replace(".", "-");
+                //Формирование имени
+                string fileName = /*"../../../../OutputResultFiles/"+*/  nameFile + "_" + createData + ".txt";
+                return fileName;
+            }
+            else
+            {
+                //Формирование имени
+                string fileName = /*"../../../../OutputResultFiles/"+*/  nameFile + ".txt";
+                return fileName;
+            }
 
-            return fileName;
+            
         }
 
         /// <summary>
@@ -78,7 +89,7 @@ namespace AntColonyExtLib.Processing
 
         public string CreateStatisricFile()
         {
-            string outputDataFile = CreateFileName("OutputStatistic"); //Получение имени выходного файла
+            string outputDataFile = CreateFileName("OutputStatistic", "Data"); //Получение имени выходного файла
 
             // Создание файла и запись в него
             FileInfo fileInf = new FileInfo(outputDataFile);
@@ -91,7 +102,7 @@ namespace AntColonyExtLib.Processing
         }
 
         public string CreateTimerFile(string name, string comment = null) {
-            string outputDataFile = CreateFileName(name);
+            string outputDataFile = name;
 
             // Создание файла и запись в него
             FileInfo fileInf = new FileInfo(outputDataFile);
@@ -104,6 +115,7 @@ namespace AntColonyExtLib.Processing
                     sw.WriteLine(comment);
                     sw.WriteLine("-------------------------------------------------------------\n");
                 }
+                sw.WriteLine("all_time \t findWayTask_time \t senderTask_time \t");
                 sw.Close();
             }
             return outputDataFile;

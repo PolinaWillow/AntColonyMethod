@@ -15,8 +15,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DebagExtLib", "DebagExtLib\
 EndProject
 Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "AntColonyDb", "AntColonyDb\AntColonyDb.sqlproj", "{B1ED9FBB-888D-47F1-93DF-44FCC20E8AB4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "AntColony_ReactClient_v1", "AntColony_ReactClient_v1\AntColony_ReactClient_v1.csproj", "{2F5E8BA5-3766-492E-8E55-723562A765B2}"
-EndProject
 Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "reactapp", "Solution1\reactapp\reactapp.esproj", "{13EE0B67-61B1-46EB-8A38-25779BBD049E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "webapi", "Solution1\webapi\webapi.csproj", "{DBCE7FE1-7D21-4519-BFEB-D8286FCF9DEA}"
@@ -53,10 +51,6 @@ Global
 		{B1ED9FBB-888D-47F1-93DF-44FCC20E8AB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B1ED9FBB-888D-47F1-93DF-44FCC20E8AB4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B1ED9FBB-888D-47F1-93DF-44FCC20E8AB4}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{2F5E8BA5-3766-492E-8E55-723562A765B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2F5E8BA5-3766-492E-8E55-723562A765B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2F5E8BA5-3766-492E-8E55-723562A765B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2F5E8BA5-3766-492E-8E55-723562A765B2}.Release|Any CPU.Build.0 = Release|Any CPU
 		{13EE0B67-61B1-46EB-8A38-25779BBD049E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{13EE0B67-61B1-46EB-8A38-25779BBD049E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{13EE0B67-61B1-46EB-8A38-25779BBD049E}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
