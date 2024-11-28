@@ -12,8 +12,12 @@ namespace AntColonyExtLib.ClusterInteraction.Models
         /// Ствтус соединения с кластером
         /// </summary>
         public string Status { get; set; }
-        public StatusCommunication(string status="") {
+        public int timeDelayStatus {get; set;}
+        public int threadAgentCount { get; set;}
+        public StatusCommunication(string status="", int timeDelay=0, int threadAgentCount = 0) {
             this.Status = status;
+            this.timeDelayStatus = timeDelay;
+            this.threadAgentCount = threadAgentCount;
         }
 
         /// <summary>

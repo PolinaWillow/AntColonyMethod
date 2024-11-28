@@ -7,15 +7,25 @@ using System.Text;
 using System.Threading.Tasks;
 using AntColonyExtLib.DataModel.Statistic;
 using System.Net.Mime;
+using AntColonyExtLib.DataModel.Files;
 
 namespace AntColonyExtLib.Processing
 {
     public class FileManager
     {
         /// <summary>
+        /// Список фалов
+        /// </summary>
+        public List<DataFile> FilesList {  get; set; }
+        /// <summary>
         /// Основное название файла с выходными данными
         /// </summary>
         public static string PATH_TEST_FILE_DATA = "OutputData.txt";
+
+        public FileManager()
+        {
+            this.FilesList = new List<DataFile>();
+        }
 
         /// <summary>
         /// Создание имени файла
@@ -120,6 +130,20 @@ namespace AntColonyExtLib.Processing
             }
             return outputDataFile;
         }
+
+        /// <summary>
+        /// Преобразование времени в нужный формат (с,мс)
+        /// </summary>
+        /// <param name="time"></param>
+        /// <returns></returns>
+        public string FormatTime(TimeSpan time)
+        {
+            string newTimeFormat = "";
+            newTimeFormat = time.TotalSeconds.ToString().Replace('.', ',');
+
+            return newTimeFormat;
+        }
+
 
         /// <summary>
         /// Запись строки в файл

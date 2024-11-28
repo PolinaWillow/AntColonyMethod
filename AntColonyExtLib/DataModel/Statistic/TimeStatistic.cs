@@ -23,6 +23,12 @@ namespace AntColonyExtLib.DataModel.Statistic
         /// Время работы модуля FindWayTask
         /// </summary>
         public Timer findWayTask_time { get; set; }
+
+        /// <summary>
+        /// Время поиска по hash-таблице
+        /// </summary>
+        public Timer findHashTable_time { get; set; }
+
         /// <summary>
         /// Время работы модуля SenderTask
         /// </summary>
@@ -32,6 +38,7 @@ namespace AntColonyExtLib.DataModel.Statistic
         {
             this.findWayTask_time = new Timer();
             this.senderTask_time = new Timer();
+            this.findHashTable_time = new Timer();
             this.all_time = new Timer();
 
             //Создание файла для записи
@@ -61,12 +68,20 @@ namespace AntColonyExtLib.DataModel.Statistic
                 case "senderTask":
                     this.senderTask_time.StartTimer();
                     break;
+                case "findHashTable":
+                    this.findHashTable_time.StartTimer();
+                    break;
                 default:
                     this.all_time.StartTimer();
                     this.senderTask_time.StartTimer();
                     this.findWayTask_time.StartTimer();
                     break;
             }
+        }
+
+        public void TimeStatistic_Interval(string modulName = null)
+        {
+
         }
 
         public void TimeStatistic_End(string modulNane = null)
@@ -82,6 +97,9 @@ namespace AntColonyExtLib.DataModel.Statistic
                 case "senderTask":
                     this.senderTask_time.SumTime();
                     break;
+                case "findHashTable":
+                    this.findHashTable_time.EndTimer();
+                    break;
                 default:
                     this.all_time.EndTimer();
                     this.senderTask_time.EndTimer();
@@ -90,13 +108,24 @@ namespace AntColonyExtLib.DataModel.Statistic
             }
         }
 
-        public void Write()
+        public void Write(string title=null, string typeTimer = null)
         {
-            if (this._writeFlag)
+            if (title!=null) _fileManager.Write(this._fileName, title);
+            else if (this._writeFlag)
             {
-                string writeString = this.all_time.Get() + "\t" + this.findWayTask_time.Get() + "\t" + this.senderTask_time.Get();
-                _fileManager.Write(this._fileName, writeString);
+                switch (typeTimer)
+                {
+                    case "findHashTable":
+                        _fileManager.Write(this._fileName, _fileManager.FormatTime(this.findHashTable_time.Get()));
+                        break;
+                    default:
+                        string writeString = _fileManager.FormatTime(this.all_time.Get()) + "\t" + _fileManager.FormatTime(this.findWayTask_time.Get()) + "\t" + _fileManager.FormatTime(this.senderTask_time.Get());
+                        _fileManager.Write(this._fileName, writeString);
+                        break;
+                }
+                
             }
+
         }
     }
 }

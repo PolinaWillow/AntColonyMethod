@@ -43,7 +43,7 @@ namespace AntColonyExtLib.DataModel
         /// </summary>
         /// <param name="inputData">Структура входных данных</param>
         /// <returns></returns>
-        public int[] FindAgentWay(InputData inputData, StatisticsCollection statistic)
+        public int[] FindAgentWay(InputData inputData, StatisticsCollection statistic, bool hashTableStatus = true)
         {
             int[] wayAgent; //Искомый путь агента
 
@@ -56,44 +56,36 @@ namespace AntColonyExtLib.DataModel
             else { wayAgent = inputData.inputParams.FindWay(); }
 
 
-            //Определяем хэш агента
-            Hash hash = new Hash();
-            string hashWay = hash.GetHash(wayAgent);
-
-
-            while (inputData.AddNewHash(hashWay, wayAgent) < 0) //Добавление нового ключа в таблицй  
+            if (hashTableStatus) //Если внедряем хэш-таблицы
             {
-                //Поиск нового пути
-                int[] newWayAgent = FindAlternativeWay(inputData, wayAgent, hashWay, statistic);
-                hashWay = hash.GetHash(newWayAgent);
-                //hash.AddNewHash(hashWay, wayAgent, inputData);
-                Array.Copy(newWayAgent, 0, wayAgent, 0, inputData.inputParams.Params.Count());
-            }
+                Hash hash = new Hash();
+                string hashWay = hash.GetHash(wayAgent);
 
-            //if (!inputData.hashTable.ContainsKey(hashWay))
-            //{
-                
-            //    hash.AddNewHash(hashWay, wayAgent, inputData); //Добавление нового ключа в таблицй                            
-            //}
+                while (inputData.AddNewHash(hashWay, wayAgent) < 0) //Добавление нового ключа в таблицй  
+                {
+                    //Поиск нового пути
+                    int[] newWayAgent = FindAlternativeWay(inputData, wayAgent, hashWay, statistic);
+                    hashWay = hash.GetHash(newWayAgent);
+                    //hash.AddNewHash(hashWay, wayAgent, inputData);
+                    Array.Copy(newWayAgent, 0, wayAgent, 0, inputData.inputParams.Params.Count());
+                }
+
+                //Обновление насыщения вершины
+                for (int i = 0; i < inputData.inputParams.Params.Count(); i++)
+                {
+                    if (inputData.changeFlag)
+                    {
+                        inputData.cloneInputParams.Params[i].UpdateSaturation(wayAgent[i], 1);
+                    }
+                    else { inputData.inputParams.Params[i].UpdateSaturation(wayAgent[i], 1); }
+
+                }
+
+            }
             //else
             //{
-            //    //Поиск нового пути
-            //    int[] newWayAgent = FindAlternativeWay(inputData, wayAgent, hashWay, statistic);
-            //    hashWay = hash.GetHash(newWayAgent);
-            //    hash.AddNewHash(hashWay, wayAgent, inputData);
-            //    Array.Copy(newWayAgent, 0, wayAgent, 0, inputData.inputParams.Params.Count());
+            //    inputData.AddNewHash(hashWay, wayAgent);
             //}
-
-            //Обновление насыщения вершины
-            for (int i = 0; i < inputData.inputParams.Params.Count(); i++)
-            {
-                if (inputData.changeFlag)
-                {
-                    inputData.cloneInputParams.Params[i].UpdateSaturation(wayAgent[i], 1);
-                }
-                else { inputData.inputParams.Params[i].UpdateSaturation(wayAgent[i], 1); }
-
-            }
 
 
             return wayAgent;

@@ -45,7 +45,7 @@ namespace AntColonyExtLib.DataModel.Statistic
         public TimeSpan SumTime()
         {
             this._timeEnd = DateTime.Now;
-            this._allTime += this._timeEnd - this._timeStart;
+            this._allTime = this._allTime + ( this._timeEnd - this._timeStart);
 
             return this._allTime;
         }

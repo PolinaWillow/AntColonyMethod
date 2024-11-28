@@ -20,10 +20,21 @@ namespace AntColonyExtLib.DataModel
         /// </summary>
         public int countCombinationsV { get; set; }
 
+        /// <summary>
+        /// Флаг, позволяющий определить все ли комбинации проверены
+        /// </summary>
+        public bool isAllCombinations { get; set; }
+
         public ParamsList()
         {
             Params = new List<Param>();
             countCombinationsV = 0;
+            isAllCombinations = false;
+        }
+
+        public bool IsAllCombinations()
+        {
+            return isAllCombinations;
         }
 
         public object Clone()
