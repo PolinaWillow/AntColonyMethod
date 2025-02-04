@@ -12,11 +12,11 @@ namespace DebagExtLib
     public class ParamsForTesting
     {
         //Основные параметры для настройки
-        public int startCount_MAX = 5; //Количество запусков
+        public int startCount_MAX = 1; //Количество запусков
         public int threadAgentCount = 1; //Количество потоков агентов
-        public int MAX_threadAgentCount = 5; //Максимальное количество потоков агентов
-        public int timeDelay = 400; //Задержка
-        public int MAX_timeDelay = 1000; //Максимальная задежка
+        public int MAX_threadAgentCount = 1; //Максимальное количество потоков агентов
+        public int timeDelay = 500; //Задержка
+        public int MAX_timeDelay = 500; //Максимальная задежка
         public bool hashTableStatus = true; //С хэш таблицей (true) или без нее (false) 
 
         //Параметры для управлением отправки
@@ -24,9 +24,15 @@ namespace DebagExtLib
         public int countMultySender = 1; //Количество одновременно отправляемых данных
 
         //Функция для запуска
-        public string startName = "Async_v3";
+        public string startName = "Sync";
 
-        
-        
+        //Паремтры для создания или не созданпия файлов лога 
+        public bool OutPutDataFile = false; //Выходной файл с результатами решений (Криво соотносится key и value при изменении даты создания файла)
+        public bool TimeStatisticFile = true; //Выходной файл с временными характеристиками
+
+
+
+
+
     }
 }

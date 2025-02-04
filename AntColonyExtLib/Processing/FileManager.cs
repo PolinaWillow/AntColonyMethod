@@ -7,7 +7,6 @@ using System.Text;
 using System.Threading.Tasks;
 using AntColonyExtLib.DataModel.Statistic;
 using System.Net.Mime;
-using AntColonyExtLib.DataModel.Files;
 
 namespace AntColonyExtLib.Processing
 {
@@ -16,7 +15,7 @@ namespace AntColonyExtLib.Processing
         /// <summary>
         /// Список фалов
         /// </summary>
-        public List<DataFile> FilesList {  get; set; }
+        //public List<DataFile> FilesList {  get; set; }
         /// <summary>
         /// Основное название файла с выходными данными
         /// </summary>
@@ -24,7 +23,7 @@ namespace AntColonyExtLib.Processing
 
         public FileManager()
         {
-            this.FilesList = new List<DataFile>();
+            //this.FilesList = new List<DataFile>();
         }
 
         /// <summary>

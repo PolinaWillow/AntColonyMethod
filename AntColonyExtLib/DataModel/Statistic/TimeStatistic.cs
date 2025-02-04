@@ -1,4 +1,4 @@
-﻿using AntColonyExtLib.Processing;
+﻿using AntColonyExtLib.FileManager;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -11,7 +11,7 @@ namespace AntColonyExtLib.DataModel.Statistic
     public class TimeStatistic
     {
         bool _writeFlag { get; set; }
-        FileManager _fileManager { get; set; }
+        FileManager_v2 _fileManager { get; set; }
         string _fileName { get; set; }
 
         /// <summary>
@@ -45,13 +45,10 @@ namespace AntColonyExtLib.DataModel.Statistic
             if (fileName == null) this._writeFlag = false;
             else
             {
-                this._fileManager = new FileManager();
+                this._fileManager = new FileManager_v2();
                 this._fileName = this._fileManager.CreateFileName(fileName);
                 this._writeFlag = true;
-                if (!File.Exists(this._fileName))
-                {
-                    _fileManager.CreateTimerFile(this._fileName);
-                }
+                _fileManager.CreateFile(this._fileName, false);
             }
         }
 
@@ -116,9 +113,9 @@ namespace AntColonyExtLib.DataModel.Statistic
             this.all_time = new Timer();
         }
 
-        public void Write(string title=null, string typeTimer = null)
+        public void Write(string title = null, string typeTimer = null)
         {
-            if (title!=null) _fileManager.Write(this._fileName, title);
+            if (title != null) _fileManager.Write(this._fileName, title);
             else if (this._writeFlag)
             {
                 switch (typeTimer)
@@ -131,14 +128,14 @@ namespace AntColonyExtLib.DataModel.Statistic
                         _fileManager.Write(this._fileName, writeString);
                         break;
                 }
-                
+
             }
 
         }
 
         public void Print()
         {
-            Console.WriteLine("senderTask_time - "+ senderTask_time);
+            Console.WriteLine("senderTask_time - " + senderTask_time);
         }
     }
 }

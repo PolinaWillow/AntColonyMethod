@@ -175,7 +175,7 @@ namespace AntColonyExtLib.Processing
             Agent agent = agentGroup.FindAgent(id);
 
             //Определение пути агента
-            int[] wayAgent = agent.FindAgentWay(inputData, statistics);
+            int[] wayAgent = agent.FindAgentWay(inputData);
             agentGroup.AddWayAgent(wayAgent, id);
             countFindWay++;
 
