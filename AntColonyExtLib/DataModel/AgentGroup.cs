@@ -42,6 +42,18 @@ namespace AntColonyExtLib.DataModel
 
         }
 
+        public string UpdateAgentID(string id) {
+            string newId = Guid.NewGuid().ToString();
+
+            Agent agent = this.FindAgent(id);
+            if (agent == null) return null;
+            else
+            {
+                agent.idAgent = newId;
+                return newId;
+            }
+        }
+
         public int DeleteAgent(string id)
         {
             Monitor.Enter(_monitor);
@@ -85,7 +97,7 @@ namespace AntColonyExtLib.DataModel
             Agent agent = Agents.FirstOrDefault(r => r.idAgent == id);
             if (agent != null)
             {
-                agent.wayAgent.AddRange(wayAgent);
+                agent.AddWay(wayAgent);
             }
 
             Monitor.Exit(_monitor);

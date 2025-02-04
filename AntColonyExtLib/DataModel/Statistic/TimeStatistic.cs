@@ -108,6 +108,14 @@ namespace AntColonyExtLib.DataModel.Statistic
             }
         }
 
+        public void Clear()
+        {
+            this.findWayTask_time = new Timer();
+            this.senderTask_time = new Timer();
+            this.findHashTable_time = new Timer();
+            this.all_time = new Timer();
+        }
+
         public void Write(string title=null, string typeTimer = null)
         {
             if (title!=null) _fileManager.Write(this._fileName, title);
@@ -126,6 +134,11 @@ namespace AntColonyExtLib.DataModel.Statistic
                 
             }
 
+        }
+
+        public void Print()
+        {
+            Console.WriteLine("senderTask_time - "+ senderTask_time);
         }
     }
 }

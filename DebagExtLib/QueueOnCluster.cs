@@ -14,12 +14,12 @@ namespace DebagExtLib
         /// <summary>
         /// Очередь отправления на кластер
         /// </summary>
-        public List<Calculation> Queue { get; set; }
+        public List<Calculation_v2> Queue { get; set; }
 
         private object _monitor { get; set; }
 
         public QueueOnCluster() {
-            Queue = new List<Calculation>();
+            Queue = new List<Calculation_v2>();
             _monitor = new object();
         }
 
@@ -30,7 +30,7 @@ namespace DebagExtLib
         {
             Monitor.Enter(_monitor);
 
-            Calculation calculation = new Calculation(way, inputData, idAgent);
+            Calculation_v2 calculation = new Calculation_v2(idAgent, way, inputData);
             Queue.Add(calculation);
 
             Monitor.Exit(_monitor);
@@ -40,7 +40,7 @@ namespace DebagExtLib
         /// Получение элемента очереди по принципу FIFO
         /// </summary>
         /// <returns></returns>
-        public Calculation GetFromQueue()
+        public Calculation_v2 GetFromQueue()
         {
             Monitor.Enter(_monitor);
 
@@ -51,7 +51,7 @@ namespace DebagExtLib
             }
             else
             {
-                Calculation calculation = this.Queue[0];
+                Calculation_v2 calculation = this.Queue[0];
                 this.Queue.RemoveAt(0);
                 Monitor.Exit(_monitor);
                 return calculation;
@@ -65,7 +65,7 @@ namespace DebagExtLib
             Console.WriteLine("\n\nОчередь");
             for (int i=0; i < Queue.Count; i++)
             {
-                Console.WriteLine(i+":\tid: " + Queue[i].idAgent+"\tway: " + Queue[i].sendData.Way_For_Send.ToString());
+                Console.WriteLine(i+":\tid: " + Queue[i].idAgent+"\tway: " + Queue[i].Way_For_Send.ToString());
             }
         }
     }

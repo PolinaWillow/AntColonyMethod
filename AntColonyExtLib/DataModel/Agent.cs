@@ -38,6 +38,36 @@ namespace AntColonyExtLib.DataModel
             funcValue = 0;
         }
 
+        public void AddWay(int[] wayAgent)
+        {
+            this.wayAgent.Clear();
+            this.wayAgent.AddRange(wayAgent);
+        }
+
+        public object Clone()
+        {
+            Agent objClone = new Agent();
+            objClone.idAgent = this.idAgent; 
+            objClone.delta = this.delta;
+            objClone.funcValue = this.funcValue;
+            objClone.wayAgent = new List<int>();
+
+            foreach (var item in this.wayAgent)
+            {
+                objClone.wayAgent.Add(item);
+            }
+
+            return objClone;
+        }
+
+        public string UpdateID()
+        {
+            string newId = Guid.NewGuid().ToString();
+
+            this.idAgent = newId;
+            return newId;
+        }
+
         /// <summary>
         /// Определение пути агента
         /// </summary>

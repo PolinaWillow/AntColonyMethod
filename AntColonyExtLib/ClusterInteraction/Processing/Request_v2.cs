@@ -19,16 +19,15 @@ namespace AntColonyExtLib.ClusterInteraction.Processing
         private Socket socket { get; set; }
 
         public ClusterInfo clusterInfo { get; set; }
+
+        //Флаг открытости соединения
+        private bool isConnected = false;
+
         public Request_v2()
         {
             clusterInfo = new ClusterInfo();
             request = new Sender();
             response = new Sender();
-
-            //Создание сокета и открытие соединения
-            socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-            //Console.WriteLine("connected...");
-
         }
 
         /// <summary>
@@ -42,23 +41,84 @@ namespace AntColonyExtLib.ClusterInteraction.Processing
         }
 
         /// <summary>
-        /// Закрытие соединения
+        /// Открытие соединения и отправление команды Start
         /// </summary>
+        /// <param name="timeDelay">Задержка на кластере в мс</param>
+        /// <param name="threadAgentCount">Количиство потоков агентов</param>
         /// <returns></returns>
-        public bool CloseConnect()
+        public bool Start(int timeDelay, int threadAgentCount)
         {
-            try
+            if (!isConnected)
             {
-                this.socket.Close();
-                return true;
+                //Создание сокета и открытие соединения
+                this.socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
+                this.socket.Connect(this.clusterInfo.IP, this.clusterInfo.PORT);
+                //Console.WriteLine("connected...");
+                this.isConnected = true;
+
+                //Отправляем команду "start";
+                StatusCommunication statusCommunication = new StatusCommunication("start", timeDelay, threadAgentCount);
+                try
+                {
+                    this.request.AddData(statusCommunication.TypeOf(), JsonSerializer.Serialize(statusCommunication));
+                    this.request.Print();
+                    this.Post();
+                    Console.WriteLine("Отправлен запрос Start");
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e + "Ошибка связи с кластером при отправлении statusCommunication = start");
+                    this.socket.Close();
+                    this.isConnected = false;
+                    return false;
+                }
             }
-            catch { return false; }
+
+            return false;
         }
 
+        /// <summary>
+        /// Разрыв соединения с отправлением соответствующего запроса кластеру
+        /// </summary>
+        /// <returns></returns>
+        public bool End()
+        {
+            if (isConnected)
+            {
+                //Отправляем запрос на окончание работы
+                StatusCommunication statusCommunication = new StatusCommunication("end");
+
+                try
+                {
+                    this.request.AddData(statusCommunication.TypeOf(), JsonSerializer.Serialize(statusCommunication));
+                    this.request.Print();
+                    this.Post();
+
+                    socket.Close();
+                    isConnected = false;
+
+                    Console.WriteLine("Отправлен запрос End");
+                    return true;
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e + "Ошибка связи с кластером при отправлении statusCommunication = end");
+                    return false;
+                }
+            }
+
+            return false;
+        }
 
         public Sender Post()
         {
-            this.socket.Connect(this.clusterInfo.IP, this.clusterInfo.PORT);
+            //this.request.Print();
+
+            if (!this.isConnected)
+            {
+                throw new InvalidOperationException("Соединение не установлено");
+            }
 
             //Формирование строки Json для отправки данных
             string jsonData = JsonSerializer.Serialize(this.request);
@@ -99,6 +159,7 @@ namespace AntColonyExtLib.ClusterInteraction.Processing
             //Console.ReadKey();
 
             return this.response;
+
         }
     }
 }
