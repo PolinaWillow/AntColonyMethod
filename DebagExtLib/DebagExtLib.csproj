@@ -11,4 +11,10 @@
     <ProjectReference Include="..\AntColonyExtLib\AntColonyExtLib.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Update="DataFunctions\MultiFunction.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
 </Project>

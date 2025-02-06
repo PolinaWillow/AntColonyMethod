@@ -10,7 +10,7 @@ namespace DebagExtLib.DataFunctions
 {
     internal class MultiFunctionData
     {
-        string _path = @"C:\UsersFolders\Polina\Диплом\AntColonyMethod\DebagExtLib\DataFunctions\MultiFunction.txt";
+        string _nameFile = "MultiFunction.txt";
         double _start { get; set; }
         double _end { get; set; }
         double _step { get; set; }
@@ -22,6 +22,8 @@ namespace DebagExtLib.DataFunctions
         /// </summary>
         void readData()
         {
+            string baseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+            string _path = Path.Combine(baseDirectory, "DataFunctions", this._nameFile);
 
             if (File.Exists(_path))
             {
