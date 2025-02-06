@@ -53,6 +53,11 @@ namespace AntColonyExtLib.ClusterInteraction.Models.Calculation
             this.calculationList.Add(calculation);
         }
 
+        public void Add(List<Calculation_v2> calculationList)
+        {
+            this.calculationList.AddRange(calculationList);
+        }
+
         /// <summary>
         /// Получение типа отправляемых данных
         /// </summary>

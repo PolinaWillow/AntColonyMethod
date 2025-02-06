@@ -16,10 +16,13 @@ namespace DebagExtLib
         /// </summary>
         public List<Calculation_v2> Queue { get; set; }
 
+        private bool _endQueue { get; set; }
+
         private object _monitor { get; set; }
 
         public QueueOnCluster() {
             Queue = new List<Calculation_v2>();
+            _endQueue = false;
             _monitor = new object();
         }
 
@@ -34,6 +37,17 @@ namespace DebagExtLib
             Queue.Add(calculation);
 
             Monitor.Exit(_monitor);
+        }
+
+        public void End()
+        {
+            _endQueue = true;
+        }
+
+        public bool IsEnd()
+        {
+            if (this._endQueue && this.Queue.Count==0) return true;
+            return false;
         }
 
         /// <summary>
@@ -58,6 +72,30 @@ namespace DebagExtLib
             }
             
             
+        }
+
+        public List<Calculation_v2> GetAll() //Почему исключение, что кто-то изменил очередь, хотя поднят монитор???
+        {
+            Monitor.Enter(_monitor);
+            if (this.Queue.Count == 0)
+            {
+                Monitor.Exit(_monitor);
+                return null;
+            }
+            else
+            {
+                List<Calculation_v2> calculations = new List<Calculation_v2>();
+
+                //calculations.AddRange(this.Queue);
+                //this.Queue.Clear();
+                foreach (Calculation_v2 item in this.Queue) //foreach (Calculation_v2 item in this.Queue.ToList)
+                {
+                    calculations.Add(item);
+                    this.Queue.Remove(item);
+                }
+                Monitor.Exit(_monitor);
+                return calculations;
+            }
         }
 
         public void Print()
