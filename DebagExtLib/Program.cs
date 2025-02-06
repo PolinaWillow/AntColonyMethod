@@ -864,10 +864,10 @@ namespace DebagExtLib
 
                                 //Изменение феромонов
                                 agent.ChangePheromones(inputData);
-                            }
 
-                            //Удаление агента
-                            agentDictionary.Delete(agent.idAgent);
+                                //Удаление агента
+                                agentDictionary.Delete(agent.idAgent);
+                            }
                         }
 
                         //Обновление графа
