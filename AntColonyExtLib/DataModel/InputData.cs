@@ -98,7 +98,7 @@ namespace AntColonyExtLib.DataModel
             _timer.TimeStatistic_Start("findHashTable");
             bool isInHashTable = this.hashTable.ContainsKey(hashWay);
             _timer.TimeStatistic_End("findHashTable");
-            _timer.Write(null, "findHashTable");
+            //_timer.Write(null, "findHashTable");
             if (!isInHashTable)
             {
                 this.hashTable.Add(hashWay, wayAgent);

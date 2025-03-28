@@ -11,9 +11,11 @@ namespace AntColonyExtLib.FileManager
 {
     public class FileManager_v2
     {
+        private object _monitor;
         private FilesDictionary _files { get; set; }
         public FileManager_v2() {
             _files = new FilesDictionary();
+            _monitor = new object();
         }
 
         public string CreateFileName(string fileName, string typeName = null)
@@ -74,6 +76,23 @@ namespace AntColonyExtLib.FileManager
                                     sw.WriteLine("-------------------------------------------------------------\n");
                                 }
                                 sw.WriteLine("all_time \t findWayTask_time \t senderTask_time \t");
+                                sw.Close();
+                            }
+                            return fileName;
+
+                        case "TimeStatistic_current":
+                            // Создание файла и запись в него
+
+                            using (StreamWriter sw = File.CreateText(fullFileName))
+                            {
+                                sw.WriteLine("Результаты сбора статистики по времени работы основных модулей:");
+                                if (comment != null)
+                                {
+                                    sw.WriteLine("Комментарии:");
+                                    sw.WriteLine(comment);
+                                    sw.WriteLine("-------------------------------------------------------------\n");
+                                }
+                                sw.WriteLine("Итерация \t all_time \t findWayTask_time \t senderTask_time \t");
                                 sw.Close();
                             }
                             return fileName;
@@ -162,6 +181,7 @@ namespace AntColonyExtLib.FileManager
         /// <param name="writeString">Записываемая строка</param>
         public void Write(string fileName, string writeString)
         {
+            //Monitor.Enter(this._monitor);
             string fullFileName = _files.Get(fileName);
             if (!string.IsNullOrEmpty(fullFileName))
             {
@@ -172,6 +192,7 @@ namespace AntColonyExtLib.FileManager
                     sw.Close();
                 }
             }
+            //Monitor.Exit(this._monitor);
         }
 
         public string CreateWriteString(int iterNum, string typeRes, ResultValueFunction functionRes)

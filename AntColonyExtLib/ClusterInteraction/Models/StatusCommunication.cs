@@ -14,10 +14,12 @@ namespace AntColonyExtLib.ClusterInteraction.Models
         public string Status { get; set; }
         public int timeDelayStatus {get; set;}
         public int threadAgentCount { get; set;}
-        public StatusCommunication(string status="", int timeDelay=0, int threadAgentCount = 0) {
+        public int PakegeSize { get; set; }
+        public StatusCommunication(string status="", int timeDelay=0, int threadAgentCount = 0, int PakegeSize = 1) {
             this.Status = status;
             this.timeDelayStatus = timeDelay;
             this.threadAgentCount = threadAgentCount;
+            this.PakegeSize = PakegeSize;
         }
 
         /// <summary>

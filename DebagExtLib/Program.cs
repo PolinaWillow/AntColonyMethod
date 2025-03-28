@@ -6,6 +6,7 @@ using AntColonyExtLib.DataModel.Statistic;
 using AntColonyExtLib.FileManager;
 using AntColonyExtLib.Processing;
 using DebagExtLib.DataFunctions;
+using DebagExtLib.Realizations;
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Text.Json;
@@ -32,80 +33,89 @@ namespace DebagExtLib
         {
             ParamsForTesting paramsForTesting = new ParamsForTesting();
 
-            while (paramsForTesting.timeDelay <= paramsForTesting.MAX_timeDelay)
+            while (paramsForTesting.countMultySender <= paramsForTesting.Max_countMultySender)  //Мультипакетная отправка
             {
-                while (paramsForTesting.threadAgentCount <= paramsForTesting.MAX_threadAgentCount)
+                while (paramsForTesting.timeDelay <= paramsForTesting.MAX_timeDelay) //Цикл по задержке таймера
                 {
-                    //Создаем файл для сохранения статистики по времени
-                    if (paramsForTesting.TimeStatisticFile)
+                    while (paramsForTesting.threadAgentCount <= paramsForTesting.MAX_threadAgentCount) //По количеству потоков агентов
                     {
-                        timer = new TimeStatistic("TimeStatistic");
-                        string title = "\nЗапуск от " + DateTime.Now.ToString() + "\nКоличество агентов: " + paramsForTesting.threadAgentCount + "\nЗадержка: " + paramsForTesting.timeDelay + "мс";
-                        timer.Write(title);
-                    }
-
-                    int startCount = 0;
-                    while (startCount < paramsForTesting.startCount_MAX)
-                    {
-                        //Создание тестового объекта данных
-                        MultiFunctionData inputData = new MultiFunctionData();
-                        //Клонируем исходный граф
-                        inputData.testInputData.cloneInputParams = (ParamsList)inputData.testInputData.inputParams.Clone();
-
-                        //Создание выходного файла с результатами
-                        if (paramsForTesting.OutPutDataFile)
+                        //Создаем файл для сохранения статистики по времени
+                        if (paramsForTesting.TimeStatisticFile)
                         {
-                            fileManager_v2.CreateFile(outputFile, inputData.testInputData, true);
+                            timer = new TimeStatistic("TimeStatistic");
+                            string title = "\nЗапуск от " + DateTime.Now.ToString() + "\nКоличество агентов: " + paramsForTesting.threadAgentCount + "\nЗадержка: " + paramsForTesting.timeDelay + "мс" + "\nРазер пакета: "+ paramsForTesting.countMultySender;
+                            timer.Write(title);
+                            
                         }
 
-                        //Запуск расчетного блока
-                        switch (paramsForTesting.startName)
+                        int startCount = 0;
+                        while (startCount < paramsForTesting.startCount_MAX)
                         {
-                            case "Async_v1": //Каждый раз новое соединение
-                                //await AsyncSenttlement_v1(fileName, inputData.testInputData, paramsForTesting);
-                                break;
-                            case "Async_v2": //Одно соединение на все отправки
-                                await AsyncSenttlement_v2(inputData.testInputData, paramsForTesting);
-                                break;
-                            case "Async_v3": //Одно соединение на все отправки
-                                await AsyncSenttlement_v3(inputData.testInputData, paramsForTesting);
-                                break;
-                            case "Async_v4": //Одно соединение на все отправки
-                                await AsyncSenttlement_v4(inputData.testInputData, paramsForTesting);
-                                break;
-                            case "Async_v5": //Отправление нескольких данных на кластер за раз с очередью типа BlockingCollection + Не пересоздаем агенты, а просто меняем ID
-                                await AsyncSenttlement_v5(inputData.testInputData, paramsForTesting);
-                                break;
-                            case "Async_v6": //!Отправление нескольких данных на кластер за раз с очередью типа QueueOnCluster с пересозданием агентов, берем все что есть из очереди и отправляем динамическим пакетом
-                                await AsyncSenttlement_v6(inputData.testInputData, paramsForTesting);
-                                break;
-                            case "Async_v7": //Отправление нескольких данных на кластер за раз с очередью типа QueueOnCluster без пересоздания агентов агентов
-                                await AsyncSenttlement_v7(inputData.testInputData, paramsForTesting);
-                                break;
-                            case "Sync":
-                                SyncSenttlement(inputData.testInputData, paramsForTesting);
-                                break;
-                            default:
-                                Console.WriteLine("Не выбрана фугкция для запуска!");
-                                return;
+                            //Создание тестового объекта данных
+                            MultiFunctionData inputData = new MultiFunctionData();
+                            //Клонируем исходный граф
+                            inputData.testInputData.cloneInputParams = (ParamsList)inputData.testInputData.inputParams.Clone();
+
+                            //Создание выходного файла с результатами
+                            if (paramsForTesting.OutPutDataFile)
+                            {
+                                fileManager_v2.CreateFile(outputFile, inputData.testInputData, true);
+                            }
+
+                            //Запуск расчетного блока
+                            switch (paramsForTesting.startName)
+                            {
+                                case "Async_v1": //Каждый раз новое соединение
+                                                 //await AsyncSenttlement_v1(fileName, inputData.testInputData, paramsForTesting);
+                                    break;
+                                case "Async_v2": //Одно соединение на все отправки
+                                    await AsyncSenttlement_v2(inputData.testInputData, paramsForTesting);
+                                    break;
+                                case "Async_v3": //Одно соединение на все отправки
+                                    await AsyncSenttlement_v3(inputData.testInputData, paramsForTesting);
+                                    break;
+                                case "Async_v4": //Одно соединение на все отправки
+                                    await AsyncSenttlement_v4(inputData.testInputData, paramsForTesting);
+                                    break;
+                                case "Async_v5": //Отправление нескольких данных на кластер за раз с очередью типа BlockingCollection + Не пересоздаем агенты, а просто меняем ID
+                                    await AsyncSenttlement_v5(inputData.testInputData, paramsForTesting);
+                                    break;
+                                case "Async_v6": //!Отправление нескольких данных на кластер за раз с очередью типа QueueOnCluster с пересозданием агентов, берем все что есть из очереди и отправляем динамическим пакетом
+                                    await AsyncSenttlement_v6(inputData.testInputData, paramsForTesting);
+                                    break;
+                                case "Async_v7": //Отправление нескольких данных на кластер за раз с очередью типа QueueOnCluster без пересоздания агентов агентов
+                                    //Async_Multi_QueueOnCluster_WithoutOvergue async_Multi_QueueOnCluster_WithoutOvergue = new Async_Multi_QueueOnCluster_WithoutOvergue(timer, maxFunction, MAX, fileManager_v2, outputFile);
+                                    //async_Multi_QueueOnCluster_WithoutOvergue.AsyncSenttlement_v7(inputData.testInputData, paramsForTesting);
+                                    await AsyncSenttlement_v7(inputData.testInputData, paramsForTesting);
+                                    break;
+                                case "Sync":
+                                    SyncSenttlement(inputData.testInputData, paramsForTesting);
+                                    break;
+                                default:
+                                    Console.WriteLine("Не выбрана фугкция для запуска!");
+                                    return;
+                            }
+
+                            //
+                            //SyncSenttlement(fileName, inputData.testInputData);
+
+                            //Очистка пямяти, сброс данных по статистики
+                            inputData.testInputData.hashTable.Clear(); //Очистка Hash
+
+                            if (paramsForTesting.TimeStatisticFile) timer.Clear();
+
+                            startCount++;
                         }
-                        
-                        //
-                        //SyncSenttlement(fileName, inputData.testInputData);
 
-                        //Очистка пямяти, сброс данных по статистики
-                        inputData.testInputData.hashTable.Clear(); //Очистка Hash
-
-                        if (paramsForTesting.TimeStatisticFile) timer.Clear();
-
-                        startCount++;
+                        paramsForTesting.threadAgentCount = paramsForTesting.threadAgentCount*2;
                     }
 
-                    paramsForTesting.threadAgentCount++;
+                    paramsForTesting.timeDelay = paramsForTesting.timeDelay + 100;
+                    paramsForTesting.threadAgentCount = paramsForTesting.START_threadAgentCount;
                 }
 
-                paramsForTesting.timeDelay = paramsForTesting.timeDelay + 100;
-                paramsForTesting.threadAgentCount = 1;
+                paramsForTesting.timeDelay = paramsForTesting.START_timeDelay;
+                paramsForTesting.countMultySender = paramsForTesting.countMultySender * 2;
             }
         }
 
@@ -176,13 +186,16 @@ namespace DebagExtLib
                                     //Calculation_v2 calculation = new Calculation_v2(agent.idAgent, wayAgent, inputData);
 
                                     queueOnCluster.AddToQueue(wayAgent, inputData, agent.idAgent);
+                                    
+                                    agentDictionary.Add(agent); //Добавляем агента в словарь
+                                    agent.UpdateID(); //Обновляем ID Агента
 
-                                    //countFindWay++;
-
-                                    //Добавляем агента в словарь
-                                    agentDictionary.Add(agent);
-
-                                    agent.UpdateID();
+                                    //Замеряем текущее время работы программы
+                                    if (paramsForTesting.TimeStatisticFile && countFindWay == paramsForTesting.iterationWriteTimerStatistic_finedWay)
+                                    {
+                                        timer.TimeStatistic_Interval(paramsForTesting.iterationWriteTimerStatistic_finedWay, "findWayTask");
+                                        paramsForTesting.iterationWriteTimerStatistic_finedWay += paramsForTesting.stepWriteTimerStatistic;
+                                    }
                                 }
                             }
 
@@ -191,8 +204,6 @@ namespace DebagExtLib
 
                     // Ожидаем завершения всех задач
                     Task.WaitAll(tasks.ToArray());
-
-                    //Console.WriteLine("-- " + countFindWay);
                     newAgentsList.Clear();
 
                 }
@@ -202,7 +213,10 @@ namespace DebagExtLib
 
                 queueOnCluster.End();
 
-                if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_End("findWayTask");
+                if (paramsForTesting.TimeStatisticFile) {
+                    timer.TimeStatistic_End("findWayTask");
+                    timer.TimeStatistic_Interval(countFindWay, "findWayTask");
+                }
             });
 
             Task SenderTask = Task.Run(() =>
@@ -216,10 +230,9 @@ namespace DebagExtLib
 
                 //Открываем соединение
                 DateTime createSocet_Start = DateTime.Now;
-                reqCalculate.Start(paramsForTesting.timeDelay, paramsForTesting.threadAgentCount);
+                reqCalculate.Start(paramsForTesting.timeDelay, paramsForTesting.threadAgentCount, paramsForTesting.countMultySender);
                 DateTime createSocet_End = DateTime.Now;
                 TimeSpan createSocet_time = createSocet_End - createSocet_Start;
-                //Console.WriteLine("Создание сокета: " + createSocet_time.TotalSeconds.ToString().Replace('.', ',')+"\n");
 
                 //Создаем экземпляр для множественного отправления данных
                 MultyCalculation multyCalculation_req = new MultyCalculation();
@@ -254,9 +267,6 @@ namespace DebagExtLib
 
                                 DateTime request_End = DateTime.Now;
                                 TimeSpan request_time = createSocet_End - createSocet_Start;
-                                //Console.WriteLine("Время отправления одного запроса и получение ответа: " + request_time.TotalSeconds.ToString().Replace('.', ','));
-
-                                //data.Print();
 
                                 //Получение данных из тела запроса
                                 MultyCalculation multyCalculation_res = new MultyCalculation(JsonSerializer.Deserialize<List<Calculation_v2>>(data.Body));
@@ -284,18 +294,15 @@ namespace DebagExtLib
                                         MAX = valFunction.valueFunction;
                                     }
 
-                                    //Записываем результат в файл
-                                    if (paramsForTesting.OutPutDataFile)
+                                    if (paramsForTesting.OutPutDataFile) //Записываем результат в файл
                                     {
                                         string dataToOutput = fileManager_v2.CreateWriteString(i, "max", maxFunction);
                                         fileManager_v2.Write(outputFile, dataToOutput);
                                     }
+                                    
+                                    agent.ChangePheromones(inputData); //Изменение феромонов
+                                    agentDictionary.Delete(agent.idAgent); //Удаление агента
 
-                                    //Изменение феромонов
-                                    agent.ChangePheromones(inputData);
-
-                                    //Удаление агента
-                                    agentDictionary.Delete(agent.idAgent);
                                 }
 
                                 //Обновление графа
@@ -309,9 +316,19 @@ namespace DebagExtLib
                             }
                         }
                         i++;
-                        countSendWay++;
+                        //countSendWay++;
 
-                        if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_End("senderTask");
+                        countSendWay++; //Подсчет отправленных путей
+                        //Замер текущего времени
+                        if (paramsForTesting.TimeStatisticFile)
+                        { 
+                            timer.TimeStatistic_End("senderTask"); 
+                            if(countSendWay == paramsForTesting.iterationWriteTimerStatistic)
+                            {
+                                timer.TimeStatistic_Interval(paramsForTesting.iterationWriteTimerStatistic, "senderTask");
+                                paramsForTesting.iterationWriteTimerStatistic += paramsForTesting.stepWriteTimerStatistic;
+                            }
+                        }
                     }
                     else
                     {
@@ -389,7 +406,10 @@ namespace DebagExtLib
                     i++;
                     if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_End("senderTask");
                 }
-
+                if (paramsForTesting.TimeStatisticFile)
+                {
+                    timer.TimeStatistic_Interval(countSendWay, "senderTask");
+                }
                 Console.WriteLine("countSendWay " + countSendWay);
                 reqCalculate.End();
                 Console.WriteLine("Задача SenderTask завершила работу");
@@ -406,6 +426,7 @@ namespace DebagExtLib
             {
                 timer.TimeStatistic_End("all");
                 timer.Write();
+                timer.Write(null, "Timestatistic_Interval");
             }
         }
 

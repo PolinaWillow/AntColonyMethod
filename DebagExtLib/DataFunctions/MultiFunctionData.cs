@@ -60,7 +60,7 @@ namespace DebagExtLib.DataFunctions
                 count++;
                 //Console.WriteLine(i);
             }
-            Console.WriteLine(count);
+            //Console.WriteLine(count);
 
             //Заполнениие основной информации
             testInputData.inputParams.countCombinationsV = count * count;

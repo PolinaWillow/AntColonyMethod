@@ -46,7 +46,7 @@ namespace AntColonyExtLib.ClusterInteraction.Processing
         /// <param name="timeDelay">Задержка на кластере в мс</param>
         /// <param name="threadAgentCount">Количиство потоков агентов</param>
         /// <returns></returns>
-        public bool Start(int timeDelay, int threadAgentCount)
+        public bool Start(int timeDelay, int threadAgentCount, int PakegCount=1)
         {
             if (!isConnected)
             {
@@ -57,7 +57,7 @@ namespace AntColonyExtLib.ClusterInteraction.Processing
                 this.isConnected = true;
 
                 //Отправляем команду "start";
-                StatusCommunication statusCommunication = new StatusCommunication("start", timeDelay, threadAgentCount);
+                StatusCommunication statusCommunication = new StatusCommunication("start", timeDelay, threadAgentCount, PakegCount);
                 try
                 {
                     this.request.AddData(statusCommunication.TypeOf(), JsonSerializer.Serialize(statusCommunication));
