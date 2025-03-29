@@ -25,7 +25,7 @@ namespace DebagExtLib
 
         static TimeStatistic timer;
 
-        static FileManager_v2 fileManager_v2 =  new FileManager_v2();
+        static FileManager_v2 fileManager_v2 = new FileManager_v2();
 
         static string outputFile = "OutPutData";
 
@@ -43,9 +43,9 @@ namespace DebagExtLib
                         if (paramsForTesting.TimeStatisticFile)
                         {
                             timer = new TimeStatistic("TimeStatistic");
-                            string title = "\nЗапуск от " + DateTime.Now.ToString() + "\nКоличество агентов: " + paramsForTesting.threadAgentCount + "\nЗадержка: " + paramsForTesting.timeDelay + "мс" + "\nРазер пакета: "+ paramsForTesting.countMultySender;
+                            string title = "\nЗапуск от " + DateTime.Now.ToString() + "\nКоличество агентов: " + paramsForTesting.threadAgentCount + "\nЗадержка: " + paramsForTesting.timeDelay + "мс" + "\nРазер пакета: " + paramsForTesting.countMultySender;
                             timer.Write(title);
-                            
+
                         }
 
                         int startCount = 0;
@@ -107,7 +107,7 @@ namespace DebagExtLib
                             startCount++;
                         }
 
-                        paramsForTesting.threadAgentCount = paramsForTesting.threadAgentCount*2;
+                        paramsForTesting.threadAgentCount = paramsForTesting.threadAgentCount * 2;
                     }
 
                     paramsForTesting.timeDelay = paramsForTesting.timeDelay + 100;
@@ -168,7 +168,8 @@ namespace DebagExtLib
                     foreach (string agentID in newAgentsList)
                     {
                         //Console.WriteLine("agentID = " + agentID);
-                        tasks.Add(Task.Factory.StartNew(() => {
+                        tasks.Add(Task.Factory.StartNew(() =>
+                        {
                             //Если просмотрены все пути, то выход из задачи
                             Interlocked.Increment(ref countFindWay);//++;
 
@@ -186,7 +187,7 @@ namespace DebagExtLib
                                     //Calculation_v2 calculation = new Calculation_v2(agent.idAgent, wayAgent, inputData);
 
                                     queueOnCluster.AddToQueue(wayAgent, inputData, agent.idAgent);
-                                    
+
                                     agentDictionary.Add(agent); //Добавляем агента в словарь
                                     agent.UpdateID(); //Обновляем ID Агента
 
@@ -213,7 +214,8 @@ namespace DebagExtLib
 
                 queueOnCluster.End();
 
-                if (paramsForTesting.TimeStatisticFile) {
+                if (paramsForTesting.TimeStatisticFile)
+                {
                     timer.TimeStatistic_End("findWayTask");
                     timer.TimeStatistic_Interval(countFindWay, "findWayTask");
                 }
@@ -275,33 +277,35 @@ namespace DebagExtLib
                                 {
                                     //Передача результатов расчета агенту
                                     Agent agent = agentDictionary.Get(item.idAgent);
-                                    if (agent != null) agent.funcValue = item.result;
-
-
-                                    int length = item.Way_For_Send.Length;
-                                    string[] valuesParam = new string[length];
-                                    for (int j = 0; j < length; j++)
+                                    if (agent != null)
                                     {
-                                        valuesParam[j] = item.Way_For_Send[j].SendValue;
-                                    }
+                                        agent.funcValue = item.result;
 
-                                    ResultValueFunction valFunction = new ResultValueFunction();
-                                    valFunction.Set(item.result, valuesParam);
+                                        int length = item.Way_For_Send.Length;
+                                        string[] valuesParam = new string[length];
+                                        for (int j = 0; j < length; j++)
+                                        {
+                                            valuesParam[j] = item.Way_For_Send[j].SendValue;
+                                        }
 
-                                    if (valFunction.valueFunction >= MAX)
-                                    {
-                                        maxFunction = valFunction;
-                                        MAX = valFunction.valueFunction;
-                                    }
+                                        ResultValueFunction valFunction = new ResultValueFunction();
+                                        valFunction.Set(item.result, valuesParam);
 
-                                    if (paramsForTesting.OutPutDataFile) //Записываем результат в файл
-                                    {
-                                        string dataToOutput = fileManager_v2.CreateWriteString(i, "max", maxFunction);
-                                        fileManager_v2.Write(outputFile, dataToOutput);
+                                        if (valFunction.valueFunction >= MAX)
+                                        {
+                                            maxFunction = valFunction;
+                                            MAX = valFunction.valueFunction;
+                                        }
+
+                                        if (paramsForTesting.OutPutDataFile) //Записываем результат в файл
+                                        {
+                                            string dataToOutput = fileManager_v2.CreateWriteString(i, "max", maxFunction);
+                                            fileManager_v2.Write(outputFile, dataToOutput);
+                                        }
+
+                                        agent.ChangePheromones(inputData); //Изменение феромонов
+                                        agentDictionary.Delete(agent.idAgent); //Удаление агента
                                     }
-                                    
-                                    agent.ChangePheromones(inputData); //Изменение феромонов
-                                    agentDictionary.Delete(agent.idAgent); //Удаление агента
 
                                 }
 
@@ -321,9 +325,9 @@ namespace DebagExtLib
                         countSendWay++; //Подсчет отправленных путей
                         //Замер текущего времени
                         if (paramsForTesting.TimeStatisticFile)
-                        { 
-                            timer.TimeStatistic_End("senderTask"); 
-                            if(countSendWay == paramsForTesting.iterationWriteTimerStatistic)
+                        {
+                            timer.TimeStatistic_End("senderTask");
+                            if (countSendWay == paramsForTesting.iterationWriteTimerStatistic)
                             {
                                 timer.TimeStatistic_Interval(paramsForTesting.iterationWriteTimerStatistic, "senderTask");
                                 paramsForTesting.iterationWriteTimerStatistic += paramsForTesting.stepWriteTimerStatistic;
@@ -359,38 +363,37 @@ namespace DebagExtLib
                         foreach (Calculation_v2 item in multyCalculation_res.calculationList)
                         {
                             //Передача результатов расчета агенту
-                            Agent agent = agentGroup.FindAgent(item.idAgent);
-                            if (agent != null) agent.funcValue = item.result;
+                            Agent agent = agentDictionary.Get(item.idAgent);
 
-
-                            int length = item.Way_For_Send.Length;
-                            string[] valuesParam = new string[length];
-                            for (int j = 0; j < length; j++)
+                            if (agent != null)
                             {
-                                valuesParam[j] = item.Way_For_Send[j].SendValue;
+                                agent.funcValue = item.result;
+
+                                int length = item.Way_For_Send.Length;
+                                string[] valuesParam = new string[length];
+                                for (int j = 0; j < length; j++)
+                                {
+                                    valuesParam[j] = item.Way_For_Send[j].SendValue;
+                                }
+
+                                ResultValueFunction valFunction = new ResultValueFunction();
+                                valFunction.Set(item.result, valuesParam);
+
+                                if (valFunction.valueFunction >= MAX)
+                                {
+                                    maxFunction = valFunction;
+                                    MAX = valFunction.valueFunction;
+                                }
+
+                                if (paramsForTesting.OutPutDataFile) //Записываем результат в файл
+                                {
+                                    string dataToOutput = fileManager_v2.CreateWriteString(i, "max", maxFunction);
+                                    fileManager_v2.Write(outputFile, dataToOutput);
+                                }
+
+                                agent.ChangePheromones(inputData); //Изменение феромонов
+                                agentDictionary.Delete(agent.idAgent); //Удаление агента
                             }
-
-                            ResultValueFunction valFunction = new ResultValueFunction();
-                            valFunction.Set(item.result, valuesParam);
-
-                            if (valFunction.valueFunction >= MAX)
-                            {
-                                maxFunction = valFunction;
-                                MAX = valFunction.valueFunction;
-                            }
-
-                            //Записываем результат в файл
-                            if (paramsForTesting.OutPutDataFile)
-                            {
-                                string dataToOutput = fileManager_v2.CreateWriteString(i, "max", maxFunction);
-                                fileManager_v2.Write(outputFile, dataToOutput);
-                            }
-
-                            //Изменение феромонов
-                            agent.ChangePheromones(inputData);
-
-                            //Удаление агента
-                            agentDictionary.Delete(agent.idAgent);
                         }
 
                         //Обновление графа
@@ -398,18 +401,14 @@ namespace DebagExtLib
                         //Очистка запроса
                         multyCalculation_req.Clear();
                     }
-                    catch (Exception e)
-                    {
-                        Console.WriteLine(e + "Ошибка связи с кластером при отправлении Calculation");
-                    }
+                    catch (Exception e){Console.WriteLine(e + "Ошибка связи с кластером при отправлении Calculation");}
 
                     i++;
                     if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_End("senderTask");
                 }
-                if (paramsForTesting.TimeStatisticFile)
-                {
-                    timer.TimeStatistic_Interval(countSendWay, "senderTask");
-                }
+
+                if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Interval(countSendWay, "senderTask");
+                
                 Console.WriteLine("countSendWay " + countSendWay);
                 reqCalculate.End();
                 Console.WriteLine("Задача SenderTask завершила работу");
@@ -419,7 +418,6 @@ namespace DebagExtLib
             //Ожидаем выполнение всех задач
             await Task.WhenAll(FindWayTask, SenderTask);
             Console.WriteLine("Задачи выполнены");
-
             Console.WriteLine("End senttlement");
 
             if (paramsForTesting.TimeStatisticFile)
@@ -474,7 +472,8 @@ namespace DebagExtLib
                     foreach (string agentID in newAgentsList)
                     {
                         //Console.WriteLine("agentID = " + agentID);
-                        tasks.Add(Task.Factory.StartNew(() => {
+                        tasks.Add(Task.Factory.StartNew(() =>
+                        {
                             //Если просмотрены все пути, то выход из задачи
                             Interlocked.Increment(ref countFindWay);//++;
 
@@ -560,7 +559,7 @@ namespace DebagExtLib
 
                             DateTime request_End = DateTime.Now;
                             TimeSpan request_time = createSocet_End - createSocet_Start;
-                            
+
                             //Получение данных из тела запроса
                             MultyCalculation multyCalculation_res = new MultyCalculation(JsonSerializer.Deserialize<List<Calculation_v2>>(data.Body));
 
@@ -687,7 +686,8 @@ namespace DebagExtLib
                     List<Task> tasks = new List<Task>();
                     foreach (string agentID in newAgentsList)
                     {
-                        tasks.Add(Task.Factory.StartNew(() => {
+                        tasks.Add(Task.Factory.StartNew(() =>
+                        {
                             //Если просмотрены все пути, то выход из задачи
                             Interlocked.Increment(ref countFindWay);//++;
 
@@ -971,7 +971,8 @@ namespace DebagExtLib
                     foreach (string agentID in newAgentsList)
                     {
                         //Console.WriteLine("agentID = " + agentID);
-                        tasks.Add(Task.Factory.StartNew(() => {
+                        tasks.Add(Task.Factory.StartNew(() =>
+                        {
                             //Если просмотрены все пути, то выход из задачи
                             Interlocked.Increment(ref countFindWay);//++;
 
@@ -987,7 +988,7 @@ namespace DebagExtLib
 
                                     //Отправление пути в очередь на кластер
                                     //Calculation_v2 calculation = new Calculation_v2(agent.idAgent, wayAgent, inputData);
-                                    
+
                                     queueOnCluster.AddToQueue(wayAgent, inputData, agent.idAgent);
 
                                     //countFindWay++;
@@ -1206,7 +1207,7 @@ namespace DebagExtLib
 
             //Ожидаем выполнение всех задач
             await Task.WhenAll(FindWayTask, SenderTask);
-            Console.WriteLine("Задачи выполнены");  
+            Console.WriteLine("Задачи выполнены");
 
             Console.WriteLine("End senttlement");
 
@@ -1263,7 +1264,8 @@ namespace DebagExtLib
                     foreach (string agentID in newAgentsList)
                     {
                         //Console.WriteLine("agentID = " + agentID);
-                        tasks.Add(Task.Factory.StartNew(() => {
+                        tasks.Add(Task.Factory.StartNew(() =>
+                        {
                             //Если просмотрены все пути, то выход из задачи
                             Interlocked.Increment(ref countFindWay);//++;
 
@@ -1332,7 +1334,7 @@ namespace DebagExtLib
                     if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Start("senderTask");
 
                     //Добавляем данные для отправлени
-                    if(multyCalculation_req.Length() < paramsForTesting.countMultySender-1)
+                    if (multyCalculation_req.Length() < paramsForTesting.countMultySender - 1)
                     {
                         multyCalculation_req.Add(calculation);
                     }
@@ -1357,7 +1359,7 @@ namespace DebagExtLib
 
                             //Получение данных из тела запроса
                             MultyCalculation multyCalculation_res = new MultyCalculation(JsonSerializer.Deserialize<List<Calculation_v2>>(data.Body));
-                                                                  
+
                             foreach (Calculation_v2 item in multyCalculation_res.calculationList)
                             {
                                 //Передача результатов расчета агенту
@@ -1406,7 +1408,7 @@ namespace DebagExtLib
                         }
                     }
 
-                   
+
                     i++;
                     if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_End("senderTask");
                 }
@@ -1519,7 +1521,7 @@ namespace DebagExtLib
         {
             int countFindWay = 0; //Количество найденных путей
             int countAgent = 0; //Количество пройденных агентов
-            
+
             if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Start("all");
 
             //Создаем очередь и группу агентов
@@ -1552,7 +1554,8 @@ namespace DebagExtLib
                     foreach (string agentID in newAgentsList)
                     {
                         //Console.WriteLine("agentID = " + agentID);
-                        tasks.Add(Task.Factory.StartNew(() => {
+                        tasks.Add(Task.Factory.StartNew(() =>
+                        {
                             //Если просмотрены все пути, то выход из задачи
                             Interlocked.Increment(ref countFindWay);//++;
 
@@ -1608,7 +1611,7 @@ namespace DebagExtLib
                 TimeSpan createSocet_time = createSocet_End - createSocet_Start;
                 //Console.WriteLine("Создание сокета: " + createSocet_time.TotalSeconds.ToString().Replace('.', ',')+"\n");
 
-                
+
 
                 foreach (Calculation calculation in queue.GetConsumingEnumerable())
                 {//Получаем данные из очереди
@@ -1620,7 +1623,7 @@ namespace DebagExtLib
                     {
                         //Отправление данных на кластер
                         DateTime request_Start = DateTime.Now;
-                    
+
                         reqCalculate.request.AddData(calculation.TypeOf(), calculation.JSON_Data);
                         Sender data = reqCalculate.Post();
 
@@ -1736,7 +1739,7 @@ namespace DebagExtLib
         //        Console.WriteLine("Отправлен запрос на начало сессии");
         //        reqCommunication.request.AddData(statusCommunication.TypeOf(), JsonSerializer.Serialize(statusCommunication));
         //        reqCommunication.Post();
-                
+
         //    }
         //    catch (Exception e)
         //    {
@@ -1746,7 +1749,7 @@ namespace DebagExtLib
         //    //Создаем очередь и группу агентов
         //    QueueOnCluster queueOnCluster = new QueueOnCluster();
         //    AgentGroup agentGroup = new AgentGroup();
-            
+
         //    //Определение путей агентов (Параллельный поиск)
         //    Task FindWayTask = Task.Run(() =>
         //    {
@@ -1811,7 +1814,7 @@ namespace DebagExtLib
 
         //    Task SenderTask = Task.Run(() =>
         //    {
-               
+
         //        int countSendWay = 0; //Количество найденных путей
         //        int i = 0;
         //        while (countSendWay < inputData.inputParams.countCombinationsV)
@@ -1893,7 +1896,7 @@ namespace DebagExtLib
 
         //        Console.WriteLine("countSendWay" + countSendWay);
         //        Console.WriteLine("Задача SenderTask завершила работу");
-                
+
         //    });
 
 
@@ -1929,7 +1932,7 @@ namespace DebagExtLib
         //    timer.Write();
         //}
 
-        
+
         public static int SyncSenttlement(InputData inputData, ParamsForTesting paramsForTesting)
         {
             string fileDataName = "OutputData";
@@ -1939,7 +1942,7 @@ namespace DebagExtLib
 
             FileManager fileManager = new FileManager(); //Менеджер файлов для занесения результатов
             string outputFileName = fileManager.CreateOutputFile(inputData, fileDataName); //Создание файла с выходными результатами
-            
+
 
             //Отправление кластеру запрос на подтверждение
             Request reqCommunication = new Request();
