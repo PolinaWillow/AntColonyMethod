@@ -2,6 +2,7 @@
 using AntColonyExtLib.ClusterInteraction.Models.Calculation;
 using AntColonyExtLib.ClusterInteraction.Processing;
 using AntColonyExtLib.DataModel;
+using AntColonyExtLib.DataModel.Numerators;
 using AntColonyExtLib.DataModel.Statistic;
 using AntColonyExtLib.FileManager;
 using AntColonyExtLib.Processing;
@@ -128,8 +129,10 @@ namespace DebagExtLib
         /// <returns></returns>
         public static async Task AsyncSenttlement_v7(InputData inputData, ParamsForTesting paramsForTesting)
         {
-            int countFindWay = 0; //Количество найденных путей
-            int countAgent = 0; //Количество пройденных агентов
+            //int countFindWay = 0; //Количество найденных путей
+            //int countAgent = 0; //Количество пройденных агентов
+
+            //Counters counters = new Counters();
 
             if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Start("all");
 
@@ -154,16 +157,11 @@ namespace DebagExtLib
                     string id = agentGroup.AddNewAgent();
                 }
 
-                while (countFindWay < inputData.inputParams.countCombinationsV)
+                while (countFindWay < (inputData.inputParams.countCombinationsV))
                 {
-                    foreach (var item in agentGroup.Agents)
-                    {
-                        newAgentsList.Add(item.idAgent);
-                    }
+                    foreach (var item in agentGroup.Agents) newAgentsList.Add(item.idAgent);
                     i++;
-                    //Console.WriteLine("task1: countFindWay = " + countFindWay);
 
-                    //Console.WriteLine("i = "+i);
                     List<Task> tasks = new List<Task>();
                     foreach (string agentID in newAgentsList)
                     {
@@ -171,7 +169,7 @@ namespace DebagExtLib
                         tasks.Add(Task.Factory.StartNew(() =>
                         {
                             //Если просмотрены все пути, то выход из задачи
-                            Interlocked.Increment(ref countFindWay);//++;
+                            int count = Interlocked.Increment(ref countFindWay);//++;
 
                             //Console.WriteLine("agentID = " + agentID+ "\t countFindWay = "+ countFindWay);
                             if (countFindWay <= inputData.inputParams.countCombinationsV)
@@ -191,15 +189,16 @@ namespace DebagExtLib
                                     agentDictionary.Add(agent); //Добавляем агента в словарь
                                     agent.UpdateID(); //Обновляем ID Агента
 
+                                    //int countFindWay = counters.Add_FindWay();
+
                                     //Замеряем текущее время работы программы
-                                    if (paramsForTesting.TimeStatisticFile && countFindWay == paramsForTesting.iterationWriteTimerStatistic_finedWay)
+                                    if (paramsForTesting.TimeStatisticFile && count == paramsForTesting.iterationWriteTimerStatistic_finedWay)
                                     {
                                         timer.TimeStatistic_Interval(paramsForTesting.iterationWriteTimerStatistic_finedWay, "findWayTask");
                                         paramsForTesting.iterationWriteTimerStatistic_finedWay += paramsForTesting.stepWriteTimerStatistic;
                                     }
                                 }
                             }
-
                         }));
                     }
 
@@ -217,7 +216,7 @@ namespace DebagExtLib
                 if (paramsForTesting.TimeStatisticFile)
                 {
                     timer.TimeStatistic_End("findWayTask");
-                    timer.TimeStatistic_Interval(countFindWay, "findWayTask");
+                    timer.TimeStatistic_Interval(inputData.inputParams.countCombinationsV, "findWayTask");
                 }
             });
 
@@ -243,6 +242,7 @@ namespace DebagExtLib
                 {
                     //Получение пути из очереди (из очереди удалили)
                     Calculation_v2 calculation = queueOnCluster.GetFromQueue();
+                    //int countSendWay = counters.Add_SendWay();
 
                     //Пока нет данных для отправки (очередь пуста)                         //Ожидание освобождения сокета для подключения
                     if (calculation != null)
@@ -320,9 +320,9 @@ namespace DebagExtLib
                             }
                         }
                         i++;
-                        //countSendWay++;
+                        countSendWay++;
 
-                        countSendWay++; //Подсчет отправленных путей
+                        //countSendWay++; //Подсчет отправленных путей
                         //Замер текущего времени
                         if (paramsForTesting.TimeStatisticFile)
                         {
@@ -407,9 +407,11 @@ namespace DebagExtLib
                     if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_End("senderTask");
                 }
 
+
+
                 if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Interval(countSendWay, "senderTask");
                 
-                Console.WriteLine("countSendWay " + countSendWay);
+                Console.WriteLine("countSendWay " +countSendWay);
                 reqCalculate.End();
                 Console.WriteLine("Задача SenderTask завершила работу");
             });
