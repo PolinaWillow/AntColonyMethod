@@ -73,7 +73,7 @@ namespace AntColonyExtLib.DataModel
         /// </summary>
         /// <param name="inputData">Структура входных данных</param>
         /// <returns></returns>
-        public int[] FindAgentWay(InputData inputData, bool hashTableStatus = true)
+        public int[] FindAgentWay(InputData inputData, bool hashTableStatus = true, HashStatistic hashStatistic=null, int iteration=0)
         {
             int[] wayAgent; //Искомый путь агента
 
@@ -98,6 +98,9 @@ namespace AntColonyExtLib.DataModel
                     hashWay = hash.GetHash(newWayAgent);
                     //hash.AddNewHash(hashWay, wayAgent, inputData);
                     Array.Copy(newWayAgent, 0, wayAgent, 0, inputData.inputParams.Params.Count());
+
+                    //Считаем сколько раз было непопадание по хэш
+                    hashStatistic.Count(iteration);
                 }
 
                 //Обновление насыщения вершины

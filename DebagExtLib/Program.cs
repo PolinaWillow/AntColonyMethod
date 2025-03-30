@@ -52,10 +52,15 @@ namespace DebagExtLib
                         int startCount = 0;
                         while (startCount < paramsForTesting.startCount_MAX)
                         {
+                            paramsForTesting.iterationWriteTimerStatistic = paramsForTesting.START_WriteTimerStatistic;
+                            paramsForTesting.iterationWriteTimerStatistic = paramsForTesting.START_WriteTimerStatistic;
+
                             //Создание тестового объекта данных
                             MultiFunctionData inputData = new MultiFunctionData();
                             //Клонируем исходный граф
                             inputData.testInputData.cloneInputParams = (ParamsList)inputData.testInputData.inputParams.Clone();
+
+                            HashStatistic hashStatistic = new HashStatistic(paramsForTesting.START_WriteTimerStatistic, inputData.testInputData.inputParams.countCombinationsV);
 
                             //Создание выходного файла с результатами
                             if (paramsForTesting.OutPutDataFile)
@@ -87,7 +92,7 @@ namespace DebagExtLib
                                 case "Async_v7": //Отправление нескольких данных на кластер за раз с очередью типа QueueOnCluster без пересоздания агентов агентов
                                     //Async_Multi_QueueOnCluster_WithoutOvergue async_Multi_QueueOnCluster_WithoutOvergue = new Async_Multi_QueueOnCluster_WithoutOvergue(timer, maxFunction, MAX, fileManager_v2, outputFile);
                                     //async_Multi_QueueOnCluster_WithoutOvergue.AsyncSenttlement_v7(inputData.testInputData, paramsForTesting);
-                                    await AsyncSenttlement_v7(inputData.testInputData, paramsForTesting);
+                                    await AsyncSenttlement_v7(inputData.testInputData, paramsForTesting, hashStatistic);
                                     break;
                                 case "Sync":
                                     SyncSenttlement(inputData.testInputData, paramsForTesting);
@@ -102,7 +107,6 @@ namespace DebagExtLib
 
                             //Очистка пямяти, сброс данных по статистики
                             inputData.testInputData.hashTable.Clear(); //Очистка Hash
-
                             if (paramsForTesting.TimeStatisticFile) timer.Clear();
 
                             startCount++;
@@ -127,7 +131,7 @@ namespace DebagExtLib
         /// <param name="inputData"></param>
         /// <param name="paramsForTesting"></param>
         /// <returns></returns>
-        public static async Task AsyncSenttlement_v7(InputData inputData, ParamsForTesting paramsForTesting)
+        public static async Task AsyncSenttlement_v7(InputData inputData, ParamsForTesting paramsForTesting, HashStatistic hashStatistic)
         {
             //int countFindWay = 0; //Количество найденных путей
             //int countAgent = 0; //Количество пройденных агентов
@@ -178,7 +182,7 @@ namespace DebagExtLib
                                 if (agent != null)
                                 {
                                     //Определение пути агента
-                                    int[] wayAgent = agent.FindAgentWay(inputData, paramsForTesting.hashTableStatus);
+                                    int[] wayAgent = agent.FindAgentWay(inputData, paramsForTesting.hashTableStatus, hashStatistic, count);
                                     agentGroup.AddWayAgent(wayAgent, agent.idAgent);
 
                                     //Отправление пути в очередь на кластер
@@ -213,11 +217,15 @@ namespace DebagExtLib
 
                 queueOnCluster.End();
 
+                hashStatistic.Print();
+
                 if (paramsForTesting.TimeStatisticFile)
                 {
                     timer.TimeStatistic_End("findWayTask");
                     timer.TimeStatistic_Interval(inputData.inputParams.countCombinationsV, "findWayTask");
                 }
+
+                
             });
 
             Task SenderTask = Task.Run(() =>

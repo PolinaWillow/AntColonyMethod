@@ -107,7 +107,7 @@ namespace AntColonyExtLib.DataModel
 
             }
             else
-            {
+            { 
                 Monitor.Exit(_monitor);
                 return -1;
             }
