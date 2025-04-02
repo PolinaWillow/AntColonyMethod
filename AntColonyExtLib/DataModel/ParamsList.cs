@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
@@ -20,6 +21,8 @@ namespace AntColonyExtLib.DataModel
         /// </summary>
         public int countCombinationsV { get; set; }
 
+        public BigInteger countCombinationsV_Big { get; set; }
+
         /// <summary>
         /// Флаг, позволяющий определить все ли комбинации проверены
         /// </summary>
@@ -29,6 +32,7 @@ namespace AntColonyExtLib.DataModel
         {
             Params = new List<Param>();
             countCombinationsV = 0;
+            countCombinationsV_Big = 0;
             isAllCombinations = false;
         }
 
@@ -41,6 +45,7 @@ namespace AntColonyExtLib.DataModel
         {
             ParamsList objClone = new ParamsList();
             objClone.countCombinationsV = this.countCombinationsV;
+            objClone.countCombinationsV_Big = this.countCombinationsV_Big;
             objClone.Params = new List<Param>();
             foreach (Param param in this.Params)
             {

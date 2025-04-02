@@ -46,7 +46,7 @@ namespace AntColonyExtLib.ClusterInteraction.Processing
         /// <param name="timeDelay">Задержка на кластере в мс</param>
         /// <param name="threadAgentCount">Количиство потоков агентов</param>
         /// <returns></returns>
-        public bool Start(int timeDelay, int threadAgentCount, int PakegCount=1)
+        public bool Start(int timeDelay=0, int threadAgentCount = 1, int PakegCount=1)
         {
             if (!isConnected)
             {
@@ -111,15 +111,43 @@ namespace AntColonyExtLib.ClusterInteraction.Processing
             return false;
         }
 
+        /// <summary>
+        /// Получение информации с вычислительного кластера для формирования графа
+        /// </summary>
+        public Sender GetData()
+        {
+            if (!this.isConnected) throw new InvalidOperationException("Соединение не установлено");
+
+            this.request.AddData("GetGraphInfo", ""); //Заполняем запрос
+
+            string jsonData = JsonSerializer.Serialize(this.request); //Запрос и отправляем его по сокету
+            byte[] dataBytes = Encoding.Default.GetBytes(jsonData); //Представление строки в виде байтов
+            this.socket.Send(dataBytes); //Отправка данных
+           
+            //Получение результата расчетов кластера
+            byte[] buffer = new byte[1024 * 4];
+            int readBytes = socket.Receive(buffer);
+            MemoryStream memoryStream = new MemoryStream();
+
+            while (readBytes > 0)
+            {
+                memoryStream.Write(buffer, 0, readBytes);
+                if (socket.Available > 0) readBytes = socket.Receive(buffer);
+                else break;
+            }
+            byte[] totalBytes = memoryStream.ToArray();
+            memoryStream.Close();
+
+            string readData = Encoding.Default.GetString(totalBytes);
+            this.response = JsonSerializer.Deserialize<Sender>(readData);
+
+            return this.response;
+        }
+
         public Sender Post()
         {
-            //this.request.Print();
-
-            if (!this.isConnected)
-            {
-                throw new InvalidOperationException("Соединение не установлено");
-            }
-
+            if (!this.isConnected) throw new InvalidOperationException("Соединение не установлено");
+            
             //Формирование строки Json для отправки данных
             string jsonData = JsonSerializer.Serialize(this.request);
 
