@@ -125,7 +125,7 @@ namespace AntColonyExtLib.ClusterInteraction.Processing
             this.socket.Send(dataBytes); //Отправка данных
            
             //Получение результата расчетов кластера
-            byte[] buffer = new byte[1024 * 4];
+            byte[] buffer = new byte[1024 * 8];
             int readBytes = socket.Receive(buffer);
             MemoryStream memoryStream = new MemoryStream();
 
