@@ -53,7 +53,7 @@ namespace DebagExtLib
                         while (startCount < paramsForTesting.startCount_MAX)
                         {
                             paramsForTesting.iterationWriteTimerStatistic = paramsForTesting.START_WriteTimerStatistic;
-                            paramsForTesting.iterationWriteTimerStatistic = paramsForTesting.START_WriteTimerStatistic;
+                            paramsForTesting.iterationWriteTimerStatistic_finedWay = paramsForTesting.START_WriteTimerStatistic;
 
                             //Создание тестового объекта данных
                             MultiFunctionData inputData = new MultiFunctionData();
