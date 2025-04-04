@@ -87,7 +87,7 @@ namespace DebagExtLib
                                     await AsyncSenttlement_v5(inputData.testInputData, paramsForTesting);
                                     break;
                                 case "Async_v6": //!Отправление нескольких данных на кластер за раз с очередью типа QueueOnCluster с пересозданием агентов, берем все что есть из очереди и отправляем динамическим пакетом
-                                    await AsyncSenttlement_v6(inputData.testInputData, paramsForTesting);
+                                    await AsyncSenttlement_v6(inputData.testInputData, paramsForTesting, hashStatistic);
                                     break;
                                 case "Async_v7": //Отправление нескольких данных на кластер за раз с очередью типа QueueOnCluster без пересоздания агентов агентов
                                     //Async_Multi_QueueOnCluster_WithoutOvergue async_Multi_QueueOnCluster_WithoutOvergue = new Async_Multi_QueueOnCluster_WithoutOvergue(timer, maxFunction, MAX, fileManager_v2, outputFile);
@@ -445,17 +445,17 @@ namespace DebagExtLib
         /// <param name="inputData"></param>
         /// <param name="paramsForTesting"></param>
         /// <returns></returns>
-        public static async Task AsyncSenttlement_v6(InputData inputData, ParamsForTesting paramsForTesting)
+        public static async Task AsyncSenttlement_v6(InputData inputData, ParamsForTesting paramsForTesting, HashStatistic hashStatistic)
         {
-            int countFindWay = 0; //Количество найденных путей
-            int countAgent = 0; //Количество пройденных агентов
+            //int countFindWay = 0; //Количество найденных путей
+            //int countAgent = 0; //Количество пройденных агентов
 
             if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Start("all");
 
             //Создаем очередь и группу агентов
             QueueOnCluster queueOnCluster = new QueueOnCluster();
             AgentGroup agentGroup = new AgentGroup();
-
+            
             //Определение путей агентов (Параллельный поиск)
             Task FindWayTask = Task.Run(() =>
             {
@@ -485,7 +485,7 @@ namespace DebagExtLib
                         tasks.Add(Task.Factory.StartNew(() =>
                         {
                             //Если просмотрены все пути, то выход из задачи
-                            Interlocked.Increment(ref countFindWay);//++;
+                            int count = Interlocked.Increment(ref countFindWay);//++;
 
                             //Console.WriteLine("agentID = " + agentID+ "\t countFindWay = "+ countFindWay);
                             if (countFindWay <= inputData.inputParams.countCombinationsV)
@@ -503,6 +503,12 @@ namespace DebagExtLib
                                     queueOnCluster.AddToQueue(wayAgent, inputData, agent.idAgent);
 
                                     //countFindWay++;
+
+                                    if (paramsForTesting.TimeStatisticFile && count == paramsForTesting.iterationWriteTimerStatistic_finedWay)
+                                    {
+                                        timer.TimeStatistic_Interval(paramsForTesting.iterationWriteTimerStatistic_finedWay, "findWayTask");
+                                        paramsForTesting.iterationWriteTimerStatistic_finedWay += paramsForTesting.stepWriteTimerStatistic;
+                                    }
                                 }
                             }
 
@@ -521,8 +527,13 @@ namespace DebagExtLib
                 Console.WriteLine("Задача FindWayTask завершила работу");
 
                 queueOnCluster.End();
+                hashStatistic.Print();
 
-                if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_End("findWayTask");
+                if (paramsForTesting.TimeStatisticFile)
+                {
+                    timer.TimeStatistic_End("findWayTask");
+                    timer.TimeStatistic_Interval(inputData.inputParams.countCombinationsV, "findWayTask");
+                }
             });
 
             Task SenderTask = Task.Run(() =>
@@ -613,6 +624,7 @@ namespace DebagExtLib
                             //Обновление графа
                             inputData.UpdateParams();
                             //Очистка запроса
+                            countSendWay += multyCalculation_res.Length();
                             multyCalculation_req.Clear();
                         }
                         catch (Exception e)
@@ -621,15 +633,25 @@ namespace DebagExtLib
                         }
 
                         i++;
-                        countSendWay++;
 
-                        if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_End("senderTask");
+
+                        if (paramsForTesting.TimeStatisticFile)
+                        {
+                            timer.TimeStatistic_End("senderTask");
+                            if (countSendWay == paramsForTesting.iterationWriteTimerStatistic)
+                            {
+                                timer.TimeStatistic_Interval(paramsForTesting.iterationWriteTimerStatistic, "senderTask");
+                                paramsForTesting.iterationWriteTimerStatistic += paramsForTesting.stepWriteTimerStatistic;
+                            }
+                        }
                     }
                     else
                     {
                         Task.Delay(1000);
                     }
                 }
+
+                if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Interval(countSendWay, "senderTask");
 
                 Console.WriteLine("countSendWay " + countSendWay);
                 reqCalculate.End();
@@ -640,13 +662,13 @@ namespace DebagExtLib
             //Ожидаем выполнение всех задач
             await Task.WhenAll(FindWayTask, SenderTask);
             Console.WriteLine("Задачи выполнены");
-
             Console.WriteLine("End senttlement");
 
             if (paramsForTesting.TimeStatisticFile)
             {
                 timer.TimeStatistic_End("all");
                 timer.Write();
+                timer.Write(null, "Timestatistic_Interval");
             }
         }
 
