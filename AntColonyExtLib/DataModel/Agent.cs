@@ -100,7 +100,7 @@ namespace AntColonyExtLib.DataModel
                     Array.Copy(newWayAgent, 0, wayAgent, 0, inputData.inputParams.Params.Count());
 
                     //Считаем сколько раз было непопадание по хэш
-                    hashStatistic.Count(iteration);
+                    if(hashStatistic!=null) hashStatistic.Count(iteration);
                 }
 
                 //Обновление насыщения вершины

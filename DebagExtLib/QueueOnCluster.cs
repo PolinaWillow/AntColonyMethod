@@ -76,10 +76,10 @@ namespace DebagExtLib
 
         public List<Calculation_v2> GetAll() //Почему исключение, что кто-то изменил очередь, хотя поднят монитор???
         {
-            Monitor.Enter(_monitor);
+            Monitor.Enter(this._monitor);
             if (this.Queue.Count == 0)
             {
-                Monitor.Exit(_monitor);
+                Monitor.Exit(this._monitor);
                 return null;
             }
             else
@@ -88,12 +88,12 @@ namespace DebagExtLib
 
                 //calculations.AddRange(this.Queue);
                 //this.Queue.Clear();
-                foreach (Calculation_v2 item in this.Queue) //foreach (Calculation_v2 item in this.Queue.ToList)
+                foreach (Calculation_v2 item in this.Queue.ToList()) //foreach (Calculation_v2 item in this.Queue.ToList)
                 {
                     calculations.Add(item);
                     this.Queue.Remove(item);
                 }
-                Monitor.Exit(_monitor);
+                Monitor.Exit(this._monitor);
                 return calculations;
             }
         }

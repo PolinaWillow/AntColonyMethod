@@ -13,7 +13,7 @@ namespace DebagExtLib
     public class ParamsForTesting
     {
         //Основные параметры для настройки
-        public int startCount_MAX = 1; //Количество запусков
+        public int startCount_MAX = 50; //Количество запусков
         public int threadAgentCount = 1; //Количество потоков агентов
         public int START_threadAgentCount = 1; //Начальное Количество потоков агентов 
         public int MAX_threadAgentCount = 32; //Максимальное количество потоков агентов
@@ -34,7 +34,7 @@ namespace DebagExtLib
         public int Max_countMultySender = 128; //Максимальное количество одновременно отправляемых данных
 
         //Функция для запуска
-        public string startName = "Async_v7";
+        public string startName = "Async_v5";
 
         //Паремтры для создания или не созданпия файлов лога 
         public bool OutPutDataFile = true; //Выходной файл с результатами решений (Криво соотносится key и value при изменении даты создания файла)
