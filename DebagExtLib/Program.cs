@@ -1322,10 +1322,10 @@ namespace DebagExtLib
         /// <param name="inputData"></param>
         /// <param name="paramsForTesting"></param>
         /// <returns></returns>
-        public static async Task AsyncSenttlement_v3(InputData inputData, ParamsForTesting paramsForTesting)
+        public static async Task AsyncSenttlement_v3(InputData inputData, ParamsForTesting paramsForTesting, HashStatistic hashStatistic)
         {
-            int countFindWay = 0; //Количество найденных путей
-            int countAgent = 0; //Количество пройденных агентов 
+            //int countFindWay = 0; //Количество найденных путей
+            //int countAgent = 0; //Количество пройденных агентов 
 
             if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Start("all");
 
@@ -1363,7 +1363,7 @@ namespace DebagExtLib
                         tasks.Add(Task.Factory.StartNew(() =>
                         {
                             //Если просмотрены все пути, то выход из задачи
-                            Interlocked.Increment(ref countFindWay);//++;
+                            int count = Interlocked.Increment(ref countFindWay);//++;
 
                             //Console.WriteLine("agentID = " + agentID+ "\t countFindWay = "+ countFindWay);
                             if (countFindWay <= inputData.inputParams.countCombinationsV)
@@ -1381,6 +1381,13 @@ namespace DebagExtLib
                                     //queueOnCluster.AddToQueue(wayAgent, inputData, agent.idAgent);
 
                                     //countFindWay++;
+
+                                    //Замеряем текущее время работы программы
+                                    if (paramsForTesting.TimeStatisticFile && count == paramsForTesting.iterationWriteTimerStatistic_finedWay)
+                                    {
+                                        timer.TimeStatistic_Interval(paramsForTesting.iterationWriteTimerStatistic_finedWay, "findWayTask");
+                                        paramsForTesting.iterationWriteTimerStatistic_finedWay += paramsForTesting.stepWriteTimerStatistic;
+                                    }
                                 }
                             }
 
@@ -1389,8 +1396,6 @@ namespace DebagExtLib
 
                     // Ожидаем завершения всех задач
                     Task.WaitAll(tasks.ToArray());
-
-                    //Console.WriteLine("-- " + countFindWay);
                     newAgentsList.Clear();
 
                 }
@@ -1402,6 +1407,14 @@ namespace DebagExtLib
 
                 // Сообщаем, что больше элементов в очереди не будет
                 queue.CompleteAdding();
+
+                hashStatistic.Print();
+
+                if (paramsForTesting.TimeStatisticFile)
+                {
+                    timer.TimeStatistic_End("findWayTask");
+                    timer.TimeStatistic_Interval(inputData.inputParams.countCombinationsV, "findWayTask");
+                }
             });
 
             Task SenderTask = Task.Run(() =>
@@ -1460,7 +1473,97 @@ namespace DebagExtLib
                             {
                                 //Передача результатов расчета агенту
                                 Agent agent = agentGroup.FindAgent(item.idAgent);
-                                if (agent != null) agent.funcValue = item.result;
+                                if (agent != null)
+                                {
+                                    agent.funcValue = item.result;
+
+
+                                    int length = item.Way_For_Send.Length;
+                                    string[] valuesParam = new string[length];
+                                    for (int j = 0; j < length; j++)
+                                    {
+                                        valuesParam[j] = item.Way_For_Send[j].SendValue;
+                                    }
+
+                                    ResultValueFunction valFunction = new ResultValueFunction();
+                                    valFunction.Set(item.result, valuesParam);
+
+                                    if (valFunction.valueFunction >= MAX)
+                                    {
+                                        maxFunction = valFunction;
+                                        MAX = valFunction.valueFunction;
+                                    }
+
+                                    //Записываем результат в файл
+                                    if (paramsForTesting.OutPutDataFile)
+                                    {
+                                        string dataToOutput = fileManager_v2.CreateWriteString(i, "max", maxFunction);
+                                        fileManager_v2.Write(outputFile, dataToOutput);
+                                    }
+
+                                    //Изменение феромонов
+                                    agent.ChangePheromones(inputData);
+
+                                    //Удаление агента
+                                    agentGroup.DeleteAgent(agent.idAgent);
+                                }
+                            }
+
+                            //Обновление графа
+                            inputData.UpdateParams();
+                            //Очистка запроса
+                            multyCalculation_req.Clear();
+                        }
+                        catch (Exception e)
+                        {
+                            Console.WriteLine(e + "Ошибка связи с кластером при отправлении Calculation");
+                        }
+                    }
+
+
+                    i++;
+                    //Замер текущего времени
+                    if (paramsForTesting.TimeStatisticFile)
+                    {
+                        timer.TimeStatistic_End("senderTask");
+                        if (countSendWay == paramsForTesting.iterationWriteTimerStatistic)
+                        {
+                            timer.TimeStatistic_Interval(paramsForTesting.iterationWriteTimerStatistic, "senderTask");
+                            paramsForTesting.iterationWriteTimerStatistic += paramsForTesting.stepWriteTimerStatistic;
+                        }
+                    }
+                }
+
+                if (multyCalculation_req.Length() != 0)
+                {
+                    if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Start("senderTask");
+
+                    try
+                    {
+                        //Отправление данных на кластер
+                        DateTime request_Start = DateTime.Now;
+
+                        reqCalculate.request.AddData(multyCalculation_req.TypeOf(), multyCalculation_req.GetJSON());
+                        Sender data = reqCalculate.Post();
+
+                        data.Print();
+
+                        DateTime request_End = DateTime.Now;
+                        TimeSpan request_time = createSocet_End - createSocet_Start;
+                        //Console.WriteLine("Время отправления одного запроса и получение ответа: " + request_time.TotalSeconds.ToString().Replace('.', ','));
+
+                        //data.Print();
+
+                        //Получение данных из тела запроса
+                        MultyCalculation multyCalculation_res = new MultyCalculation(JsonSerializer.Deserialize<List<Calculation_v2>>(data.Body));
+
+                        foreach (Calculation_v2 item in multyCalculation_res.calculationList)
+                        {
+                            //Передача результатов расчета агенту
+                            Agent agent = agentGroup.FindAgent(item.idAgent);
+                            if (agent != null)
+                            {
+                                agent.funcValue = item.result;
 
 
                                 int length = item.Way_For_Send.Length;
@@ -1492,81 +1595,6 @@ namespace DebagExtLib
                                 //Удаление агента
                                 agentGroup.DeleteAgent(agent.idAgent);
                             }
-
-                            //Обновление графа
-                            inputData.UpdateParams();
-                            //Очистка запроса
-                            multyCalculation_req.Clear();
-                        }
-                        catch (Exception e)
-                        {
-                            Console.WriteLine(e + "Ошибка связи с кластером при отправлении Calculation");
-                        }
-                    }
-
-
-                    i++;
-                    if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_End("senderTask");
-                }
-
-                if (multyCalculation_req.Length() != 0)
-                {
-                    if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Start("senderTask");
-
-                    try
-                    {
-                        //Отправление данных на кластер
-                        DateTime request_Start = DateTime.Now;
-
-                        reqCalculate.request.AddData(multyCalculation_req.TypeOf(), multyCalculation_req.GetJSON());
-                        Sender data = reqCalculate.Post();
-
-                        data.Print();
-
-                        DateTime request_End = DateTime.Now;
-                        TimeSpan request_time = createSocet_End - createSocet_Start;
-                        //Console.WriteLine("Время отправления одного запроса и получение ответа: " + request_time.TotalSeconds.ToString().Replace('.', ','));
-
-                        //data.Print();
-
-                        //Получение данных из тела запроса
-                        MultyCalculation multyCalculation_res = new MultyCalculation(JsonSerializer.Deserialize<List<Calculation_v2>>(data.Body));
-
-                        foreach (Calculation_v2 item in multyCalculation_res.calculationList)
-                        {
-                            //Передача результатов расчета агенту
-                            Agent agent = agentGroup.FindAgent(item.idAgent);
-                            if (agent != null) agent.funcValue = item.result;
-
-
-                            int length = item.Way_For_Send.Length;
-                            string[] valuesParam = new string[length];
-                            for (int j = 0; j < length; j++)
-                            {
-                                valuesParam[j] = item.Way_For_Send[j].SendValue;
-                            }
-
-                            ResultValueFunction valFunction = new ResultValueFunction();
-                            valFunction.Set(item.result, valuesParam);
-
-                            if (valFunction.valueFunction >= MAX)
-                            {
-                                maxFunction = valFunction;
-                                MAX = valFunction.valueFunction;
-                            }
-
-                            //Записываем результат в файл
-                            if (paramsForTesting.OutPutDataFile)
-                            {
-                                string dataToOutput = fileManager_v2.CreateWriteString(i, "max", maxFunction);
-                                fileManager_v2.Write(outputFile, dataToOutput);
-                            }
-
-                            //Изменение феромонов
-                            agent.ChangePheromones(inputData);
-
-                            //Удаление агента
-                            agentGroup.DeleteAgent(agent.idAgent);
                         }
 
                         //Обновление графа
@@ -1582,6 +1610,7 @@ namespace DebagExtLib
                     i++;
                     if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_End("senderTask");
                 }
+                if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Interval(countSendWay, "senderTask");
 
                 Console.WriteLine("countSendWay " + countSendWay);
                 reqCalculate.End();
@@ -1600,6 +1629,7 @@ namespace DebagExtLib
             {
                 timer.TimeStatistic_End("all");
                 timer.Write();
+                timer.Write(null, "Timestatistic_Interval");
             }
         }
 
