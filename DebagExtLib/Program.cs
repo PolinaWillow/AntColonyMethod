@@ -133,18 +133,12 @@ namespace DebagExtLib
         /// <returns></returns>
         public static async Task AsyncSenttlement_v7(InputData inputData, ParamsForTesting paramsForTesting, HashStatistic hashStatistic)
         {
-            //int countFindWay = 0; //Количество найденных путей
-            //int countAgent = 0; //Количество пройденных агентов
-
-            //Counters counters = new Counters();
-
             if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Start("all");
 
-            //Создаем очередь и группу агентов
-            QueueOnCluster queueOnCluster = new QueueOnCluster();
+            
+            QueueOnCluster queueOnCluster = new QueueOnCluster(); //Создаем очередь и группу агентов
             AgentGroup agentGroup = new AgentGroup();
-            //Словарь всех агентов
-            AgentDictionary agentDictionary = new AgentDictionary();
+            AgentDictionary agentDictionary = new AgentDictionary(); //Словарь всех агентов
 
             //Определение путей агентов (Параллельный поиск)
             Task FindWayTask = Task.Run(() =>
@@ -169,13 +163,10 @@ namespace DebagExtLib
                     List<Task> tasks = new List<Task>();
                     foreach (string agentID in newAgentsList)
                     {
-                        //Console.WriteLine("agentID = " + agentID);
                         tasks.Add(Task.Factory.StartNew(() =>
                         {
-                            //Если просмотрены все пути, то выход из задачи
-                            int count = Interlocked.Increment(ref countFindWay);//++;
+                            int count = Interlocked.Increment(ref countFindWay);
 
-                            //Console.WriteLine("agentID = " + agentID+ "\t countFindWay = "+ countFindWay);
                             if (countFindWay <= inputData.inputParams.countCombinationsV)
                             {
                                 Agent agent = agentGroup.FindAgent(agentID);
@@ -185,15 +176,10 @@ namespace DebagExtLib
                                     int[] wayAgent = agent.FindAgentWay(inputData, paramsForTesting.hashTableStatus, hashStatistic, count);
                                     agentGroup.AddWayAgent(wayAgent, agent.idAgent);
 
-                                    //Отправление пути в очередь на кластер
-                                    //Calculation_v2 calculation = new Calculation_v2(agent.idAgent, wayAgent, inputData);
-
-                                    queueOnCluster.AddToQueue(wayAgent, inputData, agent.idAgent);
+                                    queueOnCluster.AddToQueue(wayAgent, inputData, agent.idAgent); //Отправление пути в очередь на кластер
 
                                     agentDictionary.Add(agent); //Добавляем агента в словарь
                                     agent.UpdateID(); //Обновляем ID Агента
-
-                                    //int countFindWay = counters.Add_FindWay();
 
                                     //Замеряем текущее время работы программы
                                     if (paramsForTesting.TimeStatisticFile && count == paramsForTesting.iterationWriteTimerStatistic_finedWay)
@@ -234,25 +220,21 @@ namespace DebagExtLib
                 int countSendWay = 0; //Количество найденных путей
                 int i = 0;
 
-                //Создаем сокет
-                Request_v2 reqCalculate = new Request_v2();
-
-                //Открываем соединение
-                DateTime createSocet_Start = DateTime.Now;
+                
+                Request_v2 reqCalculate = new Request_v2(); //Создаем сокет
+                DateTime createSocet_Start = DateTime.Now; //Открываем соединение
                 reqCalculate.Start(paramsForTesting.timeDelay, paramsForTesting.threadAgentCount, paramsForTesting.countMultySender);
                 DateTime createSocet_End = DateTime.Now;
                 TimeSpan createSocet_time = createSocet_End - createSocet_Start;
 
-                //Создаем экземпляр для множественного отправления данных
-                MultyCalculation multyCalculation_req = new MultyCalculation();
+                MultyCalculation multyCalculation_req = new MultyCalculation(); //Создаем экземпляр для множественного отправления данных
 
                 while (!queueOnCluster.IsEnd())
                 {
-                    //Получение пути из очереди (из очереди удалили)
-                    Calculation_v2 calculation = queueOnCluster.GetFromQueue();
-                    //int countSendWay = counters.Add_SendWay();
+                    
+                    Calculation_v2 calculation = queueOnCluster.GetFromQueue(); //Получение пути из очереди (из очереди удалили)
 
-                    //Пока нет данных для отправки (очередь пуста)                         //Ожидание освобождения сокета для подключения
+                    //Пока нет данных для отправки (очередь пуста)
                     if (calculation != null)
                     {
                         if (paramsForTesting.TimeStatisticFile) timer.TimeStatistic_Start("senderTask");
@@ -330,9 +312,7 @@ namespace DebagExtLib
                         i++;
                         countSendWay++;
 
-                        //countSendWay++; //Подсчет отправленных путей
-                        //Замер текущего времени
-                        if (paramsForTesting.TimeStatisticFile)
+                        if (paramsForTesting.TimeStatisticFile) //Замер текущего времени
                         {
                             timer.TimeStatistic_End("senderTask");
                             if (countSendWay == paramsForTesting.iterationWriteTimerStatistic)
@@ -370,8 +350,7 @@ namespace DebagExtLib
 
                         foreach (Calculation_v2 item in multyCalculation_res.calculationList)
                         {
-                            //Передача результатов расчета агенту
-                            Agent agent = agentDictionary.Get(item.idAgent);
+                            Agent agent = agentDictionary.Get(item.idAgent); //Передача результатов расчета агенту
 
                             if (agent != null)
                             {
