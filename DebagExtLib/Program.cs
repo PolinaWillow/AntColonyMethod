@@ -78,7 +78,7 @@ namespace DebagExtLib
                                     await AsyncSenttlement_v2(inputData.testInputData, paramsForTesting);
                                     break;
                                 case "Async_v3": //Одно соединение на все отправки
-                                    await AsyncSenttlement_v3(inputData.testInputData, paramsForTesting);
+                                    await AsyncSenttlement_v3(inputData.testInputData, paramsForTesting, hashStatistic);
                                     break;
                                 case "Async_v4": //Одно соединение на все отправки
                                     await AsyncSenttlement_v4(inputData.testInputData, paramsForTesting, hashStatistic);
